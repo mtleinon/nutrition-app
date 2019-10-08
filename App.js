@@ -4,19 +4,21 @@ import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import ReduxThunk from 'redux-thunk';
 import InitializeApp from './components/InitializeApp';
-import nutrientsDataReducer from './store/reducers/nutrientsData';
+// import nutrientsDataReducer from './store/reducers/nutrientsData';
 import mealsReducer from './store/reducers/meals';
 import plansReducer from './store/reducers/plans';
 // import SelectNutritionScreen from './screens/SelectNutritionScreen';
 // import MicronutrientScreen from './screens/MicronutrientScreen';
 
 import { initializeDatabase } from './helperFunctions/sqlite';
+console.log('APP STARTED');
 
 const rootReducer = combineReducers({
-  nutrientsData: nutrientsDataReducer,
-  meals: mealsReducer,
-  plans: plansReducer
+  // nutrientsData: nutrientsDataReducer,
+  plans: plansReducer,
+  meals: mealsReducer
 });
+console.log('APP STARTED: rootReducer made');
 
 initializeDatabase().then(() => {
   console.log('Sqlite database initialization succeeded');
@@ -29,13 +31,19 @@ import AppNavigator from './navigation/Navigator';
 const AppNavigationContainer = createAppContainer(AppNavigator);
 
 export default function App() {
+  console.log('App function STARTED');
+
   [appInitialized, setAppInitialized] = useState(false);
   return (
     <Provider store={store}>
-      {!appInitialized ?
-        <InitializeApp setAppInitialized={setAppInitialized} /> :
-        <AppNavigationContainer />
+      {appInitialized ?
+        <AppNavigationContainer /> :
+        <InitializeApp setAppInitialized={setAppInitialized} />
       }
     </Provider>);
 }
 
+/*
+      {!appInitialized &&
+        <InitializeApp setAppInitialized={setAppInitialized} />
+*/

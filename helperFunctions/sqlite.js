@@ -161,13 +161,15 @@ export const initializeDatabase = () => {
   });
 };
 
-export const insertPlan = (name, description) => {
+export const insertPlan = plan => {
   return new Promise((resolve, reject) => {
+    console.log('insertPlan', plan);
+
     db.transaction((tx) => {
       tx.executeSql(
         `INSERT INTO ${plans} (name, description)
          VALUES (?, ?);`,
-        [name, description],
+        [plan.name, plan.description],
         (_, result) => {
           resolve(result)
         },
@@ -178,7 +180,30 @@ export const insertPlan = (name, description) => {
     })
   });
 };
-export const deletePlan = (planId) => {
+
+export const updatePlan = plan => {
+  return new Promise((resolve, reject) => {
+    console.log('updatePlan', plan);
+
+    db.transaction((tx) => {
+      tx.executeSql(
+        `UPDATE ${plans} 
+         SET
+           name="${plan.name}",
+           description="${plan.description}"
+         WHERE id=${plan.id};`,
+        [],
+        (_, result) => {
+          resolve(result)
+        },
+        (_, err) => {
+          reject(err);
+        }
+      )
+    })
+  });
+};
+export const deletePlan = planId => {
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
       console.log('deletePlan: execute', `DELETE FROM ${plans} WHERE id=${planId};`);
@@ -197,6 +222,8 @@ export const deletePlan = (planId) => {
   });
 };
 export const getAllPlans = () => {
+  console.log('getAllPlans');
+
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
@@ -215,13 +242,15 @@ export const getAllPlans = () => {
 };
 
 
-export const insertMeal = (planId, name, description) => {
+export const insertMeal = meal => {
   return new Promise((resolve, reject) => {
+    console.log('insertMeal', meal);
+
     db.transaction((tx) => {
       tx.executeSql(
         `INSERT INTO ${meals} (planId, name, description)
          VALUES (?, ?, ?);`,
-        [planId, name, description],
+        [meal.planId, meal.name, meal.description],
         (_, result) => {
           resolve(result)
         },
@@ -232,7 +261,30 @@ export const insertMeal = (planId, name, description) => {
     })
   });
 };
-export const deleteMeal = (mealId) => {
+export const updateMeal = meal => {
+  return new Promise((resolve, reject) => {
+    console.log('updateMeal', meal);
+
+    db.transaction((tx) => {
+      tx.executeSql(
+        `UPDATE ${meals} 
+         SET
+           name="${meal.name}",
+           description="${meal.description}"
+         WHERE id=${meal.id};`,
+        [],
+        (_, result) => {
+          resolve(result)
+        },
+        (_, err) => {
+          reject(err);
+        }
+      )
+    })
+  });
+};
+
+export const deleteMeal = mealId => {
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
       console.log('deleteMeal: execute', `DELETE FROM ${meals} WHERE id=${mealId};`);
@@ -250,9 +302,14 @@ export const deleteMeal = (mealId) => {
     })
   });
 };
+
 export const getAllMeals = () => {
   return new Promise((resolve, reject) => {
+    console.log('getAllMeals');
+
     db.transaction((tx) => {
+      console.log('getAllMeals transaction started');
+
       tx.executeSql(
         `SELECT * FROM ${meals};`,
         [],

@@ -7,9 +7,6 @@ import * as mealActions from '../store/actions/meals';
 import InputNumber from '../components/InputNumber';
 import InputText from '../components/InputText';
 
-//import nutrients from '../data/finelliAllNutrients'; // 36 nutriitions
-//import nutrients from '../data/finelli5'; // all 3400 nutriitions
-
 const Nutrient = ({ item, selectedNameHandler, showMicronutrientHandler }) => {
   return (
     <TouchableHighlight onPress={() => selectedNameHandler(item.item[1], item.item[0])} >
@@ -30,8 +27,6 @@ const filterNutrient = (search, nutrientName) => {
 const SelectNutritionScreen = props => {
   const mealId = props.navigation.getParam('mealId');
   const nutrientsData = useSelector(state => state.nutrientsData.nutrientsData);
-  // const nutrientsData = nutrients.slice(1);
-  // console.log('nutrientsData.length =', nutrientsData.length);
   const [name, setName] = useState('');
   const [amount, setAmount] = useState('');
   const [selectedName, setSelectedName] = useState('');
@@ -39,12 +34,10 @@ const SelectNutritionScreen = props => {
   const dispatch = useDispatch();
 
   const showMicronutrientHandler = (nutrient) => {
-    // console.log('nutrient=', nutrient);
     props.navigation.navigate('Micronutrient', { nutrientData: nutrient });
   }
 
   const selectedNameHandler = (newSelectedName, newSelectedId) => {
-    // console.log('selectedNameHandler', newSelectedName);
     setSelectedName(newSelectedName);
     setSelectedId(newSelectedId);
   }
@@ -56,13 +49,6 @@ const SelectNutritionScreen = props => {
         [{ text: 'OK' }]);
       return;
     }
-    // if (!amount) {
-    //   Alert.alert('Please add amount',
-    //     'Please by writing it in the input',
-    //     [{ text: 'OK' }]);
-    //   return;
-    // }
-    // dispatch(mealActions.addNutrientToMeal(mealId, selectedId, +amount));
     dispatch(mealActions.addNutrientToMeal(mealId, selectedId, 0));
     props.navigation.goBack();
   }, [selectedName, amount]);
@@ -73,25 +59,12 @@ const SelectNutritionScreen = props => {
 
   return (
     <View style={styles.screen}>
-      {/* <View style={styles.selectedNutrition}>
-        <Text style={styles.label}>Selected nutrition:</Text>
-        <Text style={styles.selectedName}>{selectedName ? selectedName : 'Select nutrient'}</Text>
-      </View> */}
-      {/* <InputNumber
-        label="Amount"
-        onChangeText={setAmount} value={amount}
-      /> */}
       <InputText
         label="Search nutrition:"
         onChangeText={setSelectedName} value={selectedName}
       />
-      {/* <InputText
-        label="Search nutrition:"
-        onChangeText={setName} value={name}
-      /> */}
       <Text style={styles.label}>Select nutrition:</Text>
       <FlatList
-        // data={nutrientsData.filter(item => filterNutrient(name, item[1]))}
         data={nutrientsData.filter(item => filterNutrient(selectedName, item[1]))}
         renderItem={item => <Nutrient
           item={item}

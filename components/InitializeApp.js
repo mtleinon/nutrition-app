@@ -42,42 +42,42 @@ const InitializeApp = ({ setAppInitialized }) => {
       console.log('TEST FAILED: err=', err);
     }
   }
-  // Create test data only once
-  useEffect(() => { testDb() }, [dispatch]);
+  // // Create test data only once
+  // useEffect(() => { testDb() }, [dispatch]);
 
-  const readNutritionFile = async () => {
-    const nutrientDataCount = await db.getNutrientDataCount();
-    if (nutrientDataCount > 0) {
-      console.log('Nutrition data file has already been created', nutrientDataCount)
-      await dispatch(nutrientDataActions.readNutrientDataFromDatabase());
-      return; // nutrients are already in the database
-    }
-    console.log('Read Nutrition data file and insert data to database', nutrientDataCount)
-    const nutrientsData = [];
-    for (const [i, finelliNutrition] of finelli.entries()) {
-      if (i === 0) {
-        // First row in the file contains header info of the
-        // nutrition table. Add it to redux.
-        dispatch(nutrientActions.addNutrientInfo(nutrientInfo));
-      } else {
-        const nutrition = finelliNutrition.map((n, i) => {
-          if (i < 2) {
-            return n;
-          }
-          return +(n.replace(',', '.').replace(' ', ''));
-        });
-        nutrientsData.push(nutrition);
-      }
-    }
-    db.insertAllNutrientData(nutrientsData);
-    dispatch(nutrientActions.setNutrientsData(nutrientsData));
-  }
-  readNutritionFile();
+  // const readNutritionFile = async () => {
+  //   const nutrientDataCount = await db.getNutrientDataCount();
+  //   if (nutrientDataCount > 0) {
+  //     console.log('Nutrition data file has already been created', nutrientDataCount)
+  //     await dispatch(nutrientDataActions.readNutrientDataFromDatabase());
+  //     return; // nutrients are already in the database
+  //   }
+  //   console.log('Read Nutrition data file and insert data to database', nutrientDataCount)
+  //   const nutrientsData = [];
+  //   for (const [i, finelliNutrition] of finelli.entries()) {
+  //     if (i === 0) {
+  //       // First row in the file contains header info of the
+  //       // nutrition table. Add it to redux.
+  //       dispatch(nutrientActions.addNutrientInfo(nutrientInfo));
+  //     } else {
+  //       const nutrition = finelliNutrition.map((n, i) => {
+  //         if (i < 2) {
+  //           return n;
+  //         }
+  //         return +(n.replace(',', '.').replace(' ', ''));
+  //       });
+  //       nutrientsData.push(nutrition);
+  //     }
+  //   }
+  //   db.insertAllNutrientData(nutrientsData);
+  //   dispatch(nutrientActions.setNutrientsData(nutrientsData));
+  // }
+  // readNutritionFile();
 
   async function readDataFromDatabase() {
-    await dispatch(planActions.readAllPlansFromDatabase());
-    await dispatch(mealActions.readAllMealsFromDatabase());
-    await dispatch(mealActions.readAllNutrientsFromDatabase());
+    dispatch(planActions.readAllPlansFromDb());
+    dispatch(mealActions.readAllMealsFromDb());
+    // await dispatch(mealActions.readAllNutrientsFromDatabase());
     console.log('ALL INITIALIZED');
     setAppInitialized(true);
   }

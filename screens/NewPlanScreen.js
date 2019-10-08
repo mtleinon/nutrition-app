@@ -1,17 +1,23 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Alert, TouchableOpacity, View, Text, StyleSheet, Platform } from 'react-native'
 
 import InputText from '../components/InputText';
+import Plan from '../models/Plan';
+
 import * as planActions from '../store/actions/plans';
 import Colors from '../constants/Colors';
 
 const NewPlanScreen = props => {
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
+  const planId = props.navigation.getParam('planId');
+  const isEditMode = Boolean(props.navigation.getParam('isEditMode'));
+  const plan = useSelector(state => state.plans.plans.find(plan => plan.id === planId));
+
+  const [name, setName] = useState(isEditMode ? plan.name : '');
+  const [description, setDescription] = useState(isEditMode ? plan.description : '');
   const dispatch = useDispatch();
 
-  const addPlanHandler = useCallback(() => {
+  const planHandler = useCallback(() => {
     if (!name) {
       Alert.alert('Please give name',
         'Please write plan name to the field',
@@ -25,13 +31,18 @@ const NewPlanScreen = props => {
       return;
     }
     // const planId = new Date().toISOString();
-    dispatch(planActions.newPlan(name, description));
+    if (isEditMode) {
+      dispatch(planActions.updatePlanInDb(new Plan(planId, name, description)));
+    } else {
+      dispatch(planActions.storePlanToDb(new Plan(null, name, description)));
+    }
     props.navigation.goBack();
   }, [name, description]);
 
   useEffect(() => {
-    props.navigation.setParams({ addPlanHandler })
-  }, [addPlanHandler]);
+    props.navigation.setParams({ planHandler })
+    props.navigation.setParams({ actionText: isEditMode ? "Update plan" : "Add plan" })
+  }, [planHandler]);
 
   return (
     <View style={styles.screen}>
@@ -48,12 +59,13 @@ const NewPlanScreen = props => {
 }
 
 NewPlanScreen.navigationOptions = navData => {
-  const addPlanHandler = navData.navigation.getParam('addPlanHandler');
+  const planHandler = navData.navigation.getParam('planHandler');
+  const actionText = navData.navigation.getParam('actionText');
 
   return {
     headerTitle: (
-      <TouchableOpacity style={styles.header} onPress={addPlanHandler} >
-        <Text style={styles.headerText}>Add plan</Text>
+      <TouchableOpacity style={styles.header} onPress={planHandler} >
+        <Text style={styles.headerText}>{actionText}</Text>
       </TouchableOpacity>)
   }
 }

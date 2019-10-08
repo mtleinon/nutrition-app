@@ -1,9 +1,10 @@
 class Meal {
-  constructor(id, name, description, nutrients) {
+  constructor(id, planId, name, description) {
     this.id = id;
+    this.planId = planId;
     this.name = name;
     this.description = description;
-    this.nutrients = nutrients;
+    // this.nutrients = nutrients;
   }
 }
 export default Meal

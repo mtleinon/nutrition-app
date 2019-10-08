@@ -11,7 +11,7 @@ import HeaderButton from '../components/HeaderButton';
 import MicronutrientView from '../components/MicronutrientView';
 import NameText from '../components/NameText';
 
-const Plan = ({ plan, deletePlanHandler, navigateToPlanHandler }) => {
+const Plan = ({ plan, deletePlanHandler, editPlanHandler, navigateToPlanHandler }) => {
   // console.log('Plan', plan);
 
   return (
@@ -23,17 +23,20 @@ const Plan = ({ plan, deletePlanHandler, navigateToPlanHandler }) => {
             style={styles.icon}
             onPress={() => deletePlanHandler(plan.id)}
             name="md-remove-circle" size={24} color="red" />
+          <Ionicons
+            style={styles.icon}
+            onPress={() => editPlanHandler(plan.id)}
+            name="md-arrow-round-forward" size={24} color="blue" />
         </View>
-        <View style={styles.micronutrientRow}>
+        {/* <View style={styles.micronutrientRow}>
           <MicronutrientView planId={plan.id} summary={true} oneRow={true} />
-        </View>
+        </View> */}
       </View>
     </TouchableHighlight>
   );
 }
 
 const AllPlansScreen = props => {
-  // const planId = "1";
   const plans = useSelector(state => state.plans.plans);
   const dispatch = useDispatch();
   // console.log('AllPlansScreen');
@@ -43,9 +46,13 @@ const AllPlansScreen = props => {
 
     props.navigation.navigate('Plan', { planId });
   }
-  const deletePlanHandler = (planId) => {
+  const deletePlanHandler = planId => {
     // console.log('nutrient=', nutrient);
-    dispatch(planActions.deletePlan(planId));
+    dispatch(planActions.deletePlanFromDb(planId));
+  }
+  const editPlanHandler = planId => {
+    // console.log('nutrient=', nutrient);
+    props.navigation.navigate('NewPlan', { isEditMode: true, planId });
   }
 
   return (
@@ -55,6 +62,7 @@ const AllPlansScreen = props => {
         data={plans}
         renderItem={item => <Plan plan={item.item}
           deletePlanHandler={deletePlanHandler}
+          editPlanHandler={editPlanHandler}
           navigateToPlanHandler={navigateToPlanHandler} />}
         keyExtractor={item => item.id.toString()} />
     </View>

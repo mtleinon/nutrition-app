@@ -5,17 +5,19 @@ import Colors from '../constants/Colors';
 //import uuid from 'react-native-uuid';
 
 import InputText from '../components/InputText';
-import * as planActions from '../store/actions/plans';
 import * as mealActions from '../store/actions/meals';
-
+import Meal from '../models/Meal.js';
 const NewMealScreen = props => {
   const planId = props.navigation.getParam('planId');
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const dispatch = useDispatch();
-  const planMealIds = useSelector(state => state.plans.plans.find(plan => plan.id === planId).meals);
+  const mealId = props.navigation.getParam('mealId');
+  const isEditMode = Boolean(props.navigation.getParam('isEditMode'));
+  const meal = useSelector(state => state.meals.meals.find(meal => meal.id === mealId));
 
-  const addMealHandler = useCallback(() => {
+  const [name, setName] = useState(isEditMode ? meal.name : '');
+  const [description, setDescription] = useState(isEditMode ? meal.description : '');
+  const dispatch = useDispatch();
+
+  const mealHandler = useCallback(() => {
     if (!name) {
       Alert.alert('Please give name',
         'Please write meal name to the field',
@@ -29,13 +31,18 @@ const NewMealScreen = props => {
       return;
     }
     // dispatch(mealActions.newMeal(mealId, name, description))
-    dispatch(mealActions.addNewMealToPlan(planId, name, description, planMealIds));
+    if (isEditMode) {
+      dispatch(mealActions.updateMealInDb(new Meal(mealId, meal.planId, name, description)));
+    } else {
+      dispatch(mealActions.storeMealToDb(new Meal(null, planId, name, description)));
+    }
     props.navigation.goBack();
-  }, [planId, name, description]);
+  }, [mealId, name, description]);
 
   useEffect(() => {
-    props.navigation.setParams({ addMealHandler })
-  }, [addMealHandler]);
+    props.navigation.setParams({ mealHandler });
+    props.navigation.setParams({ actionText: isEditMode ? "Update meal" : "Add meal" })
+  }, [mealHandler]);
 
   return (
     <View style={styles.screen}>
@@ -52,12 +59,13 @@ const NewMealScreen = props => {
 }
 
 NewMealScreen.navigationOptions = navData => {
-  const addMealHandler = navData.navigation.getParam('addMealHandler');
+  const mealHandler = navData.navigation.getParam('mealHandler');
+  const actionText = navData.navigation.getParam('actionText');
 
   return {
     headerTitle: (
-      <TouchableOpacity style={styles.header} onPress={addMealHandler} >
-        <Text style={styles.headerText}>Add meal</Text>
+      <TouchableOpacity style={styles.header} onPress={mealHandler} >
+        <Text style={styles.headerText}>{actionText}</Text>
       </TouchableOpacity>)
   }
 }

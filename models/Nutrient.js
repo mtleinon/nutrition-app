@@ -1,7 +1,9 @@
 class Nutrient {
-  constructor(id, amount) {
+  constructor(id, mealId, nutrientDataId, amount) {
     this.id = id;
-    this.amount = amount
+    this.mealId = mealId;
+    this.nutrientDataId = nutrientDataId;
+    this.amount = amount;
   }
 }
 export default Nutrient

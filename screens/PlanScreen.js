@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux';
 import { TouchableHighlight, FlatList, View, Text, StyleSheet, Platform } from 'react-native'
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
-import * as planActions from '../store/actions/plans';
+import * as mealActions from '../store/actions/meals';
 
 import { Ionicons } from '@expo/vector-icons';
 
@@ -12,7 +12,7 @@ import Styles from '../constants/Styles';
 import HeaderButton from '../components/HeaderButton';
 import MicronutrientView from '../components/MicronutrientView';
 
-const Meal = ({ meal, removeMealHandler, navigateToMealHandler }) => {
+const Meal = ({ meal, editMealHandler, deleteMealHandler, navigateToMealHandler }) => {
   return (
     <TouchableHighlight onPress={() => navigateToMealHandler(meal.id)} >
       <View style={[styles.meal, Styles.elevated]}>
@@ -20,12 +20,17 @@ const Meal = ({ meal, removeMealHandler, navigateToMealHandler }) => {
           <Text numberOfLines={2} style={styles.mealName}>{meal.name}</Text>
           <Ionicons
             style={styles.icon}
-            onPress={() => removeMealHandler(meal.id)}
+            onPress={() => deleteMealHandler(meal.id)}
             name="md-remove-circle" size={24} color="red" />
+          <Ionicons
+            style={styles.icon}
+            onPress={() => editMealHandler(meal.id)}
+            name="md-arrow-round-forward" size={24} color="blue" />
+
         </View>
-        <View style={styles.micronutrientRow}>
+        {/* <View style={styles.micronutrientRow}>
           <MicronutrientView mealId={meal.id} summary={true} oneRow={true} />
-        </View>
+        </View> */}
       </View>
     </TouchableHighlight>
   );
@@ -36,28 +41,31 @@ const PlanScreen = props => {
   const plan = useSelector(state => state.plans.plans.find(plan => plan.id == planId));
   const dispatch = useDispatch();
   const planMeals = useSelector(
-    state => state.meals.meals.filter(
-      meal => plan.mealIds.some(
-        mealId => mealId === meal.id)));
+    state => state.meals.meals.filter(meal => meal.planId === planId));
 
-  const navigateToMealHandler = (mealId) => {
+  const navigateToMealHandler = mealId => {
     props.navigation.navigate('Meal', { mealId });
   }
 
-  const removeMealHandler = (mealId) => {
-    dispatch(planActions.removeMealFromPlan(planId, mealId));
+  const deleteMealHandler = mealId => {
+    dispatch(mealActions.deleteMealFromDb(mealId));
+  }
+  const editMealHandler = mealId => {
+    // console.log('nutrient=', nutrient);
+    props.navigation.navigate('NewMeal', { isEditMode: true, mealId });
   }
 
   return (
     <View style={styles.screen}>
       <HeadingText>{plan.name}</HeadingText>
-      <View style={styles.micronutrientRow}>
+      {/* <View style={styles.micronutrientRow}>
         <MicronutrientView planId={plan.id} summary={true} oneRow={true} />
-      </View>
+      </View> */}
       <FlatList
         data={planMeals}
         renderItem={item => <Meal meal={item.item}
-          removeMealHandler={removeMealHandler}
+          deleteMealHandler={deleteMealHandler}
+          editMealHandler={editMealHandler}
           navigateToMealHandler={navigateToMealHandler} />}
         keyExtractor={item => item.id.toString()} />
     </View>

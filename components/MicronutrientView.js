@@ -44,7 +44,7 @@ const MicronutrientView = ({ mealId, planId, nutrientData, summary, oneRow }) =>
     meal = meals.find(meal => meal.id == mealId);
     if (meal && meal.nutrients && meal.nutrients.length > 0) {
       const mealNutrients = nutrientsData.filter(
-        data => meal.nutrients.some(mealNutrient => mealNutrient.id === data[0]));
+        data => meal.nutrients.some(mealNutrient => mealNutrient.nutrientDataId === data[0]));
       nutrientData = calculateMealMicronutrientData(meal, mealNutrients, summary);
       nutrientData[1] = meal.name;
     }
@@ -56,7 +56,7 @@ const MicronutrientView = ({ mealId, planId, nutrientData, summary, oneRow }) =>
         mealId => mealId === meal.id));
     const pmd = planMeals.map(meal => {
       const mealNutrients = nutrientsData.filter(
-        data => meal.nutrients.some(mealNutrient => mealNutrient.id === data[0]));
+        data => meal.nutrients.some(mealNutrient => mealNutrient.nutrientDataId === data[0]));
       return calculateMealMicronutrientData(meal, mealNutrients, summary);
     }).filter(mealData => mealData !== undefined && mealData[0] != undefined);
     if (pmd.length > 0) {

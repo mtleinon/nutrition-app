@@ -22,7 +22,7 @@ const Nutrient = ({
 
   const nutrientData = useSelector(state => state.nutrientsData.nutrientsData.find(n => {
     // console.log('n[0] === nutrient.id', n[0], nutrient.id);
-    return n[0] === nutrient.id
+    return n[0] === nutrient.nutrientDataId;
   }
   ));
 
