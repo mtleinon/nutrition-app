@@ -17,7 +17,7 @@ const initialState = {
 };
 
 export default (state = initialState, action) => {
-  console.log('meals action', action);
+  // console.log('meals action', action);
 
   switch (action.type) {
 

@@ -28,9 +28,9 @@ const Plan = ({ plan, deletePlanHandler, editPlanHandler, navigateToPlanHandler 
             onPress={() => editPlanHandler(plan.id)}
             name="md-arrow-round-forward" size={24} color="blue" />
         </View>
-        {/* <View style={styles.micronutrientRow}>
+        <View style={styles.micronutrientRow}>
           <MicronutrientView planId={plan.id} summary={true} oneRow={true} />
-        </View> */}
+        </View>
       </View>
     </TouchableHighlight>
   );

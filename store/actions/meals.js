@@ -19,14 +19,14 @@ export const storeMealToDb = meal => {
   return async dispatch => {
     dbResult = await db.insertMeal(meal);
     meal.id = dbResult.insertId;
-    console.log('storeMealToDb', meal);
+    // console.log('storeMealToDb', meal);
     dispatch(addMeal(meal));
   }
 };
 
 export const updateMealInDb = meal => {
   return async dispatch => {
-    console.log('updateMealToDb', meal);
+    // console.log('updateMealToDb', meal);
     dbResult = await db.updateMeal(meal);
     dispatch(updateMeal(meal));
   }
@@ -35,16 +35,16 @@ export const updateMealInDb = meal => {
 export const deleteMealFromDb = mealId => {
   return async dispatch => {
     dbResult = await db.deleteMeal(mealId);
-    console.log('dbResult', dbResult);
+    // console.log('dbResult', dbResult);
     dispatch(deleteMeal(mealId));
   }
 };
 
 export const readAllMealsFromDb = () => {
-  console.log('readAllMealsFromDb');
+  // console.log('readAllMealsFromDb');
   return async dispatch => {
     const meals = await db.getAllMeals();
-    console.log('readAllPlansFromDatabase', meals);
+    // console.log('readAllPlansFromDatabase', meals);
     dispatch({ type: SET_ALL_MEALS, meals });
   }
 };

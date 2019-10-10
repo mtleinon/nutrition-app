@@ -15,16 +15,16 @@ const MicronutrientScreen = props => {
   const planId = props.navigation.getParam('planId');
   const meals = useSelector(state => state.meals.meals);
   const plans = useSelector(state => state.plans.plans);
-  const nutrientsData = useSelector(state => state.nutrientsData.nutrientsData);
-  let headingText;
+
+  let headingText = '';
   if (mealId) {
-    headingText = meal = meals.find(meal => meal.id == mealId).name;
+    headingText = 'Meal : ' + meals.find(meal => meal.id == mealId).name;
   } else if (planId) {
-    headingText = plans.find(plan => plan.id == planId).name;
+    headingText = 'Plan : ' + plans.find(plan => plan.id == planId).name;
   }
   return (
     <View style={styles.screen}>
-      <HeadingText>TODO add heading</HeadingText>
+      <HeadingText>{headingText}</HeadingText>
       <MicronutrientView nutrientData={nutrientData} mealId={mealId} planId={planId} summary={summary} />
     </View>
   )
@@ -43,7 +43,8 @@ const styles = StyleSheet.create({
   screen: {
     marginTop: 20,
     marginLeft: 10,
-    marginRight: 5
+    marginRight: 5,
+    paddingBottom: 60,
   },
   microNutrient: {
     flexDirection: 'row',

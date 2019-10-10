@@ -9,11 +9,11 @@ const nutrientDataTable = 'nutrientsData';
 const db = SQLite.openDatabase(dbName);
 
 export const initializeDatabase = () => {
-  console.log('initializeDatabase: start');
+  // console.log('initializeDatabase: start');
 
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
-      console.log('transaction');
+      // console.log('transaction');
 
       tx.executeSql(
         `CREATE TABLE IF NOT EXISTS ${plans} (
@@ -22,10 +22,10 @@ export const initializeDatabase = () => {
           description TEXT NOT NULL);`,
         [],
         () => {
-          console.log('plans transaction step succeeded:');
+          // console.log('plans transaction step succeeded:');
         },
         (err) => {
-          console.log('plans transaction step failed', err)
+          // console.log('plans transaction step failed', err)
           reject(err);
         }
       );
@@ -44,10 +44,10 @@ export const initializeDatabase = () => {
         );`,
         [],
         () => {
-          console.log('meals step in transaction succeeded')
+          // console.log('meals step in transaction succeeded')
         },
         (_, err) => {
-          console.log('meals step in transaction failed', err)
+          // console.log('meals step in transaction failed', err)
           reject(err);
         }
       );
@@ -69,10 +69,10 @@ export const initializeDatabase = () => {
         );`,
         [],
         () => {
-          console.log('nutrients step in transaction succeeded')
+          // console.log('nutrients step in transaction succeeded')
         },
         (_, err) => {
-          console.log('nutrients step in transaction failed', err)
+          // console.log('nutrients step in transaction failed', err)
 
           reject(err);
         }
@@ -142,20 +142,20 @@ export const initializeDatabase = () => {
         () => {
         },
         (_, err) => {
-          console.log('nutrientsData step in transaction failed', err)
+          // console.log('nutrientsData step in transaction failed', err)
 
           reject(err);
-          console.log('nutrientsData step in transaction succeeded')
+          // console.log('nutrientsData step in transaction succeeded')
         }
       );
-      console.log('all transaction steps started')
+      // console.log('all transaction steps started')
     },
       (err) => {
-        console.log('transaction failed', err)
+        // console.log('transaction failed', err)
         reject(err);
       },
       (result) => {
-        console.log('transaction succeeded:', result);
+        // console.log('transaction succeeded:', result);
         resolve()
       });
   });
@@ -163,7 +163,7 @@ export const initializeDatabase = () => {
 
 export const insertPlan = plan => {
   return new Promise((resolve, reject) => {
-    console.log('insertPlan', plan);
+    // console.log('insertPlan', plan);
 
     db.transaction((tx) => {
       tx.executeSql(
@@ -183,7 +183,7 @@ export const insertPlan = plan => {
 
 export const updatePlan = plan => {
   return new Promise((resolve, reject) => {
-    console.log('updatePlan', plan);
+    // console.log('updatePlan', plan);
 
     db.transaction((tx) => {
       tx.executeSql(
@@ -206,7 +206,7 @@ export const updatePlan = plan => {
 export const deletePlan = planId => {
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
-      console.log('deletePlan: execute', `DELETE FROM ${plans} WHERE id=${planId};`);
+      // console.log('deletePlan: execute', `DELETE FROM ${plans} WHERE id=${planId};`);
 
       tx.executeSql(
         `DELETE FROM ${plans} WHERE id=${planId};`,
@@ -222,7 +222,7 @@ export const deletePlan = planId => {
   });
 };
 export const getAllPlans = () => {
-  console.log('getAllPlans');
+  // console.log('getAllPlans');
 
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
@@ -230,7 +230,7 @@ export const getAllPlans = () => {
         `SELECT * FROM ${plans};`,
         [],
         (_, result) => {
-          console.log('result', result["rows"]["_array"]);
+          // console.log('result', result["rows"]["_array"]);
           resolve(result.rows["_array"]);
         },
         (_, err) => {
@@ -244,7 +244,7 @@ export const getAllPlans = () => {
 
 export const insertMeal = meal => {
   return new Promise((resolve, reject) => {
-    console.log('insertMeal', meal);
+    // console.log('insertMeal', meal);
 
     db.transaction((tx) => {
       tx.executeSql(
@@ -263,7 +263,7 @@ export const insertMeal = meal => {
 };
 export const updateMeal = meal => {
   return new Promise((resolve, reject) => {
-    console.log('updateMeal', meal);
+    // console.log('updateMeal', meal);
 
     db.transaction((tx) => {
       tx.executeSql(
@@ -287,7 +287,7 @@ export const updateMeal = meal => {
 export const deleteMeal = mealId => {
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
-      console.log('deleteMeal: execute', `DELETE FROM ${meals} WHERE id=${mealId};`);
+      // console.log('deleteMeal: execute', `DELETE FROM ${meals} WHERE id=${mealId};`);
 
       tx.executeSql(
         `DELETE FROM ${meals} WHERE id=${mealId};`,
@@ -305,16 +305,16 @@ export const deleteMeal = mealId => {
 
 export const getAllMeals = () => {
   return new Promise((resolve, reject) => {
-    console.log('getAllMeals');
+    // console.log('getAllMeals');
 
     db.transaction((tx) => {
-      console.log('getAllMeals transaction started');
+      // console.log('getAllMeals transaction started');
 
       tx.executeSql(
         `SELECT * FROM ${meals};`,
         [],
         (_, result) => {
-          console.log('result', result["rows"]["_array"]);
+          // console.log('result', result["rows"]["_array"]);
           resolve(result.rows["_array"]);
         },
         (_, err) => {
@@ -325,15 +325,15 @@ export const getAllMeals = () => {
   });
 };
 
-export const insertNutrient = (mealId, nutrientDataId, amount) => {
+export const insertNutrient = nutrient => {
   return new Promise((resolve, reject) => {
     console.log(`INSERT INTO ${nutrients} (mealId, nutrientDataId, amount)
-      VALUES (?, ?, ?);`, [mealId, nutrientDataId, amount]);
+    VALUES(?, ?, ?); `, [nutrient.mealId, nutrient.nutrientDataId, nutrient.amount]);
     db.transaction((tx) => {
       tx.executeSql(
         `INSERT INTO ${nutrients} (mealId, nutrientDataId, amount)
-         VALUES (?, ?, ?);`,
-        [mealId, nutrientDataId, amount],
+         VALUES(?, ?, ?); `,
+        [nutrient.mealId, nutrient.nutrientDataId, nutrient.amount],
         (_, result) => {
           resolve(result)
         },
@@ -345,13 +345,13 @@ export const insertNutrient = (mealId, nutrientDataId, amount) => {
   });
 };
 // update nutrients set amount = 1000.0 where nutrientDataId=812;
-export const updateNutrientAmount = (mealId, nutrientDataId, amount) => {
+export const updateNutrient = nutrient => {
   return new Promise((resolve, reject) => {
-    console.log(`UPDATE ${nutrients} SET amount = ${amount} WHERE nutrientDataId=${nutrientDataId} AND mealId=${mealId};`);
+    // console.log(`UPDATE ${ nutrients } SET amount = ${ nutrient.amount } WHERE id = ${ nutrient.id }; `);
 
     db.transaction((tx) => {
       tx.executeSql(
-        `UPDATE ${nutrients} SET amount = ${amount} WHERE nutrientDataId=${nutrientDataId} AND mealId=${mealId};`,
+        `UPDATE ${nutrients} SET amount = ${nutrient.amount} WHERE id = ${nutrient.id}; `,
         [],
         (_, result) => {
           resolve(result)
@@ -363,13 +363,13 @@ export const updateNutrientAmount = (mealId, nutrientDataId, amount) => {
     })
   });
 };
-export const deleteNutrient = (mealId, nutrientId) => {
+export const deleteNutrient = nutrientId => {
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
-      console.log('deleteNutrient: execute', `DELETE FROM ${nutrients} WHERE id=${nutrientId};`);
+      // console.log('deleteNutrient: execute', `DELETE FROM ${ nutrients } WHERE id = ${ nutrientId }; `);
 
       tx.executeSql(
-        `DELETE FROM ${nutrients} WHERE id=${nutrientId};`,
+        `DELETE FROM ${nutrients} WHERE id = ${nutrientId}; `,
         [],
         (_, result) => {
           resolve(result)
@@ -385,10 +385,10 @@ export const getAllNutrients = () => {
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
-        `SELECT * FROM ${nutrients};`,
+        `SELECT * FROM ${nutrients}; `,
         [],
         (_, result) => {
-          console.log('result', result["rows"]["_array"]);
+          // // console.log('result', result["rows"]["_array"]);
           resolve(result.rows["_array"]);
         },
         (_, err) => {
@@ -398,16 +398,17 @@ export const getAllNutrients = () => {
     })
   });
 };
+
 export const getNutrientData = () => {
   return new Promise((resolve, reject) => {
-    console.log(`SELECT * FROM ${nutrientDataTable};`);
+    // console.log(`SELECT * FROM ${ nutrientDataTable }; `);
 
     db.transaction((tx) => {
       tx.executeSql(
-        `SELECT * FROM ${nutrientDataTable};`,
+        `SELECT * FROM ${nutrientDataTable}; `,
         [],
         (_, result) => {
-          console.log('result', result["rows"]["_array"].length);
+          // console.log('result', result["rows"]["_array"].length);
           resolve(result.rows["_array"]);
         },
         (_, err) => {
@@ -422,29 +423,29 @@ export const getNutrientData = () => {
 
 export const insertAllNutrientData = (allNutrientData) => {
   return new Promise((resolve, reject) => {
-    console.log('insertAllNutrientData START, write nutrientdata:', allNutrientData.length);
+    // console.log('insertAllNutrientData START, write nutrientdata:', allNutrientData.length);
     db.transaction((tx) => {
       const columnNames = allNutrientData[0].map((_, index) => 'column' + index);
       const questionMarks = allNutrientData[0].map(_ => '?');
-      // console.log('insertNutrientData', `INSERT INTO ${nutrientDataTable} ( ${columnNames} ) VALUES ( ${questionMarks} );`);
+      // // console.log('insertNutrientData', `INSERT INTO ${ nutrientDataTable } (${ columnNames } ) VALUES(${ questionMarks }); `);
       allNutrientData.forEach(nutrientData => {
         tx.executeSql(
-          `INSERT INTO ${nutrientDataTable} ( ${columnNames} ) VALUES ( ${questionMarks} );`,
+          `INSERT INTO ${nutrientDataTable} (${columnNames} ) VALUES(${questionMarks}); `,
           nutrientData,
           null,
           (_, err) => {
-            console.log('insertAllNutrientData FAILED');
+            // console.log('insertAllNutrientData FAILED');
             reject(err);
           }
         );
       });
     },
       (_, err) => {
-        console.log('insertAllNutrientData FAILED att end', err);
+        // console.log('insertAllNutrientData FAILED att end', err);
         reject(err);
       },
       (_, result) => {
-        console.log('insertAllNutrientData SUCCEEDED');
+        // console.log('insertAllNutrientData SUCCEEDED');
         resolve(result)
       }
     )
@@ -456,9 +457,9 @@ export const insertNutrientData = (nutrientData) => {
     db.transaction((tx) => {
       const columnNames = nutrientData.map((_, index) => 'column' + index);
       const questionMarks = nutrientData.map(_ => '?');
-      // console.log('insertNutrientData', `INSERT INTO ${nutrientDataTable} ( ${columnNames} ) VALUES ( ${questionMarks} );`);
+      // // console.log('insertNutrientData', `INSERT INTO ${ nutrientDataTable } (${ columnNames } ) VALUES(${ questionMarks }); `);
       tx.executeSql(
-        `INSERT INTO ${nutrientDataTable} ( ${columnNames} ) VALUES ( ${questionMarks} );`,
+        `INSERT INTO ${nutrientDataTable} (${columnNames} ) VALUES(${questionMarks}); `,
         nutrientData,
         (_, result) => {
           resolve(result)
@@ -474,10 +475,10 @@ export const getNutrientDataCount = () => {
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
-        `SELECT COUNT(*) AS nutrientDataCount FROM ${nutrientDataTable};`,
+        `SELECT COUNT(*) AS nutrientDataCount FROM ${nutrientDataTable}; `,
         null,
         (_, result) => {
-          console.log('getNutrientDataCount=', result.rows["_array"][0]["nutrientDataCount"]);
+          // console.log('getNutrientDataCount=', result.rows["_array"][0]["nutrientDataCount"]);
 
           resolve(result.rows["_array"][0]["nutrientDataCount"]);
         },
@@ -492,12 +493,12 @@ export const getNutrientDataCount = () => {
 
 // export const addMealToPlan = (planId, mealIds) => {
 //   mealIdsString = mealIds.join(',');
-//   console.log('addMealToPlan: mealIdsString:', mealIdsString);
+//   // console.log('addMealToPlan: mealIdsString:', mealIdsString);
 
 //   return new Promise((resolve, reject) => {
 //     db.transaction((tx) => {
 //       tx.executeSql(
-//         `UPDATE ${plans} 
+//         `UPDATE ${ plans }
 //          SET (mealIds)
 //          VALUES (?)
 //          WHERE planId=${planId};`,
@@ -534,7 +535,7 @@ export const readAllPlans = () => {
 
 export const insertMealAndAddItToPlan = (planId, name, description, mealIds) => {
   mealIdsString = mealIds.join(',');
-  console.log('insertPlan: mealIdsString:', mealIdsString);
+  // console.log('insertPlan: mealIdsString:', mealIdsString);
 
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
@@ -543,8 +544,8 @@ export const insertMealAndAddItToPlan = (planId, name, description, mealIds) => 
          VALUES (?, ?, ?);`,
         [name, description, ""],
         (_, result) => {
-          console.log('insertMealAndAddItToPlan: INSERT INTO ${meals} (name, description)', result);
-          console.log('insertMealAndAddItToPlan: dbResult', result, result.insertId.toString());
+          // console.log('insertMealAndAddItToPlan: INSERT INTO ${meals} (name, description)', result);
+          // console.log('insertMealAndAddItToPlan: dbResult', result, result.insertId.toString());
           const newMealId = result.insertId.toString();
           const newMealIds = mealIds.concat(newMealId);
           tx.executeSql(

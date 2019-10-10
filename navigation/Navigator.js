@@ -16,9 +16,9 @@ const AppNavigator = createStackNavigator(
     NewPlan: NewPlanScreen,
     Plan: PlanScreen,
     NewMeal: NewMealScreen,
-    // Meal: MealScreen,
-    // SelectNutrient: SelectNutrientScreen,
-    // Micronutrient: MicronutrientScreen,
+    Meal: MealScreen,
+    SelectNutrient: SelectNutrientScreen,
+    Micronutrient: MicronutrientScreen,
   },
   {
     defaultNavigationOptions: {

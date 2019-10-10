@@ -17,7 +17,7 @@ export const addNutrientInfo = nutrientInfo => {
   return { type: ADD_NUTRIENT_INFO, nutrientInfo }
 };
 
-export const readNutrientDataFromDatabase = () => {
+export const readNutrientDataFromDb = () => {
   return async dispatch => {
     const nutrientsInDb = await db.getNutrientData();
     const nutrientsData = nutrientsInDb.map(nutrientInDb => Object.values(nutrientInDb).slice(1));

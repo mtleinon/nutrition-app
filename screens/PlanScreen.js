@@ -28,9 +28,9 @@ const Meal = ({ meal, editMealHandler, deleteMealHandler, navigateToMealHandler 
             name="md-arrow-round-forward" size={24} color="blue" />
 
         </View>
-        {/* <View style={styles.micronutrientRow}>
+        <View style={styles.micronutrientRow}>
           <MicronutrientView mealId={meal.id} summary={true} oneRow={true} />
-        </View> */}
+        </View>
       </View>
     </TouchableHighlight>
   );
@@ -58,9 +58,9 @@ const PlanScreen = props => {
   return (
     <View style={styles.screen}>
       <HeadingText>{plan.name}</HeadingText>
-      {/* <View style={styles.micronutrientRow}>
+      <View style={styles.micronutrientRow}>
         <MicronutrientView planId={plan.id} summary={true} oneRow={true} />
-      </View> */}
+      </View>
       <FlatList
         data={planMeals}
         renderItem={item => <Meal meal={item.item}
@@ -87,7 +87,7 @@ PlanScreen.navigationOptions = navData => {
         <Item title="Info"
           iconName='md-information-circle'
           onPress={() => {
-            navData.navigation.navigate('Micronutrient', { planId, summary: true });
+            navData.navigation.navigate('Micronutrient', { planId });
           }} />
       </HeaderButtons>
     )

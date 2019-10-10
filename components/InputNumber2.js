@@ -4,7 +4,7 @@ import Colors from '../constants/Colors';
 
 const InputNumber2 = props => {
   const [value, setValue] = useState(props.value);
-  let inputRef;
+  // let inputRef;
   const setValueHandler = (text) => {
     const number = parseFloat(text);
     //TODO: must , be handled too?
@@ -28,9 +28,7 @@ const InputNumber2 = props => {
       <TextInput
         keyboardType="number-pad"
         style={styles.inputField}
-        // onBlur={updateValueHandler}
         onChangeText={setValueHandler} value={value.toString()}
-        // autofocus={props.autofocus}
         autofocus={true}
       />
     </View>
@@ -38,18 +36,21 @@ const InputNumber2 = props => {
 }
 
 const styles = StyleSheet.create({
-  label: {
+  // label: {
+  //   color: Colors.primary,
+  //   fontSize: 14,
+  //   fontWeight: 'bold',
+  //   marginTop: 5,
+  // },
+  inputField: {
     color: Colors.primary,
     fontSize: 14,
     fontWeight: 'bold',
-    marginTop: 5,
-  },
-  inputField: {
     borderBottomWidth: 1,
     borderBottomColor: Colors.primary,
     // backgroundColor: Colors.primary,
     paddingHorizontal: 6,
-    paddingVertical: 5,
+    paddingVertical: 0,
   },
 
 })

@@ -19,52 +19,88 @@ const decimals = value => {
   return
 }
 
-const Micronutrient = ({ value, heading }) => {
+const getRecommendation = header => {
+  // console.log('getRecommendation - header:', header);
+
+  if (header.dri) {
+    if (header.dri.rda) {
+      if (header.dri.rda.males) {
+        return header.dri.rda.males;
+      }
+      return header.dri.rda;
+    }
+    if (header.dri.ai)
+      return header.dri.ai;
+  }
+  return undefined;
+}
+
+const Micronutrient = ({ value, heading, unit, recommendation }) => {
   // console.log('Micronutrient:', heading, value);
   return (
     <TouchableHighlight style={styles.item} onPress={() => { }} >
       <View style={styles.microNutrient}>
         <Text numberOfLines={2} style={styles.microNutrientName}>{heading}</Text>
         <Text style={styles.microNutrientValue}>{value.toFixed(decimals(value))}</Text>
+        <Text style={styles.microNutrientUnit}>{unit}</Text>
+        <Text style={styles.microNutrientRecommendation}>{recommendation ? (value / recommendation * 100).toFixed(0) + '%' : ''}</Text>
       </View>
     </TouchableHighlight>
   )
 }
 
 const summaryLength = 6;
-const MicronutrientView = ({ mealId, planId, nutrientData, summary, oneRow }) => {
+const MicronutrientView = ({ nutrientId, mealId, planId, nutrientData, summary, oneRow }) => {
   const meals = useSelector(state => state.meals.meals);
   const plans = useSelector(state => state.plans.plans);
+  const nutrients = useSelector(state => state.nutrients.nutrients);
   const nutrientsData = useSelector(state => state.nutrientsData.nutrientsData);
 
+  let dataToShow;
   if (nutrientData && summary) {
-    nutrientData = nutrientData.slice(0, summaryLength);
+    dataToShow = nutrientData.slice(0, summaryLength);
   }
+  if (nutrientId) {
+    const singleNutrient = nutrients.filter(nutrient => nutrient.id === nutrientId);
+    const nutrientWithData = singleNutrient.map(nutrient => (
+      {
+        amount: nutrient.amount,
+        nutrientData: nutrientsData.find(nutrientData => nutrientData[0] === nutrient.nutrientDataId)
+      })
+    );
+    dataToShow = calculateMealMicronutrientData(nutrientWithData, summary);
+    dataToShow[1] = nutrientWithData[0].nutrientData[1];
+  }
+
   if (mealId) {
-    meal = meals.find(meal => meal.id == mealId);
-    if (meal && meal.nutrients && meal.nutrients.length > 0) {
-      const mealNutrients = nutrientsData.filter(
-        data => meal.nutrients.some(mealNutrient => mealNutrient.nutrientDataId === data[0]));
-      nutrientData = calculateMealMicronutrientData(meal, mealNutrients, summary);
-      nutrientData[1] = meal.name;
+    const mealNutrients = nutrients.filter(nutrient => nutrient.mealId == mealId);
+    if (mealNutrients.length > 0) {
+      const mealNutrientsData = mealNutrients.map(nutrient => (
+        {
+          amount: nutrient.amount,
+          nutrientData: nutrientsData.find(nutrientData => nutrientData[0] === nutrient.nutrientDataId)
+        })
+      );
+      dataToShow = calculateMealMicronutrientData(mealNutrientsData, summary);
+      dataToShow[1] = meals.find(meal => meal.id === mealId).name;
     }
   }
+
   if (planId) {
-    const plan = plans.find(plan => plan.id == planId)
-    const planMeals = meals.filter(
-      meal => plan.mealIds.some(
-        mealId => mealId === meal.id));
-    const pmd = planMeals.map(meal => {
-      const mealNutrients = nutrientsData.filter(
-        data => meal.nutrients.some(mealNutrient => mealNutrient.nutrientDataId === data[0]));
-      return calculateMealMicronutrientData(meal, mealNutrients, summary);
-    }).filter(mealData => mealData !== undefined && mealData[0] != undefined);
-    if (pmd.length > 0) {
-      nutrientData = pmd.filter(mealData => mealData !== undefined).reduce((acc, curr) => acc.map((r, i) => r + curr[i]), Array(pmd[0].length).fill(0))
-      nutrientData[1] = plan.name;
+    const planMeals = meals.filter(meal => meal.planId === planId);
+    const planNutrients = nutrients.filter(nutrient => planMeals.some(meal => meal.id === nutrient.mealId));
+    if (planNutrients.length > 0) {
+      const planNutrientsData = planNutrients.map(nutrient => (
+        {
+          amount: nutrient.amount,
+          nutrientData: nutrientsData.find(nutrientData => nutrientData[0] === nutrient.nutrientDataId)
+        })
+      );
+      dataToShow = calculateMealMicronutrientData(planNutrientsData, summary);
+      dataToShow[1] = plans.find(plan => plan.id === planId).name;
     }
   }
-  if (!nutrientData) {
+  if (!dataToShow) {
     return <View>
       <Text>No micronutrient data</Text>
     </View>
@@ -72,20 +108,24 @@ const MicronutrientView = ({ mealId, planId, nutrientData, summary, oneRow }) =>
   if (oneRow) {
     return (
       <View style={styles.summaryRow}>
-        <SmallText style={styles.smallText}>energ: {nutrientData[2].toFixed(0)}cal</SmallText>
-        <SmallText style={styles.smallText}>carb: {nutrientData[3].toFixed(0)}g</SmallText>
-        <SmallText style={styles.smallText}>fet: {nutrientData[4].toFixed(0)}g</SmallText>
-        <SmallText style={styles.smallText}>prot: {nutrientData[5].toFixed(0)}g</SmallText>
+        <SmallText style={styles.smallText}>energ: {dataToShow[2].toFixed(0)}cal</SmallText>
+        <SmallText style={styles.smallText}>carb: {dataToShow[3].toFixed(0)}g</SmallText>
+        <SmallText style={styles.smallText}>fet: {dataToShow[4].toFixed(0)}g</SmallText>
+        <SmallText style={styles.smallText}>prot: {dataToShow[5].toFixed(0)}g</SmallText>
       </View>
     );
   }
   return (
     <View style={styles.screen}>
-      {/* <HeadingText>{nutrientData[1]}</HeadingText> */}
+      {/* <HeadingText>{dataToShow[1]}</HeadingText> */}
       <FlatList
-        data={nutrientData.slice(2)}
+        data={dataToShow.slice(2)}
         renderItem={item => {
-          return <Micronutrient value={item.item} heading={nutrientHeading[item.index + 2].name.fi} />
+          return <Micronutrient
+            value={item.item}
+            heading={nutrientHeading[item.index + 2].name.fiShort}
+            unit={nutrientHeading[item.index + 2].unit}
+            recommendation={getRecommendation(nutrientHeading[item.index + 2])} />
         }}
         keyExtractor={(_, index) => index.toString()}
       />
@@ -112,10 +152,21 @@ const styles = StyleSheet.create({
     borderBottomColor: Colors.grayBorder,
   },
   microNutrientName: {
-    width: '70%'
+    width: '50%'
   },
   microNutrientValue: {
-    paddingRight: 10
+    paddingRight: 3,
+    textAlign: 'right',
+    width: '20%'
+  },
+  microNutrientRecommendation: {
+    paddingRight: 10,
+    textAlign: 'right',
+    width: '20%'
+  },
+  microNutrientUnit: {
+    width: '10%',
+    textAlign: 'left'
   }
 })
 export default MicronutrientView;

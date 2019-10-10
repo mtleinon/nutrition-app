@@ -1,4 +1,4 @@
-import {ADD_PLAN, UPDATE_PLAN, DELETE_PLAN, SET_ALL_PLANS} from '../actions/plans';
+import { ADD_PLAN, UPDATE_PLAN, DELETE_PLAN, SET_ALL_PLANS } from '../actions/plans';
 import Plan from '../../models/Plan';
 // import testPlansData from '../../data/testPlansData';
 
@@ -7,7 +7,7 @@ const initialState = {
 };
 
 export default (state = initialState, action) => {
-  console.log('action', action);
+  // console.log('action', action);
 
   switch (action.type) {
     case ADD_PLAN:
@@ -17,7 +17,7 @@ export default (state = initialState, action) => {
     case DELETE_PLAN:
       return {
         plans: state.plans.filter(plan => plan.id !== action.planId)
-    }
+      }
     case UPDATE_PLAN:
       return {
         plans: state.plans.map(plan => {
@@ -26,7 +26,7 @@ export default (state = initialState, action) => {
           }
           return plan;
         })
-    }
+      }
     case SET_ALL_PLANS:
       return {
         plans: action.plans

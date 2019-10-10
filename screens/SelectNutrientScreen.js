@@ -3,11 +3,12 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Alert, TouchableHighlight, TouchableOpacity, FlatList, TextInput, View, Text, StyleSheet, Platform, KeyboardAvoidingView, ScrollView } from 'react-native'
 import { Ionicons } from '@expo/vector-icons';
 import Colors from '../constants/Colors';
-import * as mealActions from '../store/actions/meals';
+import * as nutrientActions from '../store/actions/nutrients';
 import InputNumber from '../components/InputNumber';
 import InputText from '../components/InputText';
+import Nutrient from '../models/Nutrient';
 
-const Nutrient = ({ item, selectedNameHandler, showMicronutrientHandler }) => {
+const NutrientDataView = ({ item, selectedNameHandler, showMicronutrientHandler }) => {
   return (
     <TouchableHighlight onPress={() => selectedNameHandler(item.item[1], item.item[0])} >
       <View style={styles.selectNutrition}>
@@ -27,8 +28,8 @@ const filterNutrient = (search, nutrientName) => {
 const SelectNutritionScreen = props => {
   const mealId = props.navigation.getParam('mealId');
   const nutrientsData = useSelector(state => state.nutrientsData.nutrientsData);
-  const [name, setName] = useState('');
-  const [amount, setAmount] = useState('');
+  // const [name, setName] = useState('');
+  // const [amount, setAmount] = useState('');
   const [selectedName, setSelectedName] = useState('');
   const [selectedId, setSelectedId] = useState('');
   const dispatch = useDispatch();
@@ -43,15 +44,15 @@ const SelectNutritionScreen = props => {
   }
 
   const addNutrientHandler = useCallback(() => {
-    if (!selectedName) {
+    if (!selectedId) {
       Alert.alert('Please select nutrient',
         'Please select nutrient by touching a nutrient in the list',
         [{ text: 'OK' }]);
       return;
     }
-    dispatch(mealActions.addNutrientToMeal(mealId, selectedId, 0));
+    dispatch(nutrientActions.storeNutrientToDb(new Nutrient(null, mealId, selectedId, 0)));
     props.navigation.goBack();
-  }, [selectedName, amount]);
+  }, [selectedId]);
 
   useEffect(() => {
     props.navigation.setParams({ addNutrientHandler })
@@ -66,7 +67,7 @@ const SelectNutritionScreen = props => {
       <Text style={styles.label}>Select nutrition:</Text>
       <FlatList
         data={nutrientsData.filter(item => filterNutrient(selectedName, item[1]))}
-        renderItem={item => <Nutrient
+        renderItem={item => <NutrientDataView
           item={item}
           selectedNameHandler={selectedNameHandler}
           showMicronutrientHandler={showMicronutrientHandler}
