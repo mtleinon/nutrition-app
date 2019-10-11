@@ -100,6 +100,11 @@ MealScreen.navigationOptions = navData => {
     headerTitle: 'Meal',
     headerRight: (
       <HeaderButtons HeaderButtonComponent={HeaderButton}>
+        <Item title="Select nutrient with barcode"
+          iconName={Platform.OS === 'android' ? 'md-barcode' : 'ios-barcode'}
+          onPress={() => {
+            navData.navigation.navigate('SelectNutrientWithBarcode', { mealId });
+          }} />
         <Item title="Select nutrient"
           iconName={Platform.OS === 'android' ? 'md-add' : 'ios-add'}
           onPress={() => {

@@ -47,6 +47,7 @@ const InitializeApp = ({ setAppInitialized }) => {
   // useEffect(() => { testDb() }, [dispatch]);
 
   const readNutritionFile = async () => {
+    console.log('readNutritionFile');
     const nutrientDataCount = await db.getNutrientDataCount();
     if (nutrientDataCount > 0) {
       console.log('Nutrition data is in database, read and set it to reducer:', nutrientDataCount)

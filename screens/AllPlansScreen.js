@@ -10,6 +10,7 @@ import Colors from '../constants/Colors';
 import HeaderButton from '../components/HeaderButton';
 import MicronutrientView from '../components/MicronutrientView';
 import NameText from '../components/NameText';
+import SmallText from '../components/SmallText';
 
 const Plan = ({ plan, deletePlanHandler, editPlanHandler, navigateToPlanHandler }) => {
   // console.log('Plan', plan);
@@ -26,10 +27,11 @@ const Plan = ({ plan, deletePlanHandler, editPlanHandler, navigateToPlanHandler 
           <Ionicons
             style={styles.icon}
             onPress={() => editPlanHandler(plan.id)}
-            name="md-arrow-round-forward" size={24} color="blue" />
+            name="md-create" size={24} color="green" />
         </View>
+        <SmallText numberOfLines={2} style={styles.planDescription}>{plan.description}</SmallText>
         <View style={styles.micronutrientRow}>
-          <MicronutrientView planId={plan.id} summary={true} oneRow={true} />
+          <MicronutrientView planId={plan.id} summary={true} noDataText="Click to add meals" />
         </View>
       </View>
     </TouchableHighlight>
@@ -57,7 +59,7 @@ const AllPlansScreen = props => {
 
   return (
     <View style={styles.screen}>
-      <HeadingText>All plans</HeadingText>
+      {/* <HeadingText>All plans</HeadingText> */}
       <FlatList
         data={plans}
         renderItem={item => <Plan plan={item.item}
@@ -80,6 +82,11 @@ AllPlansScreen.navigationOptions = navData => {
           onPress={() => {
             navData.navigation.navigate('NewPlan');
           }} />
+        <Item title="Configure"
+          iconName={Platform.OS === 'android' ? 'md-settings' : 'ios-settings'}
+          onPress={() => {
+            navData.navigation.navigate('Configure');
+          }} />
       </HeaderButtons>
     )
   }
@@ -100,6 +107,9 @@ const styles = StyleSheet.create({
   },
   mealName: {
     width: '70%'
+  },
+  planDescription: {
+    padding: 20
   },
   icons: {
     paddingRight: 10

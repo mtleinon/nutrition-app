@@ -7,6 +7,7 @@ import * as mealActions from '../store/actions/meals';
 import { Ionicons } from '@expo/vector-icons';
 
 import HeadingText from '../components/HeadingText';
+import Heading2Text from '../components/Heading2Text';
 import Colors from '../constants/Colors';
 import Styles from '../constants/Styles';
 import HeaderButton from '../components/HeaderButton';
@@ -17,7 +18,7 @@ const Meal = ({ meal, editMealHandler, deleteMealHandler, navigateToMealHandler 
     <TouchableHighlight onPress={() => navigateToMealHandler(meal.id)} >
       <View style={[styles.meal, Styles.elevated]}>
         <View style={styles.nameRow}>
-          <Text numberOfLines={2} style={styles.mealName}>{meal.name}</Text>
+          <Heading2Text numberOfLines={2} style={styles.mealName}>{meal.name}</Heading2Text>
           <Ionicons
             style={styles.icon}
             onPress={() => deleteMealHandler(meal.id)}
@@ -25,10 +26,10 @@ const Meal = ({ meal, editMealHandler, deleteMealHandler, navigateToMealHandler 
           <Ionicons
             style={styles.icon}
             onPress={() => editMealHandler(meal.id)}
-            name="md-arrow-round-forward" size={24} color="blue" />
+            name="md-create" size={24} color="green" />
 
         </View>
-        <View style={styles.micronutrientRow}>
+        <View style={styles.mealMicronutrientRow}>
           <MicronutrientView mealId={meal.id} summary={true} oneRow={true} />
         </View>
       </View>
@@ -58,7 +59,7 @@ const PlanScreen = props => {
   return (
     <View style={styles.screen}>
       <HeadingText>{plan.name}</HeadingText>
-      <View style={styles.micronutrientRow}>
+      <View style={styles.planMicronutrientRow}>
         <MicronutrientView planId={plan.id} summary={true} oneRow={true} />
       </View>
       <FlatList
@@ -111,6 +112,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    margin: 5
   },
   mealName: {
     width: '70%'
@@ -118,9 +120,16 @@ const styles = StyleSheet.create({
   icons: {
     paddingRight: 10
   },
-  micronutrientRow: {
+  mealMicronutrientRow: {
+    marginLeft: 10,
+    marginRight: 30,
+    marginVertical: 5
+  },
+  planMicronutrientRow: {
     marginLeft: 10,
     marginRight: 40,
+    marginTop: 3,
+    marginBottom: 7
   }
 })
 export default PlanScreen;

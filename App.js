@@ -8,19 +8,21 @@ import nutrientsDataReducer from './store/reducers/nutrientsData';
 import mealsReducer from './store/reducers/meals';
 import plansReducer from './store/reducers/plans';
 import nutrientsReducer from './store/reducers/nutrients';
+import barcodesReducer from './store/reducers/barcodes';
 // import SelectNutritionScreen from './screens/SelectNutritionScreen';
 // import MicronutrientScreen from './screens/MicronutrientScreen';
 
 import { initializeDatabase } from './helperFunctions/sqlite';
-// console.log('APP STARTED');
+console.log('APP STARTED');
 
 const rootReducer = combineReducers({
   nutrientsData: nutrientsDataReducer,
   nutrients: nutrientsReducer,
+  barcodes: barcodesReducer,
   plans: plansReducer,
   meals: mealsReducer
 });
-// console.log('APP STARTED: rootReducer made');
+console.log('APP STARTED: rootReducer made');
 
 initializeDatabase().then(() => {
   console.log('Sqlite database initialization succeeded');

@@ -4,16 +4,91 @@ const dbName = 'nutrition-app.db';
 const plans = 'plans';
 const meals = 'meals';
 const nutrients = 'nutrients';
+const barcodes = 'barcodes';
 const nutrientDataTable = 'nutrientsData';
 
 const db = SQLite.openDatabase(dbName);
 
-export const initializeDatabase = () => {
-  // console.log('initializeDatabase: start');
+export const dropAllTablesInDatabase = () => {
+  console.log('dropAllTablesInDatabase: start');
 
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
-      // console.log('transaction');
+
+      tx.executeSql(
+        `DROP TABLE ${plans};`,
+        [],
+        () => {
+          console.log(`DROP TABLE ${plans}; succeeded`);
+        },
+        (err) => {
+          // console.log('plans transaction step failed', err)
+          reject(err);
+        }
+      );
+      tx.executeSql(
+        `DROP TABLE ${nutrients};`,
+        [],
+        () => {
+          console.log(`DROP TABLE ${nutrients}; succeeded`);
+        },
+        (err) => {
+          // console.log('plans transaction step failed', err)
+          reject(err);
+        }
+      );
+      tx.executeSql(
+        `DROP TABLE ${barcodes};`,
+        [],
+        () => {
+          console.log(`DROP TABLE ${barcodes}; succeeded`);
+        },
+        (err) => {
+          // console.log('plans transaction step failed', err)
+          reject(err);
+        }
+      );
+      tx.executeSql(
+        `DROP TABLE ${meals};`,
+        [],
+        () => {
+          console.log(`DROP TABLE ${meals}; succeeded`);
+        },
+        (err) => {
+          // console.log('plans transaction step failed', err)
+          reject(err);
+        }
+      );
+      tx.executeSql(
+        `DROP TABLE ${nutrientDataTable};`,
+        [],
+        () => {
+          console.log(`DROP TABLE ${nutrientDataTable}; succeeded`);
+        },
+        (err) => {
+          // console.log('plans transaction step failed', err)
+          reject(err);
+        }
+      );
+
+      // console.log('all transaction steps started')
+    },
+      (err) => {
+        // console.log('transaction failed', err)
+        reject(err);
+      },
+      (result) => {
+        // console.log('transaction succeeded:', result);
+        resolve()
+      });
+  });
+};
+
+export const initializeDatabase = () => {
+  console.log('initializeDatabase: start');
+
+  return new Promise((resolve, reject) => {
+    db.transaction((tx) => {
 
       tx.executeSql(
         `CREATE TABLE IF NOT EXISTS ${plans} (
@@ -73,6 +148,38 @@ export const initializeDatabase = () => {
         },
         (_, err) => {
           // console.log('nutrients step in transaction failed', err)
+
+          reject(err);
+        }
+      );
+      console.log(`CREATE TABLE IF NOT EXISTS ${barcodes}
+      (
+        id INTEGER PRIMARY KEY,
+        barcode INTEGER NOT NULL,
+        nutrientDataId INTEGER NOT NULL,
+        FOREIGN KEY (nutrientDataId)
+          REFERENCES nutrientData (nutrientDataId)
+            ON DELETE CASCADE
+            ON UPDATE NO ACTION
+      );`)
+
+      tx.executeSql(
+        `CREATE TABLE IF NOT EXISTS ${barcodes}
+        (
+          id INTEGER PRIMARY KEY,
+          barcode INTEGER NOT NULL,
+          nutrientDataId INTEGER NOT NULL,
+          FOREIGN KEY (nutrientDataId)
+            REFERENCES nutrientData (nutrientDataId)
+              ON DELETE CASCADE
+              ON UPDATE NO ACTION
+        );`,
+        [],
+        () => {
+          console.log('nutrients step in transaction succeeded:' + `CREATE TABLE IF NOT EXISTS ${barcodes}`)
+        },
+        (_, err) => {
+          console.log('nutrients step in transaction failed', err)
 
           reject(err);
         }
@@ -160,6 +267,8 @@ export const initializeDatabase = () => {
       });
   });
 };
+
+
 
 export const insertPlan = plan => {
   return new Promise((resolve, reject) => {
@@ -386,6 +495,80 @@ export const getAllNutrients = () => {
     db.transaction((tx) => {
       tx.executeSql(
         `SELECT * FROM ${nutrients}; `,
+        [],
+        (_, result) => {
+          // // console.log('result', result["rows"]["_array"]);
+          resolve(result.rows["_array"]);
+        },
+        (_, err) => {
+          reject(err);
+        }
+      )
+    })
+  });
+};
+
+export const insertBarcode = barcode => {
+  return new Promise((resolve, reject) => {
+    console.log(`INSERT INTO ${barcodes} (barcode, nutrientDataId)
+    VALUES(?, ?, ?); `, [barcode.barcode, barcode.nutrientDataId]);
+    db.transaction((tx) => {
+      tx.executeSql(
+        `INSERT INTO ${barcodes} (barcode, nutrientDataId)
+         VALUES(?, ?); `,
+        [barcode.barcode, barcode.nutrientDataId],
+        (_, result) => {
+          resolve(result)
+        },
+        (_, err) => {
+          reject(err);
+        }
+      )
+    })
+  });
+};
+// update barcodes set amount = 1000.0 where barcodeDataId=812;
+export const updateBarcode = barcode => {
+  return new Promise((resolve, reject) => {
+    // console.log(`UPDATE ${ barcodes } SET amount = ${ barcode.amount } WHERE id = ${ barcode.id }; `);
+
+    db.transaction((tx) => {
+      tx.executeSql(
+        `UPDATE ${barcodes} SET barcode = ${barcode.barcode} nutrientDataId = ${barcode.nutrientDataId} WHERE id = ${barcode.id}; `,
+        [],
+        (_, result) => {
+          resolve(result)
+        },
+        (_, err) => {
+          reject(err);
+        }
+      )
+    })
+  });
+};
+export const deleteBarcode = barcodeId => {
+  return new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      // console.log('deleteBarcode: execute', `DELETE FROM ${ barcodes } WHERE id = ${ barcodeId }; `);
+
+      tx.executeSql(
+        `DELETE FROM ${barcodes} WHERE id = ${barcodeId}; `,
+        [],
+        (_, result) => {
+          resolve(result)
+        },
+        (_, err) => {
+          reject(err);
+        }
+      )
+    })
+  });
+};
+export const getAllBarcodes = () => {
+  return new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        `SELECT * FROM ${barcodes}; `,
         [],
         (_, result) => {
           // // console.log('result', result["rows"]["_array"]);

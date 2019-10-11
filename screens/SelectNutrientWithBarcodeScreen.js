@@ -1,14 +1,17 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux';
-import { Alert, TouchableHighlight, TouchableOpacity, FlatList, TextInput, View, Text, StyleSheet, Platform, KeyboardAvoidingView, ScrollView } from 'react-native'
+import { Button, Alert, TouchableHighlight, TouchableOpacity, FlatList, TextInput, View, Text, StyleSheet, Platform, KeyboardAvoidingView, ScrollView } from 'react-native'
 import { Ionicons } from '@expo/vector-icons';
 import Colors from '../constants/Colors';
 import * as nutrientActions from '../store/actions/nutrients';
-import * as barcodeActions from '../store/actions/barcodes';
 import InputNumber from '../components/InputNumber';
 import InputText from '../components/InputText';
 import Nutrient from '../models/Nutrient';
-import Barcode from '../models/Barcode';
+
+import Constants from 'expo-constants';
+import * as Permissions from 'expo-permissions';
+import { BarCodeScanner } from 'expo-barcode-scanner';
+
 
 const NutrientDataView = ({ item, selectedNameHandler, showMicronutrientHandler }) => {
   return (
@@ -27,15 +30,33 @@ const filterNutrient = (search, nutrientName) => {
   return search.toLowerCase().split(' ').every(part => nutrientName.toLowerCase().includes(part));
 }
 
-const SelectNutritionScreen = props => {
+
+const SelectNutrientWithBarcodeScreen = props => {
   const mealId = props.navigation.getParam('mealId');
-  const barcode = props.navigation.getParam('barcode');
   const nutrientsData = useSelector(state => state.nutrientsData.nutrientsData);
+  const barcodes = useSelector(state => state.barcodes.barcodes);
   // const [name, setName] = useState('');
   // const [amount, setAmount] = useState('');
   const [selectedName, setSelectedName] = useState('');
   const [selectedId, setSelectedId] = useState('');
+  const [selectedCode, setSelectedCode] = useState('');
+
+  const [hasCameraPermission, setHasCameraPermission] = useState(null);
+  const [scanned, setScanned] = useState(false);
+
   const dispatch = useDispatch();
+
+  const askCameraPermission = async () => {
+    const status = await Permissions.askAsync(Permissions.CAMERA);
+    console.log('askCameraPermission', status);
+    setHasCameraPermission(true);
+    // setHasCameraPermission(status === 'granted');
+  }
+
+  useEffect(() => {
+    console.log('askCameraPermission');
+    askCameraPermission();
+  }, []);
 
   const showMicronutrientHandler = (nutrient) => {
     props.navigation.navigate('Micronutrient', { nutrientData: nutrient });
@@ -47,56 +68,86 @@ const SelectNutritionScreen = props => {
   }
 
   const addNutrientHandler = useCallback(() => {
-    if (!selectedId) {
-      Alert.alert('Please select nutrient',
-        'Please select nutrient by touching a nutrient in the list',
+    if (!selectedCode) {
+      Alert.alert('Please read barcode first',
+        'Please use phones camera to read barcode',
         [{ text: 'OK' }]);
       return;
     }
-    if (mealId) {
-      dispatch(nutrientActions.storeNutrientToDb(new Nutrient(null, mealId, selectedId, 0)));
-    }
+    barcode = barcodes.find(barcode => barcode.barcode === selectedCode);
     if (barcode) {
-      dispatch(barcodeActions.storeBarcodeToDb(new Barcode(null, barcode, selectedId)));
-      props.navigation.navigate('Meal');
-      return;
+      dispatch(nutrientActions.storeNutrientToDb(new Nutrient(null, mealId, barcode.nutrientDataId, 0)));
+      props.navigation.goBack();
     }
-    props.navigation.goBack();
-  }, [selectedId]);
+    else {
+      props.navigation.navigate('SelectNutrient', { barcode: selectedCode, mealId });
+      //props.navigation.goBack();
+    }
+  }, [selectedCode]);
 
   useEffect(() => {
     props.navigation.setParams({ addNutrientHandler })
   }, [addNutrientHandler]);
 
+  if (hasCameraPermission === null) {
+    return <Text>Requesting for camera permission</Text>;
+  }
+  if (hasCameraPermission === false) {
+    return <Text>No access to camera</Text>;
+  }
+
+  const handleBarCodeScanned = ({ type, data }) => {
+    setScanned(true);
+    setSelectedCode(data);
+    alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+  };
+
   return (
-    <View style={styles.screen}>
-      <InputText
-        label="Search nutrition:"
-        onChangeText={setSelectedName} value={selectedName}
+    <View
+      style={{
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'flex-end',
+      }}>
+      <BarCodeScanner
+        onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+        style={StyleSheet.absoluteFillObject}
       />
-      <Text style={styles.label}>Select nutrition:</Text>
-      <FlatList
-        data={nutrientsData.filter(item => filterNutrient(selectedName, item[1]))}
-        renderItem={item => <NutrientDataView
-          item={item}
-          selectedNameHandler={selectedNameHandler}
-          showMicronutrientHandler={showMicronutrientHandler}
-        />}
-        keyExtractor={item => item[0].toString()}
-      />
+
+      {scanned && (
+        <Button title={'Tap to Scan Again'} onPress={() => setScanned(false)} />
+      )}
     </View>
-  )
+  );
+
+
+  // return (
+  //   <View style={styles.screen}>
+  //     <InputText
+  //       label="Search nutrition:"
+  //       onChangeText={setSelectedName} value={selectedName}
+  //     />
+  //     <Text style={styles.label}>Select nutrition:</Text>
+  //     <FlatList
+  //       data={nutrientsData.filter(item => filterNutrient(selectedName, item[1]))}
+  //       renderItem={item => <NutrientDataView
+  //         item={item}
+  //         selectedNameHandler={selectedNameHandler}
+  //         showMicronutrientHandler={showMicronutrientHandler}
+  //       />}
+  //       keyExtractor={item => item[0].toString()}
+  //     />
+  //   </View>
+  // )
 }
 
-SelectNutritionScreen.navigationOptions = navData => {
+SelectNutrientWithBarcodeScreen.navigationOptions = navData => {
   const addNutrientHandler = navData.navigation.getParam('addNutrientHandler');
-  const mealId = navData.navigation.getParam('mealId');
-  const barcode = navData.navigation.getParam('barcode');
 
   return {
     headerTitle: (
       <TouchableOpacity style={styles.header} onPress={addNutrientHandler} >
-        <Text style={styles.headerText}>{barcode ? 'Add barcode' : 'Add nutrition'}</Text>
+        <Text style={styles.headerText}>Use barcode</Text>
       </TouchableOpacity>)
   }
 }
@@ -156,4 +207,4 @@ const styles = StyleSheet.create({
     color: Platform.OS === 'android' ? 'white' : Colors.primary,
   }
 });
-export default SelectNutritionScreen;
+export default SelectNutrientWithBarcodeScreen;
