@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux';
-import { TouchableHighlight, FlatList, View, Text, StyleSheet, Platform } from 'react-native'
+import { Button, TouchableHighlight, FlatList, View, Text, StyleSheet, Platform } from 'react-native'
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import * as mealActions from '../store/actions/meals';
+import * as nutrientActions from '../store/actions/nutrients';
 
 import { Ionicons } from '@expo/vector-icons';
 
@@ -49,6 +50,7 @@ const PlanScreen = props => {
   }
 
   const deleteMealHandler = mealId => {
+    dispatch(nutrientActions.deleteNutrientsOfMealsFromDb([mealId]));
     dispatch(mealActions.deleteMealFromDb(mealId));
   }
   const editMealHandler = mealId => {
@@ -69,6 +71,8 @@ const PlanScreen = props => {
           editMealHandler={editMealHandler}
           navigateToMealHandler={navigateToMealHandler} />}
         keyExtractor={item => item.id.toString()} />
+      <Button title='Add new meal' onPress={() => props.navigation.navigate('NewMeal', { planId })} />
+
     </View>
   )
 }

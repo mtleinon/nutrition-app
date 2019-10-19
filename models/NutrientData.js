@@ -3,7 +3,7 @@ export const NAME_I = 1;
 class NutrientData {
   constructor(id, nutrientData) {
     this.id = id;
-    this.nutrientDataArray;
+    this.nutrientData = nutrientData;
   }
 }
 export default Nutrient

@@ -1,16 +1,12 @@
 import {
   SET_ALL_MEALS,
-  // ADD_NUTRIENT_TO_MEAL,
-  // REMOVE_NUTRIENT_FROM_MEAL,
   DELETE_MEAL,
+  DELETE_MEALS,
   ADD_MEAL,
   UPDATE_MEAL,
-  // UPDATE_NUTRIENT_IN_MEAL
 } from '../actions/meals';
 
 import Meal from '../../models/Meal';
-import Nutrient from '../../models/Nutrient';
-// import testMealsData from '../../data/testMealsData';
 
 const initialState = {
   meals: [],
@@ -28,6 +24,10 @@ export default (state = initialState, action) => {
     case DELETE_MEAL:
       return {
         meals: state.meals.filter(meal => meal.id !== action.mealId)
+      }
+    case DELETE_MEALS:
+      return {
+        meals: state.meals.filter(meal => !action.mealIds.includes(meal.id))
       }
     case UPDATE_MEAL:
       return {

@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux';
-import { ScrollView, KeyboardAvoidingView, FlatList, View, Text, StyleSheet, Platform } from 'react-native'
+import { Button, ScrollView, KeyboardAvoidingView, FlatList, View, Text, StyleSheet, Platform } from 'react-native'
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import * as mealActions from '../store/actions/meals';
 import * as nutrientActions from '../store/actions/nutrients';
@@ -52,6 +52,7 @@ const MealScreen = props => {
   const nutrients = useSelector(state =>
     state.nutrients.nutrients.filter(nutrient => nutrient.mealId == mealId));
   const dispatch = useDispatch();
+  const scrollViewRef = useRef();
 
   const removeNutrientHandler = (nutrientId) => {
     dispatch(nutrientActions.deleteNutrientFromDb(nutrientId));
@@ -70,14 +71,17 @@ const MealScreen = props => {
       </View>
       <KeyboardAvoidingView
         behavior="padding" style={{ flex: 1 }}
-        keyboardVerticalOffset={110}>
-        {nutrients ? <ScrollView >
+        keyboardVerticalOffset={100}>
+        {nutrients ? <ScrollView ref={scrollViewRef}
+          onContentSizeChange={() => scrollViewRef.current.scrollToEnd()} >
           {nutrients.map((nutrient) => <Nutrient key={nutrient.id} nutrient={nutrient}
             removeNutrientHandler={removeNutrientHandler}
             updateNutrientAmountHandler={updateNutrientAmountHandler}
           />)}
+          <Button title='Add new nutrient' onPress={() => props.navigation.navigate('SelectNutrient', { mealId })} />
         </ScrollView>
           : <Text>No nutrients in the meal</Text>}
+
       </KeyboardAvoidingView>
 
       {/* <FlatList

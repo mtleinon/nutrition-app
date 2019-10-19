@@ -1,7 +1,7 @@
 // actions store plans to database and reducer
 
 import * as db from '../../helperFunctions/sqlite';
-
+import { deleteMealsOfAPlanFromDb } from './meals';
 export const SET_ALL_PLANS = 'SET_ALL_PLANS';
 export const ADD_PLAN = 'ADD_PLAN';
 export const UPDATE_PLAN = 'UPDATE_PLAN';
@@ -31,9 +31,9 @@ export const updatePlanInDb = plan => {
   }
 };
 
-export const deletePlanFromDb = planId => {
+export const deletePlanFromDb = (planId, mealIds) => {
   return async dispatch => {
-    dbResult = await db.deletePlan(planId);
+    const dbResult = await db.deletePlan(planId);
     // console.log('dbResult', dbResult);
     dispatch(deletePlan(planId));
   }

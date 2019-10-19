@@ -28,6 +28,8 @@ const filterNutrient = (search, nutrientName) => {
 }
 
 const SelectNutritionScreen = props => {
+  console.log('SelectNutritionScreen - props', props);
+
   const mealId = props.navigation.getParam('mealId');
   const barcode = props.navigation.getParam('barcode');
   const nutrientsData = useSelector(state => state.nutrientsData.nutrientsData);
@@ -44,6 +46,14 @@ const SelectNutritionScreen = props => {
   const selectedNameHandler = (newSelectedName, newSelectedId) => {
     setSelectedName(newSelectedName);
     setSelectedId(newSelectedId);
+    if (mealId) {
+      dispatch(nutrientActions.storeNutrientToDb(new Nutrient(null, mealId, newSelectedId, 0)));
+    }
+    if (barcode) {
+      dispatch(barcodeActions.storeBarcodeToDb(new Barcode(null, barcode, newSelectedId)));
+      // return;
+    }
+    props.navigation.navigate('Meal');
   }
 
   const addNutrientHandler = useCallback(() => {
@@ -58,10 +68,10 @@ const SelectNutritionScreen = props => {
     }
     if (barcode) {
       dispatch(barcodeActions.storeBarcodeToDb(new Barcode(null, barcode, selectedId)));
-      props.navigation.navigate('Meal');
-      return;
+      // return;
     }
-    props.navigation.goBack();
+    props.navigation.navigate('Meal');
+    // props.navigation.goBack();
   }, [selectedId]);
 
   useEffect(() => {
@@ -96,7 +106,7 @@ SelectNutritionScreen.navigationOptions = navData => {
   return {
     headerTitle: (
       <TouchableOpacity style={styles.header} onPress={addNutrientHandler} >
-        <Text style={styles.headerText}>{barcode ? 'Add barcode' : 'Add nutrition'}</Text>
+        <Text style={styles.headerText}>{barcode ? 'Select nutrient for barcode' : 'Select nutrient'}</Text>
       </TouchableOpacity>)
   }
 }

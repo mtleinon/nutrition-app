@@ -411,7 +411,24 @@ export const deleteMeal = mealId => {
     })
   });
 };
-
+export const deleteMealsOfAPlan = mealIds => {
+  console.log('deleteMealsOfAPlan - mealIds =', mealIds);
+  return new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      const mealIdsString = mealIds.join(',');
+      tx.executeSql(
+        `DELETE FROM ${meals} WHERE id IN (${mealIdsString}); `,
+        [],
+        (_, result) => {
+          resolve(result)
+        },
+        (_, err) => {
+          reject(err);
+        }
+      )
+    })
+  });
+};
 export const getAllMeals = () => {
   return new Promise((resolve, reject) => {
     // console.log('getAllMeals');
@@ -490,6 +507,25 @@ export const deleteNutrient = nutrientId => {
     })
   });
 };
+export const deleteNutrientsOfMeals = mealIds => {
+  console.log('deleteNutrientsOfMeals - mealIds =', mealIds);
+  return new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      // console.log('deleteNutrient: execute', `DELETE FROM ${ nutrients } WHERE id = ${ nutrientId }; `);
+      const mealIdsString = mealIds.join(',');
+      tx.executeSql(
+        `DELETE FROM ${nutrients} WHERE mealId IN (${mealIdsString}); `,
+        [],
+        (_, result) => {
+          resolve(result)
+        },
+        (_, err) => {
+          reject(err);
+        }
+      )
+    })
+  });
+};
 export const getAllNutrients = () => {
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
@@ -515,9 +551,11 @@ export const insertBarcode = barcode => {
     db.transaction((tx) => {
       tx.executeSql(
         `INSERT INTO ${barcodes} (barcode, nutrientDataId)
-         VALUES(?, ?); `,
+    VALUES(?, ?); `,
         [barcode.barcode, barcode.nutrientDataId],
         (_, result) => {
+          console.log('insertBarcode - result', result);
+
           resolve(result)
         },
         (_, err) => {
@@ -571,7 +609,7 @@ export const getAllBarcodes = () => {
         `SELECT * FROM ${barcodes}; `,
         [],
         (_, result) => {
-          // // console.log('result', result["rows"]["_array"]);
+          console.log('result', result["rows"]["_array"]);
           resolve(result.rows["_array"]);
         },
         (_, err) => {

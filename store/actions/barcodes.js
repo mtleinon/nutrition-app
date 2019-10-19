@@ -38,10 +38,10 @@ export const deleteBarcodeFromDb = barcodeId => {
 };
 
 export const readAllBarcodesFromDb = () => {
-  // console.log('readAllBarcodesFromDb');
+  console.log('readAllBarcodesFromDb');
   return async dispatch => {
     const barcodes = await db.getAllBarcodes();
-    // console.log('readAllPlansFromDatabase', barcodes);
+    console.log('readAllPlansFromDatabase', barcodes);
     dispatch({ type: SET_ALL_BARCODES, barcodes });
   }
 };

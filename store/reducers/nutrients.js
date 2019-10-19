@@ -1,11 +1,9 @@
 import {
   SET_ALL_NUTRIENTS,
-  // ADD_NUTRIENT_TO_NUTRIENT,
-  // REMOVE_NUTRIENT_FROM_NUTRIENT,
   DELETE_NUTRIENT,
+  DELETE_NUTRIENTS_OF_MEALS,
   ADD_NUTRIENT,
   UPDATE_NUTRIENT,
-  // UPDATE_NUTRIENT_IN_NUTRIENT
 } from '../actions/nutrients';
 
 import Nutrient from '../../models/Nutrient';
@@ -27,6 +25,10 @@ export default (state = initialState, action) => {
     case DELETE_NUTRIENT:
       return {
         nutrients: state.nutrients.filter(nutrient => nutrient.id !== action.nutrientId)
+      }
+    case DELETE_NUTRIENTS_OF_MEALS:
+      return {
+        nutrients: state.nutrients.filter(nutrient => !action.mealIds.includes(nutrient.mealId))
       }
     case UPDATE_NUTRIENT:
       console.log('UPDATE_NUTRIENT: nutrients action', action);

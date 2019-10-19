@@ -1,27 +1,34 @@
-import React, { useEffect } from 'react'
-import { useSelector, useDispatch } from 'react-redux';
-import { Button, TouchableHighlight, FlatList, View, Text, StyleSheet, Platform } from 'react-native'
-import { HeaderButtons, Item } from 'react-navigation-header-buttons';
-import { Ionicons } from '@expo/vector-icons';
-
-import HeadingText from '../components/HeadingText';
-import Colors from '../constants/Colors';
-import HeaderButton from '../components/HeaderButton';
-import NameText from '../components/NameText';
-import SmallText from '../components/SmallText';
+import React from 'react'
+import { Button, View, Text, StyleSheet, } from 'react-native'
 import * as db from '../helperFunctions/sqlite';
+import Colors from '../constants/Colors';
 
 const ConfigureScreen = props => {
-  const dispatch = useDispatch();
+
+  const writeDbTablesToLog = async () => {
+    let result = await db.getAllPlans();
+    console.log('Plans result =', result);
+    result = await db.getAllMeals();
+    console.log('Meals result =', result);
+    result = await db.getAllNutrients();
+    console.log('Nutrients result =', result);
+  }
 
   const dropTablesHandler = async () => {
     await db.dropAllTablesInDatabase();
   }
   return (
     <View style={styles.screen}>
-      <Text>Configure</Text>
-      <Button title="Drop database tables" onPress={dropTablesHandler} />
-      <Button title="Go to All plans screen" onPress={() => props.navigation.navigate('AllPlans')} />
+      <Text style={styles.text}>This version is used for testing.</Text>
+      <View style={styles.button}>
+        <Button title="Drop database tables" onPress={dropTablesHandler} />
+      </View>
+      <View style={styles.button}>
+        <Button title="Go to start screen" onPress={() => props.navigation.navigate('AllPlans')} />
+      </View>
+      <View style={styles.button}>
+        <Button title="Write db tables to log" onPress={writeDbTablesToLog} />
+      </View>
     </View>
   )
 }
@@ -29,20 +36,17 @@ const ConfigureScreen = props => {
 ConfigureScreen.navigationOptions = navData => {
 
   return {
-    headerTitle: 'Configure',
-    headerRight: (
-      <HeaderButtons HeaderButtonComponent={HeaderButton}>
-        <Item title="Add Plan"
-          iconName={Platform.OS === 'android' ? 'md-add' : 'ios-add'}
-          onPress={() => {
-            navData.navigation.navigate('NewPlan');
-          }} />
-      </HeaderButtons>
-    )
+    headerTitle: 'Nutrition planner version 0.01',
   }
 };
 
 const styles = StyleSheet.create({
+  button: {
+    margin: 20,
+  },
+  text: {
+    textAlign: 'center'
+  },
   screen: {
     flex: 1,
     paddingTop: 20,

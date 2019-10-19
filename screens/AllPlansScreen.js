@@ -1,8 +1,10 @@
 import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux';
-import { TouchableHighlight, FlatList, View, Text, StyleSheet, Platform } from 'react-native'
+import { Button, TouchableHighlight, FlatList, View, Text, StyleSheet, Platform } from 'react-native'
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import * as planActions from '../store/actions/plans';
+import * as mealActions from '../store/actions/meals';
+import * as nutrientActions from '../store/actions/nutrients';
 import { Ionicons } from '@expo/vector-icons';
 
 import HeadingText from '../components/HeadingText';
@@ -40,6 +42,7 @@ const Plan = ({ plan, deletePlanHandler, editPlanHandler, navigateToPlanHandler 
 
 const AllPlansScreen = props => {
   const plans = useSelector(state => state.plans.plans);
+  const meals = useSelector(state => state.meals.meals);
   const dispatch = useDispatch();
   // console.log('AllPlansScreen');
 
@@ -48,10 +51,15 @@ const AllPlansScreen = props => {
 
     props.navigation.navigate('Plan', { planId });
   }
+
   const deletePlanHandler = planId => {
     // console.log('nutrient=', nutrient);
+    const mealIdsToDelete = meals.filter(meal => meal.planId === planId).map(meal => meal.id);
+    dispatch(nutrientActions.deleteNutrientsOfMealsFromDb(mealIdsToDelete));
+    dispatch(mealActions.deleteMealsOfAPlanFromDb(mealIdsToDelete));
     dispatch(planActions.deletePlanFromDb(planId));
   }
+
   const editPlanHandler = planId => {
     // console.log('nutrient=', nutrient);
     props.navigation.navigate('NewPlan', { isEditMode: true, planId });
@@ -67,6 +75,7 @@ const AllPlansScreen = props => {
           editPlanHandler={editPlanHandler}
           navigateToPlanHandler={navigateToPlanHandler} />}
         keyExtractor={item => item.id.toString()} />
+      <Button title='Add new plan' onPress={() => props.navigation.navigate('NewPlan')} />
     </View>
   )
 }
@@ -99,20 +108,29 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     paddingRight: 5,
     backgroundColor: Colors.screenBackground,
+    justifyContent: 'flex-start'
   },
   plan: {
     borderBottomWidth: 1,
     paddingVertical: 5,
+    paddingHorizontal: 10,
     borderBottomColor: Colors.grayBorder,
   },
   mealName: {
-    width: '70%'
+    width: '65%'
   },
   planDescription: {
     padding: 20
   },
   icons: {
-    paddingRight: 10
+    // paddingRight: 10
+  },
+  icon: {
+    // backgroundColor: 'red',
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+
+    margin: 1
   },
   nameRow: {
     flexDirection: 'row',

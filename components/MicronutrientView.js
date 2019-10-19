@@ -193,7 +193,7 @@ const MicronutrientView = ({ nutrientId, mealId, planId, nutrientData, summary, 
       },
     ];
     return (<View style={styles.screen}>
-      <HeadingText>{dataToShow[1]}</HeadingText>
+      {/* <HeadingText>{dataToShow[1]}</HeadingText> */}
       <SectionList
         sections={data}
         renderItem={item => {

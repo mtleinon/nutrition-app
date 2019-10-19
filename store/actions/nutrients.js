@@ -4,11 +4,13 @@ export const SET_ALL_NUTRIENTS = 'SET_ALL_NUTRIENTS';
 export const ADD_NUTRIENT = 'ADD_NUTRIENT';
 export const UPDATE_NUTRIENT = 'UPDATE_NUTRIENT';
 export const DELETE_NUTRIENT = 'DELETE_NUTRIENT';
+export const DELETE_NUTRIENTS_OF_MEALS = 'DELETE_NUTRIENTS_OF_MEALS';
 
 // Handling the plans in redux
 export const addNutrient = nutrient => ({ type: ADD_NUTRIENT, nutrient })
 export const updateNutrient = nutrient => ({ type: UPDATE_NUTRIENT, nutrient })
 export const deleteNutrient = nutrientId => ({ type: DELETE_NUTRIENT, nutrientId })
+export const deleteNutrientsOfMeals = mealIds => ({ type: DELETE_NUTRIENTS_OF_MEALS, mealIds })
 
 // Handling the plans in database. Functions update database asychronously
 // and when it has finished they update redux accordingly
@@ -34,6 +36,14 @@ export const deleteNutrientFromDb = nutrientId => {
     dbResult = await db.deleteNutrient(nutrientId);
     // console.log('dbResult', dbResult);
     dispatch(deleteNutrient(nutrientId));
+  }
+};
+export const deleteNutrientsOfMealsFromDb = mealIds => {
+  console.log('deleteNutrientsOfMealsFromDb mealIds =', mealIds);
+  return async dispatch => {
+    dbResult = await db.deleteNutrientsOfMeals(mealIds);
+    // console.log('dbResult', dbResult);
+    dispatch(deleteNutrientsOfMeals(mealIds));
   }
 };
 

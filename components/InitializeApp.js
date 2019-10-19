@@ -5,6 +5,7 @@ import * as nutrientDataActions from '../store/actions/nutrientsData';
 import * as planActions from '../store/actions/plans';
 import * as mealActions from '../store/actions/meals';
 import * as nutrientActions from '../store/actions/nutrients';
+import * as barcodeActions from '../store/actions/barcodes';
 import nutrientInfo from '../data/nutrientInfo';
 const finelli = require('../data/finelli3.json');
 // const finelli = require('../data/finelliSmall.json');
@@ -85,6 +86,8 @@ const InitializeApp = ({ setAppInitialized }) => {
     await dispatch(planActions.readAllPlansFromDb());
     await dispatch(mealActions.readAllMealsFromDb());
     await dispatch(nutrientActions.readAllNutrientsFromDb());
+    // await dispatch(nutrientActions.readAllNutrientsFromDb());
+    await dispatch(barcodeActions.readAllBarcodesFromDb());
     readNutritionFile();
   }
 

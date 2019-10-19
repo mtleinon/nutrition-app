@@ -4,14 +4,11 @@ import { Button, Alert, TouchableHighlight, TouchableOpacity, FlatList, TextInpu
 import { Ionicons } from '@expo/vector-icons';
 import Colors from '../constants/Colors';
 import * as nutrientActions from '../store/actions/nutrients';
-import InputNumber from '../components/InputNumber';
-import InputText from '../components/InputText';
 import Nutrient from '../models/Nutrient';
-
-import Constants from 'expo-constants';
+// import { NAME_I } from '../models/NutrientData';
 import * as Permissions from 'expo-permissions';
 import { BarCodeScanner } from 'expo-barcode-scanner';
-
+const NAME_I = 1;
 
 const NutrientDataView = ({ item, selectedNameHandler, showMicronutrientHandler }) => {
   return (
@@ -81,7 +78,7 @@ const SelectNutrientWithBarcodeScreen = props => {
     }
     else {
       props.navigation.navigate('SelectNutrient', { barcode: selectedCode, mealId });
-      //props.navigation.goBack();
+      // props.navigation.goBack();
     }
   }, [selectedCode]);
 
@@ -98,10 +95,55 @@ const SelectNutrientWithBarcodeScreen = props => {
 
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
-    setSelectedCode(data);
-    alert(`Bar code with type ${type} and data ${data} has been scanned!`);
-  };
-
+    setSelectedCode(+data);
+    barcode = barcodes.find(barcode => barcode.barcode === +data);
+    let nutrient;
+    if (barcode) {
+      nutrient = nutrientsData.find(data => data[0] === barcode.nutrientDataId)
+    }
+    if (nutrient) {
+      Alert.alert(
+        'Add nutrient to meal',
+        nutrient[NAME_I],
+        [
+          {
+            text: 'Add',
+            onPress: () => {
+              dispatch(nutrientActions.storeNutrientToDb(new Nutrient(null, mealId, barcode.nutrientDataId, 0)));
+              props.navigation.goBack();
+            }
+          },
+          {
+            text: 'Scan a new barcode',
+            onPress: () => {
+              setScanned(false);
+            }
+          }
+        ]);
+    } else {
+      Alert.alert(
+        'Select nutrient',
+        'Select nutrient for the new barcode',
+        [
+          {
+            text: 'Select',
+            onPress: () => {
+              props.navigation.navigate('SelectNutrient', { barcode: +data, mealId });
+            }
+          },
+          {
+            text: 'Scan a new barcode',
+            onPress: () => {
+              console.log('Scan new barcode');
+              setScanned(false);
+            }
+          }
+        ]);
+      // alert(`Bar code with type ${type} and data ${+data} has been scanned!
+      //     ${nutrientName ? nutrientName[1] : 'No nutrient for barcode'}
+      //   `);
+    };
+  }
   return (
     <View
       style={{
@@ -114,9 +156,9 @@ const SelectNutrientWithBarcodeScreen = props => {
         style={StyleSheet.absoluteFillObject}
       />
 
-      {scanned && (
+      {/* {scanned && (
         <Button title={'Tap to Scan Again'} onPress={() => setScanned(false)} />
-      )}
+      )} */}
     </View>
   );
 
@@ -147,7 +189,7 @@ SelectNutrientWithBarcodeScreen.navigationOptions = navData => {
   return {
     headerTitle: (
       <TouchableOpacity style={styles.header} onPress={addNutrientHandler} >
-        <Text style={styles.headerText}>Use barcode</Text>
+        <Text style={styles.headerText}>Scan barcode</Text>
       </TouchableOpacity>)
   }
 }
