@@ -1,4 +1,3 @@
-const summaryLength = 6;
 
 // export function calculateMealMicronutrientData(meal, mealNutrients, summary) {
 //   if (!mealNutrients) {
@@ -14,13 +13,13 @@ const summaryLength = 6;
 //   }
 //   return mealMicronutrientData;
 // }
-export function calculateMealMicronutrientData(mealNutrientsData, summary) {
+export function calculateMealMicronutrientData(mealNutrientsData, summaryLength) {
   let mealMicronutrientData;
   if (mealNutrientsData.length > 0) {
     mealMicronutrientData = mealNutrientsData.reduce((acc, curr) => {
       return acc.map((value, i) => value + curr.amount * curr.nutrientData[i] * 0.01);
     }
-      , Array(summary ? summaryLength : mealNutrientsData[0].nutrientData.length).fill(0));
+      , Array(summaryLength ? summaryLength : mealNutrientsData[0].nutrientData.length).fill(0));
   }
   return mealMicronutrientData;
 }

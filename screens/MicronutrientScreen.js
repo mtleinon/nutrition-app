@@ -4,9 +4,9 @@ import { useSelector } from 'react-redux';
 
 import MicronutrientView from '../components/MicronutrientView';
 
-// import Nutrients from '../data/finelliAllNutrients'; // 36 nutriitions
 import Colors from '../constants/Colors';
 import HeadingText from '../components/HeadingText';
+import { NAME_I } from '../models/NutrientData';
 
 const MicronutrientScreen = props => {
   const summary = props.navigation.getParam('summary');
@@ -21,6 +21,8 @@ const MicronutrientScreen = props => {
     headingText = 'Meal : ' + meals.find(meal => meal.id == mealId).name;
   } else if (planId) {
     headingText = 'Plan : ' + plans.find(plan => plan.id == planId).name;
+  } else if (nutrientData) {
+    headingText = '100g of ' + nutrientData[NAME_I];
   }
   return (
     <View style={styles.screen}>

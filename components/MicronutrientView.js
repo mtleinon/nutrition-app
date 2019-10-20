@@ -1,13 +1,14 @@
 import React from 'react'
 import { useSelector } from 'react-redux';
-import { TouchableHighlight, SectionList, FlatList, View, Text, StyleSheet } from 'react-native'
+import { SectionList, FlatList, View, Text, StyleSheet } from 'react-native'
 import { calculateMealMicronutrientData } from '../helperFunctions/mealMicronutrientData';
 import nutrientHeading from '../data/nutrientInfo';
-// import Nutrients from '../data/finelliAllNutrients'; // 36 nutriitions
 import Colors from '../constants/Colors';
-import HeadingText from '../components/HeadingText';
 import SmallText from '../components/SmallText';
 import MicronutrientSummary from '../components/MicronutrientSummary';
+import { NAME_I, ENERGY_I, CARBOHYDRATES_I, FET_I, PROTEIN_I } from '../models/NutrientData';
+
+const SUMMARY_LENGTH = 6;
 
 const decimals = value => {
   if (value === 0) {
@@ -36,21 +37,8 @@ const getRecommendation = header => {
   return undefined;
 }
 const kjTokCal = value => value / 4.184;
-// cosnt relativeToWholeEnergy = ()
 
-// const MicronutrientSummary = ({ value, heading, unit, recommendation }) => {
-//   // console.log('MicronutrientSummary:', heading, value);
-//   return (
-//     <View style={styles.item} >
-//       <View style={styles.microNutrient}>
-//         <Text numberOfLines={2} style={styles.microNutrientName}>{heading}</Text>
-//         <Text style={styles.microNutrientValue}>{value.toFixed(decimals(value))}</Text>
-//         <Text style={styles.microNutrientUnit}>{unit}</Text>
-//         <Text style={styles.microNutrientRecommendation}>{recommendation ? (recommendation * 100).toFixed(0) + '%' : ''}</Text>
-//       </View>
-//     </View>
-//   )
-// }
+
 const Micronutrient2 = props => {
   const { heading, value, unit, recommendation } = props.value;
   return (
@@ -65,7 +53,6 @@ const Micronutrient2 = props => {
   )
 }
 const SectionHeader = ({ title }) => {
-  // console.log('SectionHeader', title);
   return (
     <View style={styles.sectionHeader}>
 
@@ -77,79 +64,116 @@ const SectionHeader = ({ title }) => {
   )
 }
 
-const summaryLength = 6;
-const MicronutrientView = ({ nutrientId, mealId, planId, nutrientData, summary, oneRow, noDataText }) => {
-  const noDataMessage = noDataText || 'No micronutrient data';
-  const meals = useSelector(state => state.meals.meals);
-  const plans = useSelector(state => state.plans.plans);
-  const nutrients = useSelector(state => state.nutrients.nutrients);
-  const nutrientsData = useSelector(state => state.nutrientsData.nutrientsData);
-
-  let dataToShow;
-  if (nutrientData) {
-    if (summary) {
-      dataToShow = nutrientData.slice(0, summaryLength);
-    } else {
-      dataToShow = [...nutrientData];
-    }
-    dataToShow[1] += ' 100g.'
+function nutrientDataToShow(nutrientData, summaryLength) {
+  let dataToShow = [];
+  if (summaryLength) {
+    dataToShow = nutrientData.slice(0, summaryLength);
+  } else {
+    dataToShow = [...nutrientData];
   }
+  dataToShow[NAME_I] += ' 100g.'
+  return dataToShow;
+}
 
+function nutrientIdDataToShow(nutrientId, nutrients, nutrientsData, summaryLength) {
+  let dataToShow = [];
+  const nutrientWithData = nutrients.filter(nutrient => nutrient.id === nutrientId).map(nutrient => (
+    {
+      amount: nutrient.amount,
+      nutrientData: nutrientsData.find(nutrientData => nutrientData[0] === nutrient.nutrientDataId)
+    })
+  );
+  dataToShow = calculateMealMicronutrientData(nutrientWithData, summaryLength);
+  dataToShow[NAME_I] = nutrientWithData[0].nutrientData[NAME_I];
+  return dataToShow;
+}
 
-  if (nutrientId) {
-    const nutrientWithData = nutrients.filter(nutrient => nutrient.id === nutrientId).map(nutrient => (
+function mealIdDataToShow(mealId, meals, nutrients, nutrientsData, summaryLength) {
+  let dataToShow = [];
+  const mealNutrients = nutrients.filter(nutrient => nutrient.mealId == mealId);
+  if (mealNutrients.length > 0) {
+    const mealNutrientsData = mealNutrients.map(nutrient => (
       {
         amount: nutrient.amount,
         nutrientData: nutrientsData.find(nutrientData => nutrientData[0] === nutrient.nutrientDataId)
       })
     );
-    dataToShow = calculateMealMicronutrientData(nutrientWithData, summary);
-    dataToShow[1] = nutrientWithData[0].nutrientData[1];
+    dataToShow = calculateMealMicronutrientData(mealNutrientsData, summaryLength);
+    dataToShow[NAME_I] = meals.find(meal => meal.id === mealId).name;
   }
+  return dataToShow;
+}
 
-  if (mealId) {
-    const mealNutrients = nutrients.filter(nutrient => nutrient.mealId == mealId);
-    if (mealNutrients.length > 0) {
-      const mealNutrientsData = mealNutrients.map(nutrient => (
-        {
-          amount: nutrient.amount,
-          nutrientData: nutrientsData.find(nutrientData => nutrientData[0] === nutrient.nutrientDataId)
-        })
-      );
-      dataToShow = calculateMealMicronutrientData(mealNutrientsData, summary);
-      dataToShow[1] = meals.find(meal => meal.id === mealId).name;
-    }
-  }
-
-  if (planId) {
-    const planMeals = meals.filter(meal => meal.planId === planId);
-    const planNutrients = nutrients.filter(nutrient => planMeals.some(meal => meal.id === nutrient.mealId));
-    if (planNutrients.length > 0) {
-      const planNutrientsData = planNutrients.map(nutrient => (
-        {
-          amount: nutrient.amount,
-          nutrientData: nutrientsData.find(nutrientData => nutrientData[0] === nutrient.nutrientDataId)
-        })
-      );
-      dataToShow = calculateMealMicronutrientData(planNutrientsData, summary);
-      dataToShow[1] = plans.find(plan => plan.id === planId).name;
-    }
-  }
-  if (!dataToShow) {
-    return <View>
-      <Text>{noDataMessage}</Text>
-    </View>
-  }
-  if (oneRow) {
-    return (
-      <View style={styles.summaryRow}>
-        <SmallText style={styles.smallText}>energ: {dataToShow[2].toFixed(0)}cal</SmallText>
-        <SmallText style={styles.smallText}>carb: {dataToShow[3].toFixed(0)}g</SmallText>
-        <SmallText style={styles.smallText}>fet: {dataToShow[4].toFixed(0)}g</SmallText>
-        <SmallText style={styles.smallText}>prot: {dataToShow[5].toFixed(0)}g</SmallText>
-      </View>
+function planIdDataToShow(planId, plans, meals, nutrients, nutrientsData, summaryLength) {
+  let dataToShow = [];
+  const planMeals = meals.filter(meal => meal.planId === planId);
+  const planNutrients = nutrients.filter(nutrient => planMeals.some(meal => meal.id === nutrient.mealId));
+  if (planNutrients.length > 0) {
+    const planNutrientsData = planNutrients.map(nutrient => (
+      {
+        amount: nutrient.amount,
+        nutrientData: nutrientsData.find(nutrientData => nutrientData[0] === nutrient.nutrientDataId)
+      })
     );
+    dataToShow = calculateMealMicronutrientData(planNutrientsData, summaryLength);
+    dataToShow[1] = plans.find(plan => plan.id === planId).name;
   }
+  return dataToShow;
+}
+
+function calculateDataToShow(planId, mealId, nutrientId, nutrientData, plans, meals, nutrients, nutrientsData, summaryLength) {
+  if (nutrientData) {
+    return nutrientDataToShow(nutrientData, summaryLength);
+  } else if (nutrientId) {
+    return nutrientIdDataToShow(nutrientId, nutrients, nutrientsData, summaryLength);
+  } else if (mealId) {
+    return mealIdDataToShow(mealId, meals, nutrients, nutrientsData, summaryLength);
+  } else if (planId) {
+    return planIdDataToShow(planId, plans, meals, nutrients, nutrientsData, summaryLength);
+  }
+}
+
+const MicronutrientViewOneRow = (dataToShow) =>
+  (
+    <View style={styles.summaryRow}>
+      <SmallText style={styles.smallText}>energ: {dataToShow[ENERGY_I].toFixed(0)}cal</SmallText>
+      <SmallText style={styles.smallText}>carb: {dataToShow[CARBOHYDRATES_I].toFixed(0)}g</SmallText>
+      <SmallText style={styles.smallText}>fet: {dataToShow[FET_I].toFixed(0)}g</SmallText>
+      <SmallText style={styles.smallText}>prot: {dataToShow[PROTEIN_I].toFixed(0)}g</SmallText>
+    </View>
+  );
+
+const MicronutrientViewSummary = (dataToShow) => {
+  const energy = dataToShow[ENERGY_I];
+  const relativeToEnergy = (index, value) => {
+    if (index === ENERGY_I) return value / energy;
+    let micronutrientEnergy;
+    if (index === CARBOHYDRATES_I || index === PROTEIN_I) {
+      micronutrientEnergy = 4 * value * 4.186;
+    } else {
+      micronutrientEnergy = 9 * value * 4.186;
+    }
+    return micronutrientEnergy / energy;
+  }
+  return (
+    <View style={styles.screen}>
+      <FlatList
+        data={dataToShow.slice(2)}
+        renderItem={item => {
+          return <MicronutrientSummary
+            value={item.item}
+            heading={nutrientHeading[item.index + 2].name.fiShort}
+            unit={nutrientHeading[item.index + 2].unit}
+            recommendation={relativeToEnergy(item.index + 2, item.item)} />
+        }}
+        keyExtractor={(_, index) => index.toString()}
+      />
+    </View>
+  );
+}
+
+const MicronutrientViewLong = (dataToShow) => {
+
   const dataWithHeading = dataToShow.map((data, i) => ({
     value: data,
     heading: nutrientHeading[i].name.fiShort,
@@ -157,71 +181,61 @@ const MicronutrientView = ({ nutrientId, mealId, planId, nutrientData, summary, 
     recommendation: getRecommendation(nutrientHeading[i])
   }));
 
-  if (summary) {
-    //Render data with FlatList
-    const energy = dataToShow[2];
-    const relativeToEnergy = (index, value) => {
-      if (index === 2) return value / energy;
-      let micronutrientEnergy;
-      if (index === 3 || index === 5) {
-        micronutrientEnergy = 4 * value * 4.186;
-      } else {
-        micronutrientEnergy = 9 * value * 4.186;
-      }
-      return micronutrientEnergy / energy;
-    }
-    return (
-      <View style={styles.screen}>
-        <FlatList
-          data={dataToShow.slice(2)}
-          renderItem={item => {
-            return <MicronutrientSummary
-              value={item.item}
-              heading={nutrientHeading[item.index + 2].name.fiShort}
-              unit={nutrientHeading[item.index + 2].unit}
-              recommendation={relativeToEnergy(item.index + 2, item.item)} />
-          }}
-          keyExtractor={(_, index) => index.toString()}
-        />
-      </View>
-    )
+  // Convert data for SectionList
+  const data = [
+    {
+      title: { title: 'Main nutrients', amount: 'amount', relative: '%energy' },
+      data: dataWithHeading.slice(2, 6)
+    },
+    {
+      title: { title: 'Detailed nutrients', amount: 'amount', relative: '' },
+      data: dataWithHeading.slice(6, 33)
+    },
+    {
+      title: { title: 'Micronutrients', amount: 'amount', relative: '% daily rec' },
+      data: dataWithHeading.slice(33, 45)
+    },
+    {
+      title: { title: 'Vitamins', amount: 'amount', relative: '% daily recom' },
+      data: dataWithHeading.slice(45, 56)
+    },
+  ];
+  return (<View style={styles.screen}>
+    <SectionList
+      sections={data}
+      renderItem={item => {
+        return <Micronutrient2
+          value={item.item} />
+      }}
+      renderSectionHeader={({ section: { title } }) => (
+        <SectionHeader title={title} />)}
+      stickySectionHeadersEnabled={true}
+      keyExtractor={(_, index) => index.toString()}
+    />
+  </View>
+  );
+}
+
+const MicronutrientView = ({ nutrientId, mealId, planId, nutrientData, summary, oneRow, noDataText }) => {
+  const noDataMessage = noDataText || 'No micronutrient data';
+  const meals = useSelector(state => state.meals.meals);
+  const plans = useSelector(state => state.plans.plans);
+  const nutrients = useSelector(state => state.nutrients.nutrients);
+  const nutrientsData = useSelector(state => state.nutrientsData.nutrientsData);
+  const summaryLength = summary ? SUMMARY_LENGTH : 0;
+
+  const dataToShow = calculateDataToShow(planId, mealId, nutrientId, nutrientData, plans, meals, nutrients, nutrientsData, summaryLength);
+
+  if (dataToShow.length === 0) {
+    return (<View>
+      <Text>{noDataMessage}</Text>
+    </View>);
+  } else if (oneRow) {
+    return MicronutrientViewOneRow(dataToShow);
+  } else if (summary) {
+    return MicronutrientViewSummary(dataToShow);
   }
-  // Render data with SectionList
-  else {
-    const data = [
-      {
-        title: { title: 'Main nutrients', amount: 'amount', relative: '%energy' },
-        data: dataWithHeading.slice(2, 6)
-      },
-      {
-        title: { title: 'Detailed nutrients', amount: 'amount', relative: '' },
-        data: dataWithHeading.slice(6, 33)
-      },
-      {
-        title: { title: 'Micronutrients', amount: 'amount', relative: '% daily rec' },
-        data: dataWithHeading.slice(33, 45)
-      },
-      {
-        title: { title: 'Vitamins', amount: 'amount', relative: '% daily recom' },
-        data: dataWithHeading.slice(45, 56)
-      },
-    ];
-    return (<View style={styles.screen}>
-      {/* <HeadingText>{dataToShow[1]}</HeadingText> */}
-      <SectionList
-        sections={data}
-        renderItem={item => {
-          return <Micronutrient2
-            value={item.item} />
-        }}
-        renderSectionHeader={({ section: { title } }) => (
-          <SectionHeader title={title} />)}
-        stickySectionHeadersEnabled={true}
-        keyExtractor={(_, index) => index.toString()}
-      />
-    </View>
-    );
-  }
+  return MicronutrientViewLong(dataToShow);
 }
 
 const styles = StyleSheet.create({
