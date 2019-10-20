@@ -7,6 +7,7 @@ import nutrientHeading from '../data/nutrientInfo';
 import Colors from '../constants/Colors';
 import HeadingText from '../components/HeadingText';
 import SmallText from '../components/SmallText';
+import MicronutrientSummary from '../components/MicronutrientSummary';
 
 const decimals = value => {
   if (value === 0) {
@@ -34,20 +35,22 @@ const getRecommendation = header => {
   }
   return undefined;
 }
+const kjTokCal = value => value / 4.184;
+// cosnt relativeToWholeEnergy = ()
 
-const Micronutrient = ({ value, heading, unit, recommendation }) => {
-  // console.log('Micronutrient:', heading, value);
-  return (
-    <View style={styles.item} >
-      <View style={styles.microNutrient}>
-        <Text numberOfLines={2} style={styles.microNutrientName}>{heading}</Text>
-        <Text style={styles.microNutrientValue}>{value.toFixed(decimals(value))}</Text>
-        <Text style={styles.microNutrientUnit}>{unit}</Text>
-        <Text style={styles.microNutrientRecommendation}>{recommendation ? (value / recommendation * 100).toFixed(0) + '%' : ''}</Text>
-      </View>
-    </View>
-  )
-}
+// const MicronutrientSummary = ({ value, heading, unit, recommendation }) => {
+//   // console.log('MicronutrientSummary:', heading, value);
+//   return (
+//     <View style={styles.item} >
+//       <View style={styles.microNutrient}>
+//         <Text numberOfLines={2} style={styles.microNutrientName}>{heading}</Text>
+//         <Text style={styles.microNutrientValue}>{value.toFixed(decimals(value))}</Text>
+//         <Text style={styles.microNutrientUnit}>{unit}</Text>
+//         <Text style={styles.microNutrientRecommendation}>{recommendation ? (recommendation * 100).toFixed(0) + '%' : ''}</Text>
+//       </View>
+//     </View>
+//   )
+// }
 const Micronutrient2 = props => {
   const { heading, value, unit, recommendation } = props.value;
   return (
@@ -91,9 +94,10 @@ const MicronutrientView = ({ nutrientId, mealId, planId, nutrientData, summary, 
     }
     dataToShow[1] += ' 100g.'
   }
+
+
   if (nutrientId) {
-    const singleNutrient = nutrients.filter(nutrient => nutrient.id === nutrientId);
-    const nutrientWithData = singleNutrient.map(nutrient => (
+    const nutrientWithData = nutrients.filter(nutrient => nutrient.id === nutrientId).map(nutrient => (
       {
         amount: nutrient.amount,
         nutrientData: nutrientsData.find(nutrientData => nutrientData[0] === nutrient.nutrientDataId)
@@ -155,17 +159,27 @@ const MicronutrientView = ({ nutrientId, mealId, planId, nutrientData, summary, 
 
   if (summary) {
     //Render data with FlatList
+    const energy = dataToShow[2];
+    const relativeToEnergy = (index, value) => {
+      if (index === 2) return value / energy;
+      let micronutrientEnergy;
+      if (index === 3 || index === 5) {
+        micronutrientEnergy = 4 * value * 4.186;
+      } else {
+        micronutrientEnergy = 9 * value * 4.186;
+      }
+      return micronutrientEnergy / energy;
+    }
     return (
       <View style={styles.screen}>
-        {/* <HeadingText>{dataToShow[1]}</HeadingText> */}
         <FlatList
           data={dataToShow.slice(2)}
           renderItem={item => {
-            return <Micronutrient
+            return <MicronutrientSummary
               value={item.item}
               heading={nutrientHeading[item.index + 2].name.fiShort}
               unit={nutrientHeading[item.index + 2].unit}
-              recommendation={getRecommendation(nutrientHeading[item.index + 2])} />
+              recommendation={relativeToEnergy(item.index + 2, item.item)} />
           }}
           keyExtractor={(_, index) => index.toString()}
         />

@@ -13,8 +13,48 @@ import HeaderButton from '../components/HeaderButton';
 import MicronutrientView from '../components/MicronutrientView';
 import NameText from '../components/NameText';
 import SmallText from '../components/SmallText';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+
+const TouchableCard = ({ onPress, children }) => (
+  <TouchableHighlight onPress={onPress} >
+    <View style={[styles.plan, styles.elevated]}>
+      {children}
+    </View>
+  </TouchableHighlight>
+);
+const DeleteIcon = ({ onPress }) => (
+  <Ionicons
+    style={styles.icon}
+    onPress={onPress}
+    name="md-remove-circle" size={24} color="red" />
+)
+const EditIcon = ({ onPress }) => (
+  <Ionicons
+    style={styles.icon}
+    onPress={onPress}
+    name="md-create" size={24} color="green" />
+)
 
 const Plan = ({ plan, deletePlanHandler, editPlanHandler, navigateToPlanHandler }) => {
+  // console.log('Plan', plan);
+
+  return (
+    <TouchableCard onPress={() => navigateToPlanHandler(plan.id)} >
+      <View style={styles.nameRow}>
+        <NameText numberOfLines={2} style={styles.mealName}>{plan.name}</NameText>
+        <View style={styles.row}>
+          <DeleteIcon onPress={() => deletePlanHandler(plan.id)} />
+          <EditIcon onPress={() => editPlanHandler(plan.id)} />
+        </View>
+      </View>
+      <SmallText numberOfLines={2} style={styles.planDescription}>{plan.description}</SmallText>
+      <View style={styles.micronutrientRow}>
+        <MicronutrientView planId={plan.id} summary={true} noDataText="Click to add meals" />
+      </View>
+    </TouchableCard>
+  );
+}
+const Plan_OLD = ({ plan, deletePlanHandler, editPlanHandler, navigateToPlanHandler }) => {
   // console.log('Plan', plan);
 
   return (
@@ -32,9 +72,9 @@ const Plan = ({ plan, deletePlanHandler, editPlanHandler, navigateToPlanHandler 
             name="md-create" size={24} color="green" />
         </View>
         <SmallText numberOfLines={2} style={styles.planDescription}>{plan.description}</SmallText>
-        <View style={styles.micronutrientRow}>
-          <MicronutrientView planId={plan.id} summary={true} noDataText="Click to add meals" />
-        </View>
+        {/* <View style={styles.micronutrientRow}> */}
+        <MicronutrientView planId={plan.id} summary={true} noDataText="Click to add meals" />
+        {/* </View> */}
       </View>
     </TouchableHighlight>
   );
@@ -117,7 +157,7 @@ const styles = StyleSheet.create({
     borderBottomColor: Colors.grayBorder,
   },
   mealName: {
-    width: '65%'
+    // width: '65%'
   },
   planDescription: {
     padding: 20
@@ -138,10 +178,13 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  micronutrientRow: {
-    marginLeft: 10,
-    marginRight: 40,
+  row: {
+    flexDirection: 'row'
   },
+  // micronutrientRow: {
+  //   marginLeft: 10,
+  //   marginRight: 40,
+  // },
   elevated: {
     shadowColor: 'black',
     shadowOffset: { width: 0, height: 2 },
