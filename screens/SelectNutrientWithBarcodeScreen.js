@@ -32,8 +32,7 @@ const SelectNutrientWithBarcodeScreen = props => {
   const mealId = props.navigation.getParam('mealId');
   const nutrientsData = useSelector(state => state.nutrientsData.nutrientsData);
   const barcodes = useSelector(state => state.barcodes.barcodes);
-  // const [name, setName] = useState('');
-  // const [amount, setAmount] = useState('');
+
   const [selectedName, setSelectedName] = useState('');
   const [selectedId, setSelectedId] = useState('');
   const [selectedCode, setSelectedCode] = useState('');
@@ -54,15 +53,6 @@ const SelectNutrientWithBarcodeScreen = props => {
     console.log('askCameraPermission');
     askCameraPermission();
   }, []);
-
-  const showMicronutrientHandler = (nutrient) => {
-    props.navigation.navigate('Micronutrient', { nutrientData: nutrient });
-  }
-
-  const selectedNameHandler = (newSelectedName, newSelectedId) => {
-    setSelectedName(newSelectedName);
-    setSelectedId(newSelectedId);
-  }
 
   const addNutrientHandler = useCallback(() => {
     if (!selectedCode) {
@@ -139,9 +129,6 @@ const SelectNutrientWithBarcodeScreen = props => {
             }
           }
         ]);
-      // alert(`Bar code with type ${type} and data ${+data} has been scanned!
-      //     ${nutrientName ? nutrientName[1] : 'No nutrient for barcode'}
-      //   `);
     };
   }
   return (
@@ -155,32 +142,9 @@ const SelectNutrientWithBarcodeScreen = props => {
         onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
         style={StyleSheet.absoluteFillObject}
       />
-
-      {/* {scanned && (
-        <Button title={'Tap to Scan Again'} onPress={() => setScanned(false)} />
-      )} */}
     </View>
   );
 
-
-  // return (
-  //   <View style={styles.screen}>
-  //     <InputText
-  //       label="Search nutrition:"
-  //       onChangeText={setSelectedName} value={selectedName}
-  //     />
-  //     <Text style={styles.label}>Select nutrition:</Text>
-  //     <FlatList
-  //       data={nutrientsData.filter(item => filterNutrient(selectedName, item[1]))}
-  //       renderItem={item => <NutrientDataView
-  //         item={item}
-  //         selectedNameHandler={selectedNameHandler}
-  //         showMicronutrientHandler={showMicronutrientHandler}
-  //       />}
-  //       keyExtractor={item => item[0].toString()}
-  //     />
-  //   </View>
-  // )
 }
 
 SelectNutrientWithBarcodeScreen.navigationOptions = navData => {

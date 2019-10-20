@@ -1,7 +1,7 @@
 import React from 'react'
 import { Text, StyleSheet } from 'react-native'
 
-const SmallText = props => {
+const SmallerText = props => {
   return (
     <Text style={[styles.text, props.style]} >{props.children}</Text>
   )
@@ -9,7 +9,7 @@ const SmallText = props => {
 
 const styles = StyleSheet.create({
   text: {
-    fontSize: 16,
+    fontSize: 12,
   }
 })
-export default SmallText;
+export default SmallerText;

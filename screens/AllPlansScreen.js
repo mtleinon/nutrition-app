@@ -36,8 +36,6 @@ const EditIcon = ({ onPress }) => (
 )
 
 const Plan = ({ plan, deletePlanHandler, editPlanHandler, navigateToPlanHandler }) => {
-  // console.log('Plan', plan);
-
   return (
     <TouchableCard onPress={() => navigateToPlanHandler(plan.id)} >
       <View style={styles.nameRow}>
@@ -54,46 +52,17 @@ const Plan = ({ plan, deletePlanHandler, editPlanHandler, navigateToPlanHandler 
     </TouchableCard>
   );
 }
-const Plan_OLD = ({ plan, deletePlanHandler, editPlanHandler, navigateToPlanHandler }) => {
-  // console.log('Plan', plan);
-
-  return (
-    <TouchableHighlight onPress={() => navigateToPlanHandler(plan.id)} >
-      <View style={[styles.plan, styles.elevated]}>
-        <View style={styles.nameRow}>
-          <NameText numberOfLines={2} style={styles.mealName}>{plan.name}</NameText>
-          <Ionicons
-            style={styles.icon}
-            onPress={() => deletePlanHandler(plan.id)}
-            name="md-remove-circle" size={24} color="red" />
-          <Ionicons
-            style={styles.icon}
-            onPress={() => editPlanHandler(plan.id)}
-            name="md-create" size={24} color="green" />
-        </View>
-        <SmallText numberOfLines={2} style={styles.planDescription}>{plan.description}</SmallText>
-        {/* <View style={styles.micronutrientRow}> */}
-        <MicronutrientView planId={plan.id} summary={true} noDataText="Click to add meals" />
-        {/* </View> */}
-      </View>
-    </TouchableHighlight>
-  );
-}
 
 const AllPlansScreen = props => {
   const plans = useSelector(state => state.plans.plans);
   const meals = useSelector(state => state.meals.meals);
   const dispatch = useDispatch();
-  // console.log('AllPlansScreen');
 
   const navigateToPlanHandler = (planId) => {
-    // console.log('navigateToPlanHandler=', planId);
-
     props.navigation.navigate('Plan', { planId });
   }
 
   const deletePlanHandler = planId => {
-    // console.log('nutrient=', nutrient);
     const mealIdsToDelete = meals.filter(meal => meal.planId === planId).map(meal => meal.id);
     dispatch(nutrientActions.deleteNutrientsOfMealsFromDb(mealIdsToDelete));
     dispatch(mealActions.deleteMealsOfAPlanFromDb(mealIdsToDelete));
@@ -101,7 +70,6 @@ const AllPlansScreen = props => {
   }
 
   const editPlanHandler = planId => {
-    // console.log('nutrient=', nutrient);
     props.navigation.navigate('NewPlan', { isEditMode: true, planId });
   }
 
