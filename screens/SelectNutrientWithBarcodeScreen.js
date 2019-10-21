@@ -10,31 +10,11 @@ import * as Permissions from 'expo-permissions';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 const NAME_I = 1;
 
-const NutrientDataView = ({ item, selectedNameHandler, showMicronutrientHandler }) => {
-  return (
-    <TouchableHighlight onPress={() => selectedNameHandler(item.item[1], item.item[0])} >
-      <View style={styles.selectNutrition}>
-        <Text style={styles.selectNutritionText}>{item.item[0]}. {item.item[1]}</Text>
-        <Ionicons
-          onPress={() => showMicronutrientHandler(item.item)}
-          name="md-information-circle" size={24} color="green" />
-      </View>
-    </TouchableHighlight>
-  )
-}
-
-const filterNutrient = (search, nutrientName) => {
-  return search.toLowerCase().split(' ').every(part => nutrientName.toLowerCase().includes(part));
-}
-
-
 const SelectNutrientWithBarcodeScreen = props => {
   const mealId = props.navigation.getParam('mealId');
   const nutrientsData = useSelector(state => state.nutrientsData.nutrientsData);
   const barcodes = useSelector(state => state.barcodes.barcodes);
 
-  const [selectedName, setSelectedName] = useState('');
-  const [selectedId, setSelectedId] = useState('');
   const [selectedCode, setSelectedCode] = useState('');
 
   const [hasCameraPermission, setHasCameraPermission] = useState(null);
@@ -43,10 +23,10 @@ const SelectNutrientWithBarcodeScreen = props => {
   const dispatch = useDispatch();
 
   const askCameraPermission = async () => {
-    const status = await Permissions.askAsync(Permissions.CAMERA);
-    console.log('askCameraPermission', status);
-    setHasCameraPermission(true);
-    // setHasCameraPermission(status === 'granted');
+    const askCameraPermission = await Permissions.askAsync(Permissions.CAMERA);
+    console.log('askCameraPermission', askCameraPermission);
+    // setHasCameraPermission(true);
+    setHasCameraPermission(askCameraPermission.status === 'granted');
   }
 
   useEffect(() => {
@@ -68,7 +48,6 @@ const SelectNutrientWithBarcodeScreen = props => {
     }
     else {
       props.navigation.navigate('SelectNutrient', { barcode: selectedCode, mealId });
-      // props.navigation.goBack();
     }
   }, [selectedCode]);
 
@@ -144,12 +123,10 @@ const SelectNutrientWithBarcodeScreen = props => {
       />
     </View>
   );
-
 }
 
 SelectNutrientWithBarcodeScreen.navigationOptions = navData => {
   const addNutrientHandler = navData.navigation.getParam('addNutrientHandler');
-
   return {
     headerTitle: (
       <TouchableOpacity style={styles.header} onPress={addNutrientHandler} >
@@ -158,7 +135,6 @@ SelectNutrientWithBarcodeScreen.navigationOptions = navData => {
   }
 }
 
-
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
@@ -166,43 +142,6 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     paddingRight: 3,
     width: '100%'
-  },
-  label: {
-    color: Colors.primary,
-    fontSize: 14,
-    fontWeight: 'bold',
-    marginTop: 5,
-  },
-  selectNutrition: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    borderBottomWidth: 1,
-    paddingVertical: 5,
-    borderBottomColor: Colors.grayBorder,
-    marginRight: 8
-  },
-  selectNutritionText: {
-    width: '80%'
-  },
-  selectedName: {
-    height: 40,
-    paddingHorizontal: 5,
-    // backgroundColor: '#efefef'
-  },
-  item: {
-    flexDirection: 'row',
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee',
-    paddingVertical: 5
-  },
-  input: {
-  },
-  inputField: {
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.primary,
-    // backgroundColor: Colors.primary,
-    paddingHorizontal: 6
   },
   header: {
     paddingLeft: 20,
@@ -213,4 +152,5 @@ const styles = StyleSheet.create({
     color: Platform.OS === 'android' ? 'white' : Colors.primary,
   }
 });
+
 export default SelectNutrientWithBarcodeScreen;

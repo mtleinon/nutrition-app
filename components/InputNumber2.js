@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { View, Text, TextInput, StyleSheet } from 'react-native'
+import { View, TextInput, StyleSheet } from 'react-native'
 import Colors from '../constants/Colors';
 
 const InputNumber2 = props => {
@@ -45,12 +45,6 @@ const InputNumber2 = props => {
 }
 
 const styles = StyleSheet.create({
-  // label: {
-  //   color: Colors.primary,
-  //   fontSize: 14,
-  //   fontWeight: 'bold',
-  //   marginTop: 5,
-  // },
   inputField: {
     textAlign: 'right',
     color: Colors.primary,
@@ -58,8 +52,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     borderBottomWidth: 1,
     borderBottomColor: Colors.primary,
-    // backgroundColor: Colors.primary,
-    paddingHorizontal: 6,
+    paddingHorizontal: 3,
     paddingVertical: 0,
     minWidth: 50
   },

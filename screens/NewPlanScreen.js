@@ -51,7 +51,9 @@ const NewPlanScreen = props => {
         onChangeText={setName} value={name}
       />
       <InputText
-        label="Description"
+        label="Description2"
+        multiline={true}
+        numberOfLines={6}
         onChangeText={setDescription} value={description}
       />
     </View>
