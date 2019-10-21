@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux';
 import { Button, ScrollView, KeyboardAvoidingView, FlatList, View, Text, StyleSheet, Platform } from 'react-native'
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
-import * as mealActions from '../store/actions/meals';
 import * as nutrientActions from '../store/actions/nutrients';
 import { Ionicons } from '@expo/vector-icons';
 import HeadingText from '../components/HeadingText';
@@ -11,16 +10,15 @@ import Colors from '../constants/Colors';
 // import Styles from '../constants/Styles';
 import HeaderButton from '../components/HeaderButton';
 import MicronutrientView from '../components/MicronutrientView';
+import AddButton from '../components/AddButton';
+import Icon from '../components/Icon';
 
 const Nutrient = ({
   nutrient,
   removeNutrientHandler,
   updateNutrientAmountHandler,
-  autofocus
+  focus
 }) => {
-  // console.log('nutrient', nutrient);
-  // const [amount, setAmount] = useState('');
-
   const nutrientData = useSelector(state => state.nutrientsData.nutrientsData.find(n => {
     // console.log('n[0] === nutrient.id', n[0], nutrient.id);
     return n[0] === nutrient.nutrientDataId;
@@ -33,11 +31,9 @@ const Nutrient = ({
         <Text numberOfLines={2} style={styles.nutrientName}>{nutrientData[1]}</Text>
         <InputNumber2 style={styles.amount}
           onChangeText={(value) => updateNutrientAmountHandler(nutrient, value)} value={nutrient.amount}
-          autofocus={autofocus}
+          focus={focus}
         />
-        <Ionicons
-          onPress={() => removeNutrientHandler(nutrient.id)}
-          name="md-remove-circle" size={24} color="red" />
+        <Icon name="delete" onPress={() => removeNutrientHandler(nutrient.id)} />
       </View>
       <View style={styles.micronutrientRow}>
         <MicronutrientView nutrientId={nutrient.id} summary={true} oneRow={true} />
@@ -73,25 +69,25 @@ const MealScreen = props => {
         behavior="padding" style={{ flex: 1 }}
         keyboardVerticalOffset={100}>
         {nutrients ? <ScrollView ref={scrollViewRef}
-          onContentSizeChange={() => scrollViewRef.current.scrollToEnd()} >
-          {nutrients.map((nutrient) => <Nutrient key={nutrient.id} nutrient={nutrient}
+        // onContentSizeChange={() => scrollViewRef.current.scrollToEnd()}
+        >
+          {nutrients.map((nutrient, index) => <Nutrient key={nutrient.id} nutrient={nutrient}
             removeNutrientHandler={removeNutrientHandler}
             updateNutrientAmountHandler={updateNutrientAmountHandler}
+            focus={index === nutrients.length - 1}
           />)}
-          <Button title='Add new nutrient' onPress={() => props.navigation.navigate('SelectNutrient', { mealId })} />
+          <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
+            <AddButton title='Add nutrient' onPress={() => props.navigation.navigate('SelectNutrient', { mealId })} />
+            <AddButton title='Scan barcode' onPress={() => {
+              props.navigation.navigate('SelectNutrientWithBarcode', { mealId });
+            }} />
+          </View>
         </ScrollView>
           : <Text>No nutrients in the meal</Text>}
 
       </KeyboardAvoidingView>
 
-      {/* <FlatList
-        data={meal.nutrients}
-        renderItem={item => <Nutrient nutrient={item.item}
-          removeNutrientHandler={removeNutrientHandler}
-          updateNutrientAmountHandler={updateNutrientAmountHandler}
 
-        />}
-        keyExtractor={item => item.id} /> */}
     </View>
   )
 }
@@ -129,15 +125,15 @@ MealScreen.navigationOptions = navData => {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    justifyContent: 'flex-start',
-    marginTop: 20,
-    marginLeft: 10,
-    marginRight: 5,
-    backgroundColor: Colors.backgroundColor
+    paddingTop: 20,
+    paddingLeft: 10,
+    paddingRight: 5,
+    backgroundColor: Colors.screenBackground,
   },
   micronutrientRow: {
     marginLeft: 10,
     marginRight: 40,
+    marginBottom: 7
   },
   nutrientContainer: {
     borderBottomWidth: 1,
@@ -163,7 +159,7 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
   },
   nutrientName: {
-    width: '70%'
+    flex: 1
   },
   amount: {
     paddingRight: 10

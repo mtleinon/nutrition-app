@@ -1,39 +1,21 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useSelector, useDispatch } from 'react-redux';
-import { Button, TouchableHighlight, FlatList, View, Text, StyleSheet, Platform } from 'react-native'
+import { Button, FlatList, View, StyleSheet, Platform } from 'react-native'
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import * as planActions from '../store/actions/plans';
 import * as mealActions from '../store/actions/meals';
 import * as nutrientActions from '../store/actions/nutrients';
 import { Ionicons } from '@expo/vector-icons';
 
-import HeadingText from '../components/HeadingText';
 import Colors from '../constants/Colors';
 import HeaderButton from '../components/HeaderButton';
 import MicronutrientView from '../components/MicronutrientView';
 import NameText from '../components/NameText';
 import SmallText from '../components/SmallText';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-
-const TouchableCard = ({ onPress, children }) => (
-  <TouchableHighlight onPress={onPress} >
-    <View style={[styles.plan, styles.elevated]}>
-      {children}
-    </View>
-  </TouchableHighlight>
-);
-const DeleteIcon = ({ onPress }) => (
-  <Ionicons
-    style={styles.icon}
-    onPress={onPress}
-    name="md-remove-circle" size={24} color="red" />
-)
-const EditIcon = ({ onPress }) => (
-  <Ionicons
-    style={styles.icon}
-    onPress={onPress}
-    name="md-create" size={24} color="green" />
-)
+import TouchableCard from '../components/TouchableCard';
+import Icon from '../components/Icon';
+import AddButton from '../components/AddButton';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const Plan = ({ plan, deletePlanHandler, editPlanHandler, navigateToPlanHandler }) => {
   return (
@@ -41,8 +23,8 @@ const Plan = ({ plan, deletePlanHandler, editPlanHandler, navigateToPlanHandler 
       <View style={styles.nameRow}>
         <NameText numberOfLines={2} style={styles.mealName}>{plan.name}</NameText>
         <View style={styles.row}>
-          <DeleteIcon onPress={() => deletePlanHandler(plan.id)} />
-          <EditIcon onPress={() => editPlanHandler(plan.id)} />
+          <Icon name="delete" onPress={() => deletePlanHandler(plan.id)} />
+          <Icon name="edit" onPress={() => editPlanHandler(plan.id)} />
         </View>
       </View>
       <SmallText numberOfLines={2} style={styles.planDescription}>{plan.description}</SmallText>
@@ -75,15 +57,14 @@ const AllPlansScreen = props => {
 
   return (
     <View style={styles.screen}>
-      {/* <HeadingText>All plans</HeadingText> */}
-      <FlatList
-        data={plans}
-        renderItem={item => <Plan plan={item.item}
+      <ScrollView>
+        {plans.map(plan => <Plan key={plan.id} plan={plan}
           deletePlanHandler={deletePlanHandler}
           editPlanHandler={editPlanHandler}
-          navigateToPlanHandler={navigateToPlanHandler} />}
-        keyExtractor={item => item.id.toString()} />
-      <Button title='Add new plan' onPress={() => props.navigation.navigate('NewPlan')} />
+          navigateToPlanHandler={navigateToPlanHandler} />)}
+        <AddButton title='Add new plan' onPress={() => props.navigation.navigate('NewPlan')} />
+      </ScrollView>
+
     </View>
   )
 }
@@ -113,16 +94,10 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     paddingTop: 20,
-    paddingLeft: 10,
+    paddingLeft: 5,
     paddingRight: 5,
     backgroundColor: Colors.screenBackground,
     justifyContent: 'flex-start'
-  },
-  plan: {
-    borderBottomWidth: 1,
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    borderBottomColor: Colors.grayBorder,
   },
   mealName: {
     // width: '65%'
@@ -136,7 +111,7 @@ const styles = StyleSheet.create({
   icon: {
     // backgroundColor: 'red',
     paddingHorizontal: 15,
-    paddingVertical: 10,
+    paddingVertical: 5,
 
     margin: 1
   },
@@ -153,17 +128,17 @@ const styles = StyleSheet.create({
   //   marginLeft: 10,
   //   marginRight: 40,
   // },
-  elevated: {
-    shadowColor: 'black',
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 4,
-    padding: 5,
-    elevation: 2,
-    backgroundColor: 'white',
-    borderRadius: 4,
-    borderWidth: 0,
-    borderColor: 'transparent',
-    margin: 4,
-  }
+  // elevated: {
+  //   shadowColor: 'black',
+  //   shadowOffset: { width: 0, height: 2 },
+  //   shadowRadius: 4,
+  //   padding: 5,
+  //   elevation: 2,
+  //   backgroundColor: 'white',
+  //   borderRadius: 4,
+  //   borderWidth: 0,
+  //   borderColor: 'transparent',
+  //   margin: 4,
+  // }
 })
 export default AllPlansScreen;

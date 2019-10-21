@@ -1,7 +1,6 @@
 import React from 'react'
 import { useSelector } from 'react-redux';
 import { View, Text } from 'react-native'
-import { calculateMealMicronutrientData } from '../helperFunctions/calculateDataToShow';
 import MicronutrientViewOneRow from '../components/MicronutrientViewOneRow';
 import MicronutrientViewSummary from '../components/MicronutrientViewSummary';
 import MicronutrientViewLong from '../components/MicronutrientViewLong';

@@ -9,15 +9,14 @@ import InputNumber from '../components/InputNumber';
 import InputText from '../components/InputText';
 import Nutrient from '../models/Nutrient';
 import Barcode from '../models/Barcode';
+import Icon from '../components/Icon';
 
 const NutrientDataView = ({ item, selectedNameHandler, showMicronutrientHandler }) => {
   return (
     <TouchableHighlight onPress={() => selectedNameHandler(item.item[1], item.item[0])} >
       <View style={styles.selectNutrition}>
         <Text style={styles.selectNutritionText}>{item.item[0]}. {item.item[1]}</Text>
-        <Ionicons
-          onPress={() => showMicronutrientHandler(item.item)}
-          name="md-information-circle" size={24} color="green" />
+        <Icon name="information" onPress={() => showMicronutrientHandler(item.item)} />
       </View>
     </TouchableHighlight>
   )
@@ -136,7 +135,7 @@ const styles = StyleSheet.create({
     marginRight: 8
   },
   selectNutritionText: {
-    width: '80%'
+    flex: 1
   },
   selectedName: {
     height: 40,
