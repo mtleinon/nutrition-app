@@ -1,14 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux';
-import { Button, Alert, TouchableHighlight, TouchableOpacity, FlatList, TextInput, View, Text, StyleSheet, Platform, KeyboardAvoidingView, ScrollView } from 'react-native'
-import { Ionicons } from '@expo/vector-icons';
+import { Alert, TouchableOpacity, View, Text, StyleSheet, Platform } from 'react-native'
 import Colors from '../constants/Colors';
 import * as nutrientActions from '../store/actions/nutrients';
 import Nutrient from '../models/Nutrient';
-// import { NAME_I } from '../models/NutrientData';
 import * as Permissions from 'expo-permissions';
 import { BarCodeScanner } from 'expo-barcode-scanner';
-const NAME_I = 1;
+import { NAME_I } from '../models/NutrientData';
 
 const SelectNutrientWithBarcodeScreen = props => {
   const mealId = props.navigation.getParam('mealId');
@@ -16,7 +14,6 @@ const SelectNutrientWithBarcodeScreen = props => {
   const barcodes = useSelector(state => state.barcodes.barcodes);
 
   const [selectedCode, setSelectedCode] = useState('');
-
   const [hasCameraPermission, setHasCameraPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
 
@@ -25,7 +22,6 @@ const SelectNutrientWithBarcodeScreen = props => {
   const askCameraPermission = async () => {
     const askCameraPermission = await Permissions.askAsync(Permissions.CAMERA);
     console.log('askCameraPermission', askCameraPermission);
-    // setHasCameraPermission(true);
     setHasCameraPermission(askCameraPermission.status === 'granted');
   }
 
@@ -58,58 +54,70 @@ const SelectNutrientWithBarcodeScreen = props => {
   if (hasCameraPermission === null) {
     return <Text>Requesting for camera permission</Text>;
   }
+
   if (hasCameraPermission === false) {
     return <Text>No access to camera</Text>;
   }
 
-  const handleBarCodeScanned = ({ type, data }) => {
+  const addNutrient = (nutrient, mealId, barcode) => {
+    Alert.alert(
+      'Add nutrient to meal',
+      nutrient[NAME_I],
+      [
+        {
+          text: 'Add',
+          onPress: () => {
+            dispatch(nutrientActions.storeNutrientToDb(
+              new Nutrient(null, mealId, barcode.nutrientDataId, 0)));
+            props.navigation.goBack();
+          }
+        },
+        {
+          text: 'Scan a new barcode',
+          onPress: () => {
+            setScanned(false);
+          }
+        }
+      ]);
+  }
+
+  const addNewBarcode = (scannedBarcode, mealId) => {
+    Alert.alert(
+      'Select nutrient',
+      'Select nutrient for the new barcode',
+      [
+        {
+          text: 'Select',
+          onPress: () => {
+            props.navigation.navigate('SelectNutrient', { barcode: +scannedBarcode, mealId });
+          }
+        },
+        {
+          text: 'Scan a new barcode',
+          onPress: () => {
+            console.log('Scan new barcode');
+            setScanned(false);
+          }
+        }
+      ]);
+  }
+
+  const handleBarCodeScanned = ({ data }) => {
+    const scannedBarcode = +data;
     setScanned(true);
-    setSelectedCode(+data);
-    barcode = barcodes.find(barcode => barcode.barcode === +data);
+    setSelectedCode(scannedBarcode);
+    barcode = barcodes.find(barcode => barcode.barcode === scannedBarcode);
     let nutrient;
     if (barcode) {
       nutrient = nutrientsData.find(data => data[0] === barcode.nutrientDataId)
     }
     if (nutrient) {
-      Alert.alert(
-        'Add nutrient to meal',
-        nutrient[NAME_I],
-        [
-          {
-            text: 'Add',
-            onPress: () => {
-              dispatch(nutrientActions.storeNutrientToDb(new Nutrient(null, mealId, barcode.nutrientDataId, 0)));
-              props.navigation.goBack();
-            }
-          },
-          {
-            text: 'Scan a new barcode',
-            onPress: () => {
-              setScanned(false);
-            }
-          }
-        ]);
+      addNutrient(nutrient, mealId, barcode);
     } else {
-      Alert.alert(
-        'Select nutrient',
-        'Select nutrient for the new barcode',
-        [
-          {
-            text: 'Select',
-            onPress: () => {
-              props.navigation.navigate('SelectNutrient', { barcode: +data, mealId });
-            }
-          },
-          {
-            text: 'Scan a new barcode',
-            onPress: () => {
-              console.log('Scan new barcode');
-              setScanned(false);
-            }
-          }
-        ]);
+      addNewBarcode(scannedBarcode, mealId);
     };
   }
+
   return (
     <View
       style={{
