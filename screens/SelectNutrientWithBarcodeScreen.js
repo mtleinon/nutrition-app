@@ -1,19 +1,25 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux';
-import { Alert, TouchableOpacity, View, Text, StyleSheet, Platform } from 'react-native'
+import { Button, Modal, Alert, TouchableOpacity, View, Text, StyleSheet, Platform } from 'react-native'
 import Colors from '../constants/Colors';
 import * as nutrientActions from '../store/actions/nutrients';
 import Nutrient from '../models/Nutrient';
 import * as Permissions from 'expo-permissions';
 import { BarCodeScanner } from 'expo-barcode-scanner';
-import { NAME_I } from '../models/NutrientData';
+import { DATA_ID_I } from '../models/NutrientData';
+import AddButton from '../components/AddButton';
+import TouchableCard from '../components/TouchableCard';
+import HeadingText from '../components/HeadingText';
 
 const SelectNutrientWithBarcodeScreen = props => {
   const mealId = props.navigation.getParam('mealId');
   const nutrientsData = useSelector(state => state.nutrientsData.nutrientsData);
   const barcodes = useSelector(state => state.barcodes.barcodes);
 
-  const [selectedCode, setSelectedCode] = useState('');
+  const [scannedBarcode, setScannedBarcode] = useState('');
+  const [barcode, setBarcode] = useState('');
+  const [nutrientData, setNutrientData] = useState('');
+  const [modalVisible, setModalVisible] = useState(false);
   const [hasCameraPermission, setHasCameraPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
 
@@ -31,21 +37,21 @@ const SelectNutrientWithBarcodeScreen = props => {
   }, []);
 
   const addNutrientHandler = useCallback(() => {
-    if (!selectedCode) {
+    if (!scannedBarcode) {
       Alert.alert('Please read barcode first',
         'Please use phones camera to read barcode',
         [{ text: 'OK' }]);
       return;
     }
-    barcode = barcodes.find(barcode => barcode.barcode === selectedCode);
+    const barcode = barcodes.find(barcode => barcode.barcode === scannedBarcode);
     if (barcode) {
       dispatch(nutrientActions.storeNutrientToDb(new Nutrient(null, mealId, barcode.nutrientDataId, 0)));
       props.navigation.goBack();
     }
     else {
-      props.navigation.navigate('SelectNutrient', { barcode: selectedCode, mealId });
+      props.navigation.navigate('SelectNutrient', { barcode: scannedBarcode, mealId });
     }
-  }, [selectedCode]);
+  }, [scannedBarcode]);
 
   useEffect(() => {
     props.navigation.setParams({ addNutrientHandler })
@@ -59,65 +65,59 @@ const SelectNutrientWithBarcodeScreen = props => {
     return <Text>No access to camera</Text>;
   }
 
-  const addNutrient = (nutrient, mealId, barcode) => {
-    Alert.alert(
-      'Add nutrient to meal',
-      nutrient[NAME_I],
-      [
-        {
-          text: 'Add',
-          onPress: () => {
-            dispatch(nutrientActions.storeNutrientToDb(
-              new Nutrient(null, mealId, barcode.nutrientDataId, 0)));
-            props.navigation.goBack();
-          }
-        },
-        {
-          text: 'Scan a new barcode',
-          onPress: () => {
-            setScanned(false);
-          }
-        }
-      ]);
-  }
-
-  const addNewBarcode = (scannedBarcode, mealId) => {
-    Alert.alert(
-      'Select nutrient',
-      'Select nutrient for the new barcode',
-      [
-        {
-          text: 'Select',
-          onPress: () => {
-            props.navigation.navigate('SelectNutrient', { barcode: +scannedBarcode, mealId });
-          }
-        },
-        {
-          text: 'Scan a new barcode',
-          onPress: () => {
-            console.log('Scan new barcode');
-            setScanned(false);
-          }
-        }
-      ]);
-  }
-
   const handleBarCodeScanned = ({ data }) => {
-    const scannedBarcode = +data;
+    const scannedBarcodeNumber = +data;
     setScanned(true);
-    setSelectedCode(scannedBarcode);
-    barcode = barcodes.find(barcode => barcode.barcode === scannedBarcode);
-    let nutrient;
-    if (barcode) {
-      nutrient = nutrientsData.find(data => data[0] === barcode.nutrientDataId)
-    }
-    if (nutrient) {
-      addNutrient(nutrient, mealId, barcode);
+
+    setScannedBarcode(+scannedBarcodeNumber);
+    setModalVisible(true);
+    const foundBarcode = barcodes.find(barcode => barcode.barcode === scannedBarcodeNumber);
+    if (foundBarcode) {
+      setBarcode(foundBarcode);
+      const foundNutrient = nutrientsData.find(nutrientData => nutrientData[DATA_ID_I] === foundBarcode.nutrientDataId)
+      if (foundNutrient) {
+        setNutrientData(foundNutrient);
+      } else {
+        setNutrientData(null);
+      }
     } else {
-      addNewBarcode(scannedBarcode, mealId);
-    };
+      setBarcode(null);
+      setNutrientData(null);
+    }
   }
 
+  const BarcodeResult = () => (
+    <View style={{ flex: 1, justifyContent: 'center' }}>
+      <TouchableCard>
+        <HeadingText>{nutrientData ? `Found ${nutrientData[1]}` : 'No nutrient for barcode'}</HeadingText>
+      </TouchableCard>
+      {nutrientData && (<AddButton title="Add nutrient to meal" color="green"
+        onPress={() => {
+          setModalVisible(false);
+          dispatch(nutrientActions.storeNutrientToDb(
+            new Nutrient(null, mealId, barcode.nutrientDataId, 0)));
+          props.navigation.goBack();
+        }} />)
+      }{
+        barcode && <AddButton title="Set new nutrient for the barcode" color="green"
+          onPress={() => {
+            props.navigation.navigate('SelectNutrient', { barcode, mealId });
+            setModalVisible(false);
+          }} />
+      }{
+        !barcode && scannedBarcode &&
+        <AddButton title="Select nutrient for the new barcode" color="green"
+          onPress={() => {
+            props.navigation.navigate('SelectNutrient', { scannedBarcode, mealId });
+            setModalVisible(false);
+          }} />
+      }<AddButton title="Scan new barcode" color="blue"
+        onPress={() => {
+          setScanned(false);
+          setModalVisible(false);
+        }} />
+    </View>
+  );
   return (
     <View
       style={{
@@ -125,10 +125,20 @@ const SelectNutrientWithBarcodeScreen = props => {
         flexDirection: 'column',
         justifyContent: 'flex-end',
       }}>
+      <Modal
+        animationType="slide"
+        transparent={false}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert('Modal has been closed.');
+        }}>
+        <BarcodeResult />
+      </Modal>
       <BarCodeScanner
         onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
         style={StyleSheet.absoluteFillObject}
       />
+
     </View>
   );
 }

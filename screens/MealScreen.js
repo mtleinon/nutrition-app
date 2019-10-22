@@ -9,6 +9,7 @@ import HeaderButton from '../components/HeaderButton';
 import MicronutrientView from '../components/MicronutrientView';
 import AddButton from '../components/AddButton';
 import Nutrient from '../components/Nutrient';
+import ElevatedHeader from '../components/ElevatedHeader';
 
 const MealScreen = props => {
   const mealId = props.navigation.getParam('mealId');
@@ -29,11 +30,13 @@ const MealScreen = props => {
 
   return (
     <View style={styles.screen} >
-      <HeadingText>{meal.name}</HeadingText>
-      <View style={styles.micronutrientRow}>
-        <MicronutrientView mealId={meal.id} summary={true}
-          oneRow={true} noDataText="Meal has no nutrients yet." />
-      </View>
+      <ElevatedHeader>
+        <HeadingText style={styles.HeadingText}>{meal.name}</HeadingText>
+        <View style={styles.micronutrientRow}>
+          <MicronutrientView mealId={meal.id} summary={true}
+            oneRow={true} noDataText="Meal has no nutrients yet." />
+        </View>
+      </ElevatedHeader>
       <KeyboardAvoidingView
         behavior="padding" style={{ flex: 1 }}
         keyboardVerticalOffset={100}>
@@ -59,7 +62,7 @@ const MealScreen = props => {
 
 MealScreen.navigationOptions = navData => {
   const mealId = navData.navigation.getParam('mealId');
-  const mealNutrientData = navData.navigation.getParam('mealNutrientData');
+  // const mealNutrientData = navData.navigation.getParam('mealNutrientData');
 
   return {
     headerTitle: 'Meal',
@@ -90,14 +93,17 @@ MealScreen.navigationOptions = navData => {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    paddingTop: 20,
-    paddingLeft: 10,
-    paddingRight: 5,
+    // paddingTop: 10,
+    // paddingLeft: 5,
+    // paddingRight: 5,
     backgroundColor: Colors.screenBackground,
   },
-  micronutrientRow: {
+  HeadingText: {
     marginLeft: 10,
-    marginRight: 40,
+  },
+  micronutrientRow: {
+    marginLeft: 15,
+    marginRight: 25,
     marginBottom: 7
   },
   buttonRow: {

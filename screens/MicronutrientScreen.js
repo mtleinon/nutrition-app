@@ -7,6 +7,7 @@ import MicronutrientView from '../components/MicronutrientView';
 import Colors from '../constants/Colors';
 import HeadingText from '../components/HeadingText';
 import { NAME_I } from '../models/NutrientData';
+import ElevatedHeader from '../components/ElevatedHeader';
 
 const MicronutrientScreen = props => {
   const summary = props.navigation.getParam('summary');
@@ -26,8 +27,10 @@ const MicronutrientScreen = props => {
   }
   return (
     <View style={styles.screen}>
-      <HeadingText>{headingText}</HeadingText>
-      <MicronutrientView nutrientData={nutrientData} mealId={mealId} planId={planId} summary={summary} />
+      <ElevatedHeader>
+        <HeadingText style={styles.headingText}>{headingText}</HeadingText>
+      </ElevatedHeader>
+      <MicronutrientView style={styles.micronutrientList} nutrientData={nutrientData} mealId={mealId} planId={planId} summary={summary} />
     </View>
   )
 }
@@ -43,10 +46,11 @@ MicronutrientScreen.navigationOptions = navData => {
 
 const styles = StyleSheet.create({
   screen: {
-    marginTop: 20,
-    marginLeft: 10,
-    marginRight: 5,
-    paddingBottom: 60,
+    flex: 1,
+    // marginTop: 20,
+    // marginLeft: 10,
+    // marginRight: 10,
+    // paddingBottom: 60,
   },
   microNutrient: {
     flexDirection: 'row',
@@ -59,6 +63,9 @@ const styles = StyleSheet.create({
   },
   microNutrientName: {
     width: '70%'
+  },
+  headingText: {
+    marginLeft: 10
   },
   microNutrientValue: {
     paddingRight: 10

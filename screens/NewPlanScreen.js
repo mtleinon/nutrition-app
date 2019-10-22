@@ -24,13 +24,6 @@ const NewPlanScreen = props => {
         [{ text: 'OK' }]);
       return;
     }
-    if (!description) {
-      Alert.alert('Please give description',
-        'Please write plan description to the field',
-        [{ text: 'OK' }]);
-      return;
-    }
-    // const planId = new Date().toISOString();
     if (isEditMode) {
       dispatch(planActions.updatePlanInDb(new Plan(planId, name, description)));
     } else {
@@ -51,7 +44,7 @@ const NewPlanScreen = props => {
         onChangeText={setName} value={name}
       />
       <InputText
-        label="Description2"
+        label="Description"
         multiline={true}
         numberOfLines={6}
         onChangeText={setDescription} value={description}

@@ -68,9 +68,6 @@ AllPlansScreen.navigationOptions = navData => {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    paddingTop: 20,
-    paddingLeft: 5,
-    paddingRight: 5,
     backgroundColor: Colors.screenBackground,
     justifyContent: 'flex-start'
   },

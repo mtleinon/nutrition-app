@@ -31,7 +31,10 @@ const SelectNutritionScreen = props => {
 
   const mealId = props.navigation.getParam('mealId');
   const barcode = props.navigation.getParam('barcode');
+  const scannedBarcode = props.navigation.getParam('scannedBarcode');
   const nutrientsData = useSelector(state => state.nutrientsData.nutrientsData);
+  // const barcodes = useSelector(state => state.barcodes.barcodes);
+
   // const [name, setName] = useState('');
   // const [amount, setAmount] = useState('');
   const [selectedName, setSelectedName] = useState('');
@@ -49,8 +52,10 @@ const SelectNutritionScreen = props => {
       dispatch(nutrientActions.storeNutrientToDb(new Nutrient(null, mealId, newSelectedId, 0)));
     }
     if (barcode) {
-      dispatch(barcodeActions.storeBarcodeToDb(new Barcode(null, barcode, newSelectedId)));
-      // return;
+      dispatch(barcodeActions.updateBarcodeInDb(new Barcode(barcode.id, barcode.barcode, newSelectedId)));
+    }
+    if (scannedBarcode) {
+      dispatch(barcodeActions.storeBarcodeToDb(new Barcode(null, scannedBarcode, newSelectedId)));
     }
     props.navigation.navigate('Meal');
   }
@@ -66,7 +71,12 @@ const SelectNutritionScreen = props => {
       dispatch(nutrientActions.storeNutrientToDb(new Nutrient(null, mealId, selectedId, 0)));
     }
     if (barcode) {
-      dispatch(barcodeActions.storeBarcodeToDb(new Barcode(null, barcode, selectedId)));
+      const oldBarcode = barcodes.find(code => code.barcode === barcode);
+      if (oldBarcode) {
+        dispatch(barcodeActions.updateBarcode(new Barcode(null, barcode, selectedId)));
+      } else {
+        dispatch(barcodeActions.storeBarcodeToDb(new Barcode(null, barcode, selectedId)));
+      }
       // return;
     }
     props.navigation.navigate('Meal');

@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, SectionList } from 'react-native'
+import { View, SectionList, StyleSheet } from 'react-native'
 import nutrientHeading from '../data/nutrientInfo';
 import MicronutrientSectionHeader from '../components/MicronutrientSectionHeader';
 import MicronutrientSectionData from '../components/MicronutrientSectionData';
@@ -22,7 +22,6 @@ const getRecommendation = header => {
 }
 
 const MicronutrientViewLong = (dataToShow) => {
-
   // Convert data for SectionList
   const dataWithHeading = dataToShow.map((data, i) => ({
     value: data,
@@ -33,7 +32,7 @@ const MicronutrientViewLong = (dataToShow) => {
 
   const data = [
     {
-      title: { title: 'Main nutrients', amount: 'amount', relative: '%energy' },
+      title: { title: 'Main nutrients', amount: 'amount', relative: '% ener' },
       data: dataWithHeading.slice(2, 6)
     },
     {
@@ -41,16 +40,16 @@ const MicronutrientViewLong = (dataToShow) => {
       data: dataWithHeading.slice(6, 33)
     },
     {
-      title: { title: 'Micronutrients', amount: 'amount', relative: '% daily rec' },
+      title: { title: 'Micronutrients', amount: 'amount', relative: '% rec' },
       data: dataWithHeading.slice(33, 45)
     },
     {
-      title: { title: 'Vitamins', amount: 'amount', relative: '% daily recom' },
+      title: { title: 'Vitamins', amount: 'amount', relative: '% rec' },
       data: dataWithHeading.slice(45, 56)
     },
   ];
 
-  return (<View>
+  return (<View style={styles.micronutrientList}>
     <SectionList
       sections={data}
       renderItem={item => {
@@ -65,5 +64,11 @@ const MicronutrientViewLong = (dataToShow) => {
   </View>
   );
 }
+const styles = StyleSheet.create({
+  micronutrientList: {
+    marginLeft: 10,
+    marginRight: 10,
+  },
+});
 
 export default MicronutrientViewLong;

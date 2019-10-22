@@ -27,8 +27,10 @@ const Icon = ({ name, onPress }) => (
 
 const styles = StyleSheet.create({
   icon: {
-    paddingHorizontal: 15,
-    paddingVertical: 5,
+    paddingRight: 10,
+    paddingLeft: 15,
+    paddingTop: 3,
+    paddingBottom: 5,
     margin: 1
   },
 });

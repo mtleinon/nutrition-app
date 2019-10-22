@@ -1,12 +1,14 @@
 import React from 'react'
 import { useSelector } from 'react-redux';
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, Platform, Dimensions } from 'react-native'
 
 import InputNumber2 from '../components/InputNumber2';
 import Colors from '../constants/Colors';
 import MicronutrientView from '../components/MicronutrientView';
-
+import { NAME_I } from '../models/NutrientData';
 import Icon from '../components/Icon';
+import ElevatedCard from './ElevatedCard';
+import Heading3Text from './Heading3Text';
 
 const Nutrient = ({
   nutrient,
@@ -19,46 +21,31 @@ const Nutrient = ({
     return n[0] === nutrient.nutrientDataId;
   }
   ));
-
   return (
-    <View style={[styles.nutrientContainer, styles.elevated]}>
+    <ElevatedCard>
       <View style={styles.nutrient}>
-        <Text numberOfLines={2} style={styles.nutrientName}>{nutrientData[1]}</Text>
+        <Heading3Text numberOfLines={2} style={styles.nutrientName}>{nutrientData[NAME_I]}</Heading3Text>
         <InputNumber2 style={styles.amount}
-          onChangeText={(value) => updateNutrientAmountHandler(nutrient, value)} value={nutrient.amount}
+          onChangeText={(value) => updateNutrientAmountHandler(nutrient, value)}
+          value={nutrient.amount}
           focus={focus}
         />
-        <Text>g</Text>
+        <Heading3Text style={styles.unit}>g</Heading3Text>
         <Icon name="delete" onPress={() => removeNutrientHandler(nutrient.id)} />
       </View>
       <View style={styles.micronutrientRow}>
         <MicronutrientView nutrientId={nutrient.id} summary={true} oneRow={true} />
       </View>
-    </View>
+    </ElevatedCard>
   );
 }
 
 const styles = StyleSheet.create({
   micronutrientRow: {
     marginLeft: 10,
-    marginRight: 40,
-    marginBottom: 7
-  },
-  nutrientContainer: {
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.grayBorder,
-  },
-  elevated: {
-    shadowColor: 'black',
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 4,
-    padding: 5,
-    elevation: 2,
-    backgroundColor: 'white',
-    borderRadius: 4,
-    borderWidth: 0,
-    borderColor: 'transparent',
-    margin: 4,
+    marginRight: 30,
+    marginBottom: 5,
+    marginTop: 5
   },
   nutrient: {
     flexDirection: 'row',
@@ -68,11 +55,18 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
   },
   nutrientName: {
-    flex: 1
+    flex: 1,
+    marginLeft: 10,
+    marginLeft: 10,
   },
   amount: {
-    paddingRight: 10
+    marginBottom: Platform.OS === 'android' ? 9 : 0,
+    fontSize: 15
   },
+  unit: {
+    marginRight: 5,
+    marginLeft: 2
+  }
 });
 
 export default Nutrient;

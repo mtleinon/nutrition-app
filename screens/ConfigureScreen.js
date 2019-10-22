@@ -12,6 +12,8 @@ const ConfigureScreen = props => {
     console.log('Meals result =', result);
     result = await db.getAllNutrients();
     console.log('Nutrients result =', result);
+    result = await db.getAllBarcodes();
+    console.log('Barcodes result =', result);
   }
 
   const dropTablesHandler = async () => {

@@ -8,7 +8,7 @@ const InputNumber2 = props => {
 
   useEffect(() => {
     if (textInputRef && textInputRef.current && props.focus && value === 0) {
-      console.log('textInputRef =', textInputRef);
+      // console.log('textInputRef =', textInputRef);
       textInputRef.current.focus();
     }
   });
@@ -32,29 +32,33 @@ const InputNumber2 = props => {
     }
   }
   return (
-    <View style={styles.input}>
-      <TextInput
-        ref={textInputRef}
-        keyboardType="number-pad"
-        style={styles.inputField}
-        onChangeText={setValueHandler} value={value.toString()}
+    <TextInput
+      ref={textInputRef}
+      keyboardType="number-pad"
+      style={[styles.inputField, props.style]}
+      onChangeText={setValueHandler} value={value.toString()}
 
-      />
-    </View>
+    />
   )
 }
 
 const styles = StyleSheet.create({
+  input: {
+    alignItems: 'flex-start'
+  },
   inputField: {
     textAlign: 'right',
     color: Colors.primary,
     fontSize: 16,
     fontWeight: 'bold',
-    borderBottomWidth: 1,
+    // lineHeight: 1,
+    includeFontPadding: false,
+    textAlignVertical: 'bottom',
+    borderBottomWidth: 2,
     borderBottomColor: Colors.primary,
     paddingHorizontal: 3,
     paddingVertical: 0,
-    minWidth: 50
+    minWidth: 45
   },
 
 })

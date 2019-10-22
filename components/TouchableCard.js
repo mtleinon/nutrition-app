@@ -1,27 +1,12 @@
 import React from 'react'
 import { TouchableHighlight, View, StyleSheet } from 'react-native'
-
+import ElevatedCard from './ElevatedCard';
 const TouchableCard = ({ onPress, children }) => (
   <TouchableHighlight onPress={onPress} >
-    <View style={styles.elevated}>
+    <ElevatedCard>
       {children}
-    </View>
+    </ElevatedCard>
   </TouchableHighlight>
 );
-
-const styles = StyleSheet.create({
-  elevated: {
-    shadowColor: 'black',
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 4,
-    padding: 10,
-    elevation: 2,
-    backgroundColor: 'white',
-    borderRadius: 4,
-    borderWidth: 0,
-    borderColor: 'transparent',
-    margin: 4,
-  }
-});
 
 export default TouchableCard;

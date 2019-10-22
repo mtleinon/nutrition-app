@@ -28,6 +28,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    marginLeft: 7,
+    marginTop: 5,
   },
   mealMicronutrientRow: {
     marginLeft: 10,

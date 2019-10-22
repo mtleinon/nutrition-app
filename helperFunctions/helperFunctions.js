@@ -9,4 +9,4 @@ export const decimals = value => {
   return
 }
 
-export const convertKjToKCal = value => value / 4.184;
+export const convertKCalToKJ = value => value / 4.184;

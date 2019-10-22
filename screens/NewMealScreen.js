@@ -24,13 +24,6 @@ const NewMealScreen = props => {
         [{ text: 'OK' }]);
       return;
     }
-    if (!description) {
-      Alert.alert('Please give description',
-        'Please write meal description to the field',
-        [{ text: 'OK' }]);
-      return;
-    }
-    // dispatch(mealActions.newMeal(mealId, name, description))
     if (isEditMode) {
       dispatch(mealActions.updateMealInDb(new Meal(mealId, meal.planId, name, description)));
     } else {
@@ -52,6 +45,8 @@ const NewMealScreen = props => {
       />
       <InputText
         label="Description"
+        multiline={true}
+        numberOfLines={6}
         onChangeText={setDescription} value={description}
       />
     </View>

@@ -568,11 +568,9 @@ export const insertBarcode = barcode => {
 // update barcodes set amount = 1000.0 where barcodeDataId=812;
 export const updateBarcode = barcode => {
   return new Promise((resolve, reject) => {
-    // console.log(`UPDATE ${ barcodes } SET amount = ${ barcode.amount } WHERE id = ${ barcode.id }; `);
-
     db.transaction((tx) => {
       tx.executeSql(
-        `UPDATE ${barcodes} SET barcode = ${barcode.barcode} nutrientDataId = ${barcode.nutrientDataId} WHERE id = ${barcode.id}; `,
+        `UPDATE ${barcodes} SET barcode = ${barcode.barcode}, nutrientDataId = ${barcode.nutrientDataId} WHERE id = ${barcode.id}; `,
         [],
         (_, result) => {
           resolve(result)

@@ -11,6 +11,7 @@ import HeaderButton from '../components/HeaderButton';
 import MicronutrientView from '../components/MicronutrientView';
 import AddButton from '../components/AddButton';
 import Meal from '../components/Meal';
+import ElevatedHeader from '../components/ElevatedHeader';
 
 const PlanScreen = props => {
   const planId = props.navigation.getParam('planId');
@@ -33,11 +34,13 @@ const PlanScreen = props => {
 
   return (
     <View style={styles.screen}>
-      <HeadingText>{plan.name}</HeadingText>
-      <View style={styles.planMicronutrientRow}>
-        <MicronutrientView planId={plan.id} summary={true}
-          oneRow={true} noDataText="Plan has no meals." />
-      </View>
+      <ElevatedHeader>
+        <HeadingText style={styles.HeadingText}>{plan.name}</HeadingText>
+        <View style={styles.planMicronutrientRow}>
+          <MicronutrientView planId={plan.id} summary={true}
+            oneRow={true} noDataText="Plan has no meals." />
+        </View>
+      </ElevatedHeader>
       <ScrollView>
         {planMeals.map(meal => <Meal key={meal.id} meal={meal}
           deleteMealHandler={deleteMealHandler}
@@ -75,10 +78,10 @@ PlanScreen.navigationOptions = navData => {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    paddingTop: 20,
-    paddingLeft: 10,
-    paddingRight: 5,
     backgroundColor: Colors.screenBackground,
+  },
+  HeadingText: {
+    marginLeft: 10,
   },
   meal: {
     borderBottomWidth: 1,
@@ -87,7 +90,7 @@ const styles = StyleSheet.create({
   },
   planMicronutrientRow: {
     marginLeft: 10,
-    marginRight: 40,
+    marginRight: 30,
     marginTop: 3,
     marginBottom: 7
   }
