@@ -1,8 +1,8 @@
 import React from 'react'
 import { View, StyleSheet } from 'react-native'
 
-const ElevatedHeader = ({ children }) => (
-  <View style={styles.header}>
+const ElevatedHeader = ({ children, onPress }) => (
+  <View style={styles.header} onPress={onPress}>
     {children}
   </View>
 );

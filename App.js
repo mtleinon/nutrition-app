@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { Platform } from 'react-native'
+
 import { createAppContainer } from 'react-navigation';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
@@ -13,6 +15,16 @@ import dbOperationReducer from './store/reducers/dbOperation';
 // import SelectNutritionScreen from './screens/SelectNutritionScreen';
 // import MicronutrientScreen from './screens/MicronutrientScreen';
 import ErrorViewer from './ErrorViewer';
+
+import Constants from 'expo-constants';
+
+import {
+  AdMobBanner,
+  AdMobInterstitial,
+  PublisherBanner,
+  AdMobRewarded
+} from 'expo-ads-admob';
+
 
 import { initializeDatabase } from './helperFunctions/sqlite';
 console.log('APP STARTED');
@@ -39,7 +51,7 @@ const AppNavigationContainer = createAppContainer(AppNavigator);
 
 export default function App() {
   console.log('App function STARTED');
-
+  console.log('Constants =', Constants);
   [appInitialized, setAppInitialized] = useState(false);
   return (
     <Provider store={store}>
@@ -49,6 +61,19 @@ export default function App() {
           <InitializeApp setAppInitialized={setAppInitialized} />
         }
       </ErrorViewer>
+      <AdMobBanner
+        bannerSize="fullBanner"
+
+        adUnitID={Platform.OS === 'android'
+          ? "ca-app-pub-3940256099942544/6300978111"
+          : "ca-app-pub-3940256099942544/6300978111"}
+        // adUnitID={Platform.OS === 'android'
+        //   ? "ca-app-pub-9120709668433720/3958710513"
+        //   : "ca-app-pub-9120709668433720/4955548677"}
+        // testDeviceID="EMULATOR"
+        testDeviceID="5756bdbc-f5cc-4999-9788-190c4c7371d9"
+        servePersonalizedAds
+        onDidFailToReceiveAdWithError={err => { console.warn('banner err =', err); }} />
     </Provider>);
 }
 

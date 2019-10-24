@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "expo": "^35.0.0",
+    "expo-ads-admob": "^7.0.0",
     "expo-barcode-scanner": "^7.0.0",
     "expo-sqlite": "^7.0.0",
     "react": "16.8.3",

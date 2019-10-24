@@ -11,7 +11,7 @@ import HeaderButton from '../components/HeaderButton';
 import MicronutrientView from '../components/MicronutrientView';
 import AddButton from '../components/AddButton';
 import Meal from '../components/Meal';
-import ElevatedHeader from '../components/ElevatedHeader';
+import TouchableHeader from '../components/TouchableHeader';
 import { catchErrors } from '../store/actions/dbOperation';
 
 const PlanScreen = props => {
@@ -35,13 +35,17 @@ const PlanScreen = props => {
 
   return (
     <View style={styles.screen}>
-      <ElevatedHeader>
+      <TouchableHeader
+        onPress={() => {
+          props.navigation.navigate('Micronutrient', { planId });
+        }}
+      >
         <HeadingText style={styles.HeadingText}>{plan.name}</HeadingText>
         <View style={styles.planMicronutrientRow}>
           <MicronutrientView planId={plan.id} summary={true}
             oneRow={true} noDataText="Plan has no meals." />
         </View>
-      </ElevatedHeader>
+      </TouchableHeader>
       <ScrollView>
         {planMeals.map(meal => <Meal key={meal.id} meal={meal}
           deleteMealHandler={deleteMealHandler}

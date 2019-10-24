@@ -7,14 +7,15 @@ import Colors from '../constants/Colors';
 import MicronutrientView from '../components/MicronutrientView';
 import { NAME_I } from '../models/NutrientData';
 import Icon from '../components/Icon';
-import ElevatedCard from './ElevatedCard';
+import TouchableCard from './TouchableCard';
 import Heading3Text from './Heading3Text';
 
 const Nutrient = ({
   nutrient,
   removeNutrientHandler,
   updateNutrientAmountHandler,
-  focus
+  focus,
+  onPress
 }) => {
   const nutrientData = useSelector(state => state.nutrientsData.nutrientsData.find(n => {
     // console.log('n[0] === nutrient.id', n[0], nutrient.id);
@@ -22,7 +23,7 @@ const Nutrient = ({
   }
   ));
   return (
-    <ElevatedCard>
+    <TouchableCard onPress={onPress}>
       <View style={styles.nutrient}>
         <Heading3Text numberOfLines={2} style={styles.nutrientName}>{nutrientData[NAME_I]}</Heading3Text>
         <InputNumber2 style={styles.amount}
@@ -36,7 +37,7 @@ const Nutrient = ({
       <View style={styles.micronutrientRow}>
         <MicronutrientView nutrientId={nutrient.id} summary={true} oneRow={true} />
       </View>
-    </ElevatedCard>
+    </TouchableCard>
   );
 }
 

@@ -9,7 +9,7 @@ import HeaderButton from '../components/HeaderButton';
 import MicronutrientView from '../components/MicronutrientView';
 import AddButton from '../components/AddButton';
 import Nutrient from '../components/Nutrient';
-import ElevatedHeader from '../components/ElevatedHeader';
+import TouchableHeader from '../components/TouchableHeader';
 import { catchErrors } from '../store/actions/dbOperation';
 
 const MealScreen = props => {
@@ -31,13 +31,15 @@ const MealScreen = props => {
 
   return (
     <View style={styles.screen} >
-      <ElevatedHeader>
+      <TouchableHeader onPress={() => {
+        props.navigation.navigate('Micronutrient', { mealId });
+      }}>
         <HeadingText style={styles.HeadingText}>{meal.name}</HeadingText>
         <View style={styles.micronutrientRow}>
           <MicronutrientView mealId={meal.id} summary={true}
             oneRow={true} noDataText="Meal has no nutrients yet." />
         </View>
-      </ElevatedHeader>
+      </TouchableHeader>
       <KeyboardAvoidingView
         behavior="padding" style={{ flex: 1 }}
         keyboardVerticalOffset={100}>
@@ -47,6 +49,9 @@ const MealScreen = props => {
             removeNutrientHandler={removeNutrientHandler}
             updateNutrientAmountHandler={updateNutrientAmountHandler}
             focus={index === nutrients.length - 1}
+            onPress={() => {
+              props.navigation.navigate('Micronutrient', { nutrientId: nutrient.id });
+            }}
           />)}
           <View style={styles.buttonRow}>
             <AddButton title='Add nutrient' onPress={() => props.navigation.navigate('SelectNutrient', { mealId })} />

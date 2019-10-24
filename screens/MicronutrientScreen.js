@@ -12,25 +12,33 @@ import ElevatedHeader from '../components/ElevatedHeader';
 const MicronutrientScreen = props => {
   const summary = props.navigation.getParam('summary');
   const nutrientData = props.navigation.getParam('nutrientData');
+  const nutrientId = props.navigation.getParam('nutrientId');
   const mealId = props.navigation.getParam('mealId');
   const planId = props.navigation.getParam('planId');
   const meals = useSelector(state => state.meals.meals);
   const plans = useSelector(state => state.plans.plans);
+  const nutrients = useSelector(state => state.nutrients.nutrients);
+  const nutrientsData = useSelector(state => state.nutrientsData.nutrientsData);
 
   let headingText = '';
-  if (mealId) {
-    headingText = 'Meal : ' + meals.find(meal => meal.id == mealId).name;
+  if (nutrientId) {
+    const nutrient = nutrients.find(nutrient => nutrient.id === nutrientId);
+    const nutrientName = nutrientsData.find(data => data[0] === nutrient.nutrientDataId)[NAME_I];
+    headingText = nutrient.amount + 'g of ' + nutrientName;
+  } else if (mealId) {
+    headingText = 'Meal : ' + meals.find(meal => meal.id === mealId).name;
   } else if (planId) {
-    headingText = 'Plan : ' + plans.find(plan => plan.id == planId).name;
+    headingText = 'Plan : ' + plans.find(plan => plan.id === planId).name;
   } else if (nutrientData) {
     headingText = '100g of ' + nutrientData[NAME_I];
   }
+
   return (
     <View style={styles.screen}>
       <ElevatedHeader>
         <HeadingText style={styles.headingText}>{headingText}</HeadingText>
       </ElevatedHeader>
-      <MicronutrientView style={styles.micronutrientList} nutrientData={nutrientData} mealId={mealId} planId={planId} summary={summary} />
+      <MicronutrientView style={styles.micronutrientList} nutrientData={nutrientData} nutrientId={nutrientId} mealId={mealId} planId={planId} summary={summary} />
     </View>
   )
 }
