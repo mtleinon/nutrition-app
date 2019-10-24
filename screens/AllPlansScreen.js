@@ -1,18 +1,19 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux';
-import { View, ScrollView, StyleSheet, Platform } from 'react-native'
+import { Alert, View, ScrollView, StyleSheet, Platform } from 'react-native'
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import * as planActions from '../store/actions/plans';
 import * as mealActions from '../store/actions/meals';
-import * as nutrientActions from '../store/actions/nutrients';
 import Plan from '../components/Plan';
 import Colors from '../constants/Colors';
 import HeaderButton from '../components/HeaderButton';
 import AddButton from '../components/AddButton';
+import { catchErrors } from '../store/actions/dbOperation';
 
 const AllPlansScreen = props => {
   const plans = useSelector(state => state.plans.plans);
   const meals = useSelector(state => state.meals.meals);
+
   const dispatch = useDispatch();
 
   const navigateToPlanHandler = (planId) => {
@@ -21,9 +22,10 @@ const AllPlansScreen = props => {
 
   const deletePlanHandler = planId => {
     const mealIdsToDelete = meals.filter(meal => meal.planId === planId).map(meal => meal.id);
-    dispatch(nutrientActions.deleteNutrientsOfMealsFromDb(mealIdsToDelete));
-    dispatch(mealActions.deleteMealsOfAPlanFromDb(mealIdsToDelete));
-    dispatch(planActions.deletePlanFromDb(planId));
+    // dispatch(catchErrors(nutrientActions.deleteNutrientsOfMealsFromDb(mealIdsToDelete)));
+    // dispatch(catchErrors(mealActions.deleteMealsOfAPlanFromDb(mealIdsToDelete)));
+    // dispatch(catchErrors(planActions.deletePlanFromDb(planId)));
+    dispatch(catchErrors(planActions.deletePlanAndItsContentFromDb(planId, mealIdsToDelete)));
   }
 
   const editPlanHandler = planId => {

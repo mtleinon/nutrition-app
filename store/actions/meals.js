@@ -39,6 +39,14 @@ export const deleteMealFromDb = mealId => {
   }
 };
 
+export const deleteMealAndItsContentFromDb = mealId => {
+  return async dispatch => {
+    const dbResult = await db.deleteMealAndItsContent(mealId);
+    // console.log('dbResult', dbResult);
+    dispatch(deleteMeal(mealId));
+  }
+};
+
 export const deleteMealsOfAPlanFromDb = (mealIds) => {
   console.log('deleteMealsOfAPlanFromDb: mealIds, mealIds =', mealIds);
   return async dispatch => {
@@ -57,67 +65,3 @@ export const readAllMealsFromDb = () => {
     dispatch({ type: SET_ALL_MEALS, meals });
   }
 };
-
-// export const addNutrientToMeal = (nutrientId, mealId, nutrientDataId, amount) => {
-//   return async dispatch => {
-//     const newNutrientId = await db.insertNutrient(nutrientId, mealId, nutrientDataId, amount);
-//     dispatch({ type: ADD_NUTRIENT_TO_MEAL, nutrientId, mealId, nutrientDataId, amount });
-//   }
-// };
-
-// export const addReadNutrientToMeal = (nutrientId, mealId, nutrientDataId, amount) => {
-//   return { type: ADD_NUTRIENT_TO_MEAL, mealId, nutrientId, amount };
-// };
-
-// export const removeNutrientFromMeal = (mealId, nutrientId) => {
-//   return async dispatch => {
-//     await db.removeNutrient(mealId, nutrientId);
-//     dispatch({ type: REMOVE_NUTRIENT_FROM_MEAL, mealId, nutrientId });
-//   }
-// };
-
-// export const updateNutrientAmount = (mealId, nutrientId, newAmount) => {
-//   return async dispatch => {
-//     const newMealId = await db.updateNutrientAmount(mealId, nutrientId, newAmount);
-//     // console.log('newMealId', newMealId.insertId);
-
-//     dispatch({ type: UPDATE_NUTRIENT_IN_MEAL, mealId, nutrientId, newAmount });
-//   }
-// };
-
-// export const addNewMealToPlan = (planId, name, description) => {
-//   return async dispatch => {
-//     const newMealId = await db.insertMeal(planId, name, description);
-//     // console.log('newMealId', newMealId.insertId);
-
-//     dispatch(addMealIdToPlan(planId, newMealId.insertId));
-//     dispatch({ type: NEW_MEAL, mealId: newMealId.insertId, name, description });
-//   }
-// };
-
-// export const readAllMealsFromDatabase = () => {
-//   return async dispatch => {
-//     const mealsInDb = await db.getAllMeals();
-//     console.log('readAllMealsFromDatabase', mealsInDb);
-//     const meals = mealsInDb.map(meal => {
-//       return {
-//         ...meal,
-//         // id: meal.id.toString(),
-//         nutrients: []
-//       };
-//     });
-//     // console.log('readAllPlansFromDatabase', dbResult.rows._array);
-
-//     dispatch({ type: SET_ALL_MEALS, meals });
-//     meals.forEach(meal => dispatch(addMealIdToPlan(meal.planId, meal.id)));
-//   }
-// };
-
-
-// export const readAllNutrientsFromDatabase = () => {
-//   return async dispatch => {
-//     const nutrientsInDb = await db.getAllNutrients();
-//     // console.log('readAllNutrientsFromDatabase', nutrientsInDb);
-//     nutrientsInDb.forEach(nutrient => dispatch(addReadNutrientToMeal(nutrient.id, nutrient.mealId, nutrient.nutrientDataId, nutrient.amount)));
-//   };
-// };

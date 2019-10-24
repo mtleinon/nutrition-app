@@ -1,7 +1,10 @@
 // actions store plans to database and reducer
 
 import * as db from '../../helperFunctions/sqlite';
-import { deleteMealsOfAPlanFromDb } from './meals';
+import * as dbOperation from './dbOperation';
+import * as nutrientActions from './nutrients';
+import * as mealActions from './meals';
+
 export const SET_ALL_PLANS = 'SET_ALL_PLANS';
 export const ADD_PLAN = 'ADD_PLAN';
 export const UPDATE_PLAN = 'UPDATE_PLAN';
@@ -14,11 +17,51 @@ export const deletePlan = planId => ({ type: DELETE_PLAN, planId });
 
 // Handling the plans in database. Functions update database asychronously
 // and when it has finished they update redux accordingly
-export const storePlanToDb = plan => {
-  return async dispatch => {
+export const storePlanToDb2 = plan => {
+  return async (dispatch) => {
+    try {
+      dispatch(dbOperation.start());
+
+      dbResult = await db.insertPlan(plan);
+      plan.id = dbResult.insertId;
+      dispatch(addPlan(plan));
+
+      dispatch(dbOperation.succeeded());
+    } catch (err) {
+      console.log('CATCH err =', err);
+      dispatch(dbOperation.failed("Plan storing failed"));
+    }
+  }
+};
+
+
+// const errorMessage = "Plan storing failed";
+
+export const storePlanToDb = (plan) => {
+  return async (dispatch) => {
     dbResult = await db.insertPlan(plan);
     plan.id = dbResult.insertId;
-    // console.log('storePlanToDb', plan);
+    dispatch(addPlan(plan));
+  }
+}
+
+// export const wrap = (functionRunInTryCatch) => {
+//   return async function (dispatch) {
+//     try {
+//       dispatch(dbOperation.start());
+//       await functionRunInTryCatch(dispatch);
+//       dispatch(dbOperation.succeeded());
+//     } catch (err) {
+//       console.log('CATCH err =', err);
+//       dispatch(dbOperation.failed(err));
+//     }
+//   }
+// };
+
+export const storePlanToDb_ORG = (plan) => {
+  return async (dispatch) => {
+    dbResult = await db.insertPlan(plan);
+    plan.id = dbResult.insertId;
     dispatch(addPlan(plan));
   }
 };
@@ -35,6 +78,15 @@ export const deletePlanFromDb = (planId, mealIds) => {
   return async dispatch => {
     const dbResult = await db.deletePlan(planId);
     // console.log('dbResult', dbResult);
+    dispatch(deletePlan(planId));
+  }
+};
+export const deletePlanAndItsContentFromDb = (planId, mealIdsToDelete) => {
+  return async dispatch => {
+    const dbResult = await db.deletePlanAndItsContent(planId, mealIdsToDelete);
+    console.log('dbResult', dbResult);
+    dispatch(nutrientActions.deleteNutrientsOfMeals(mealIdsToDelete));
+    dispatch(mealActions.deleteMeals(mealIdsToDelete));
     dispatch(deletePlan(planId));
   }
 };

@@ -9,8 +9,10 @@ import mealsReducer from './store/reducers/meals';
 import plansReducer from './store/reducers/plans';
 import nutrientsReducer from './store/reducers/nutrients';
 import barcodesReducer from './store/reducers/barcodes';
+import dbOperationReducer from './store/reducers/dbOperation';
 // import SelectNutritionScreen from './screens/SelectNutritionScreen';
 // import MicronutrientScreen from './screens/MicronutrientScreen';
+import ErrorViewer from './ErrorViewer';
 
 import { initializeDatabase } from './helperFunctions/sqlite';
 console.log('APP STARTED');
@@ -20,7 +22,8 @@ const rootReducer = combineReducers({
   nutrients: nutrientsReducer,
   barcodes: barcodesReducer,
   plans: plansReducer,
-  meals: mealsReducer
+  meals: mealsReducer,
+  dbOperation: dbOperationReducer
 });
 console.log('APP STARTED: rootReducer made');
 
@@ -40,10 +43,12 @@ export default function App() {
   [appInitialized, setAppInitialized] = useState(false);
   return (
     <Provider store={store}>
-      {appInitialized ?
-        <AppNavigationContainer /> :
-        <InitializeApp setAppInitialized={setAppInitialized} />
-      }
+      <ErrorViewer>
+        {appInitialized ?
+          <AppNavigationContainer /> :
+          <InitializeApp setAppInitialized={setAppInitialized} />
+        }
+      </ErrorViewer>
     </Provider>);
 }
 

@@ -10,6 +10,8 @@ import InputText from '../components/InputText';
 import Nutrient from '../models/Nutrient';
 import Barcode from '../models/Barcode';
 import Icon from '../components/Icon';
+import { catchErrors } from '../store/actions/dbOperation';
+
 
 const NutrientDataView = ({ item, selectedNameHandler, showMicronutrientHandler }) => {
   return (
@@ -49,13 +51,13 @@ const SelectNutritionScreen = props => {
     setSelectedName(newSelectedName);
     setSelectedId(newSelectedId);
     if (mealId) {
-      dispatch(nutrientActions.storeNutrientToDb(new Nutrient(null, mealId, newSelectedId, 0)));
+      dispatch(catchErrors(nutrientActions.storeNutrientToDb(new Nutrient(null, mealId, newSelectedId, 0))));
     }
     if (barcode) {
-      dispatch(barcodeActions.updateBarcodeInDb(new Barcode(barcode.id, barcode.barcode, newSelectedId)));
+      dispatch(catchErrors(barcodeActions.updateBarcodeInDb(new Barcode(barcode.id, barcode.barcode, newSelectedId))));
     }
     if (scannedBarcode) {
-      dispatch(barcodeActions.storeBarcodeToDb(new Barcode(null, scannedBarcode, newSelectedId)));
+      dispatch(catchErrors(barcodeActions.storeBarcodeToDb(new Barcode(null, scannedBarcode, newSelectedId))));
     }
     props.navigation.navigate('Meal');
   }
@@ -68,14 +70,14 @@ const SelectNutritionScreen = props => {
       return;
     }
     if (mealId) {
-      dispatch(nutrientActions.storeNutrientToDb(new Nutrient(null, mealId, selectedId, 0)));
+      dispatch(catchErrors(nutrientActions.storeNutrientToDb(new Nutrient(null, mealId, selectedId, 0))));
     }
     if (barcode) {
       const oldBarcode = barcodes.find(code => code.barcode === barcode);
       if (oldBarcode) {
-        dispatch(barcodeActions.updateBarcode(new Barcode(null, barcode, selectedId)));
+        dispatch(catchErrors(barcodeActions.updateBarcodeInDb(new Barcode(null, barcode, selectedId))));
       } else {
-        dispatch(barcodeActions.storeBarcodeToDb(new Barcode(null, barcode, selectedId)));
+        dispatch(catchErrors(barcodeActions.storeBarcodeToDb(new Barcode(null, barcode, selectedId))));
       }
       // return;
     }

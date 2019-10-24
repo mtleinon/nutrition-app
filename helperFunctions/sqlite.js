@@ -271,18 +271,19 @@ export const initializeDatabase = () => {
 
 
 export const insertPlan = plan => {
+
   return new Promise((resolve, reject) => {
     // console.log('insertPlan', plan);
-
     db.transaction((tx) => {
       tx.executeSql(
         `INSERT INTO ${plans} (name, description)
          VALUES (?, ?);`,
         [plan.name, plan.description],
         (_, result) => {
-          resolve(result)
+          resolve(result);
         },
         (_, err) => {
+          console.log('REJECT err =', err);
           reject(err);
         }
       )
@@ -330,6 +331,61 @@ export const deletePlan = planId => {
     })
   });
 };
+
+export const deletePlanAndItsContent = (planId, mealIdsToDelete) => {
+  console.log('deletePlanAndItsContent: start');
+
+  return new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+
+      tx.executeSql(
+        `DELETE FROM ${plans} WHERE id=${planId};`,
+        [],
+        () => {
+          console.log(`DELETE FROM ${plans} WHERE id=${planId}; succeeded`);
+        },
+        (err) => {
+          // console.log('plans transaction step failed', err)
+          reject(err);
+        }
+      );
+
+      const mealIdsString = mealIdsToDelete.join(',');
+      tx.executeSql(
+        `DELETE FROM ${meals} WHERE id IN (${mealIdsString}); `,
+        [],
+        () => {
+          console.log(`DELETE FROM ${meals} WHERE id IN (${mealIdsString}); succeeded`);
+        },
+        (err) => {
+          // console.log('plans transaction step failed', err)
+          reject(err);
+        }
+      );
+      tx.executeSql(
+        `DELETE FROM ${nutrients} WHERE mealId IN (${mealIdsString});`,
+        [],
+        () => {
+          console.log(`DELETE FROM ${nutrients} WHERE mealId IN (${mealIdsString}); succeeded`);
+        },
+        (err) => {
+          // console.log('plans transaction step failed', err)
+          reject(err);
+        }
+      );
+    },
+      (err) => {
+        console.log('transaction failed', err)
+        reject(err);
+      },
+      (result) => {
+        console.log('transaction succeeded:', result);
+        resolve();
+      });
+  });
+};
+
+
 export const getAllPlans = () => {
   // console.log('getAllPlans');
 
@@ -411,24 +467,67 @@ export const deleteMeal = mealId => {
     })
   });
 };
-export const deleteMealsOfAPlan = mealIds => {
-  console.log('deleteMealsOfAPlan - mealIds =', mealIds);
+
+export const deleteMealAndItsContent = (mealId) => {
+  console.log('deletePlanAndItsContent: start');
+
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
-      const mealIdsString = mealIds.join(',');
+
       tx.executeSql(
-        `DELETE FROM ${meals} WHERE id IN (${mealIdsString}); `,
+        `DELETE FROM ${meals} WHERE id=${mealId};`,
+        [],
+        () => {
+          console.log(`DELETE FROM ${meals} WHERE id=${mealId}; succeeded`);
+        },
+        (err) => {
+          // console.log('plans transaction step failed', err)
+          reject(err);
+        }
+      );
+
+      tx.executeSql(
+        `DELETE FROM ${nutrients} WHERE mealId = ${mealId}; `,
         [],
         (_, result) => {
+          console.log(`DELETE FROM ${nutrients} WHERE mealId = ${mealId}; succeeded`);
           resolve(result)
         },
         (_, err) => {
           reject(err);
         }
       )
+    },
+      (err) => {
+        console.log('transaction failed', err)
+        reject(err);
+      },
+      (result) => {
+        console.log('transaction succeeded:', result);
+        resolve();
+      });
+  });
+};
+
+export const deleteMealsOfAPlan = mealIds => {
+  console.log('deleteMealsOfAPlan - mealIds =', mealIds);
+  return new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      const mealIdsString = mealIds.join(',');
+      `DELETE FROM ${meals} WHERE id IN (${mealIdsString}); `,
+        tx.executeSql(
+          [],
+          (_, result) => {
+            resolve(result)
+          },
+          (_, err) => {
+            reject(err);
+          }
+        )
     })
   });
 };
+
 export const getAllMeals = () => {
   return new Promise((resolve, reject) => {
     // console.log('getAllMeals');

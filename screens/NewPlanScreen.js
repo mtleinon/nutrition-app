@@ -6,6 +6,8 @@ import InputText from '../components/InputText';
 import Plan from '../models/Plan';
 
 import * as planActions from '../store/actions/plans';
+import { catchErrors } from '../store/actions/dbOperation';
+
 import Colors from '../constants/Colors';
 
 const NewPlanScreen = props => {
@@ -25,9 +27,11 @@ const NewPlanScreen = props => {
       return;
     }
     if (isEditMode) {
-      dispatch(planActions.updatePlanInDb(new Plan(planId, name, description)));
+      dispatch(catchErrors(
+        planActions.updatePlanInDb(new Plan(planId, name, description))));
     } else {
-      dispatch(planActions.storePlanToDb(new Plan(null, name, description)));
+      dispatch(catchErrors(
+        planActions.storePlanToDb(new Plan(null, name, description))));
     }
     props.navigation.goBack();
   }, [name, description]);

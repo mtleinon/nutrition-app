@@ -12,6 +12,7 @@ import MicronutrientView from '../components/MicronutrientView';
 import AddButton from '../components/AddButton';
 import Meal from '../components/Meal';
 import ElevatedHeader from '../components/ElevatedHeader';
+import { catchErrors } from '../store/actions/dbOperation';
 
 const PlanScreen = props => {
   const planId = props.navigation.getParam('planId');
@@ -25,8 +26,8 @@ const PlanScreen = props => {
   }
 
   const deleteMealHandler = mealId => {
-    dispatch(nutrientActions.deleteNutrientsOfMealsFromDb([mealId]));
-    dispatch(mealActions.deleteMealFromDb(mealId));
+    dispatch(catchErrors(nutrientActions.deleteNutrientsOfMealsFromDb([mealId])));
+    dispatch(catchErrors(mealActions.deleteMealFromDb(mealId)));
   }
   const editMealHandler = mealId => {
     props.navigation.navigate('NewMeal', { isEditMode: true, mealId });

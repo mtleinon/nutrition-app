@@ -7,6 +7,8 @@ import Colors from '../constants/Colors';
 import InputText from '../components/InputText';
 import * as mealActions from '../store/actions/meals';
 import Meal from '../models/Meal.js';
+import { catchErrors } from '../store/actions/dbOperation';
+
 const NewMealScreen = props => {
   const planId = props.navigation.getParam('planId');
   const mealId = props.navigation.getParam('mealId');
@@ -25,9 +27,9 @@ const NewMealScreen = props => {
       return;
     }
     if (isEditMode) {
-      dispatch(mealActions.updateMealInDb(new Meal(mealId, meal.planId, name, description)));
+      dispatch(catchErrors(mealActions.updateMealInDb(new Meal(mealId, meal.planId, name, description))));
     } else {
-      dispatch(mealActions.storeMealToDb(new Meal(null, planId, name, description)));
+      dispatch(catchErrors(mealActions.storeMealToDb(new Meal(null, planId, name, description))));
     }
     props.navigation.goBack();
   }, [mealId, name, description]);

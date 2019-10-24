@@ -10,6 +10,7 @@ import MicronutrientView from '../components/MicronutrientView';
 import AddButton from '../components/AddButton';
 import Nutrient from '../components/Nutrient';
 import ElevatedHeader from '../components/ElevatedHeader';
+import { catchErrors } from '../store/actions/dbOperation';
 
 const MealScreen = props => {
   const mealId = props.navigation.getParam('mealId');
@@ -20,12 +21,12 @@ const MealScreen = props => {
   const scrollViewRef = useRef();
 
   const removeNutrientHandler = (nutrientId) => {
-    dispatch(nutrientActions.deleteNutrientFromDb(nutrientId));
+    dispatch(catchErrors(nutrientActions.deleteNutrientFromDb(nutrientId)));
   }
 
   const updateNutrientAmountHandler = (nutrient, newAmount) => {
     nutrient.amount = newAmount;
-    dispatch(nutrientActions.updateNutrientInDb(nutrient));
+    dispatch(catchErrors(nutrientActions.updateNutrientInDb(nutrient)));
   }
 
   return (

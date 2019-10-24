@@ -7,52 +7,19 @@ import * as mealActions from '../store/actions/meals';
 import * as nutrientActions from '../store/actions/nutrients';
 import * as barcodeActions from '../store/actions/barcodes';
 import nutrientInfo from '../data/nutrientInfo';
-const finelli = require('../data/finelli3.json');
-// const finelli = require('../data/finelliSmall.json');
 import * as db from '../helperFunctions/sqlite';
+import { catchErrors } from '../store/actions/dbOperation';
+const finelli = require('../data/finelli3.json');
 
 const InitializeApp = ({ setAppInitialized }) => {
   const dispatch = useDispatch();
-
-  async function testDb() {
-    try {
-      let result;
-      // result = await db.insertPlan('Plan 1', 'Plan 1 description');
-      // const planId = result.insertId;
-      // result = await db.insertPlan('Plan 2', 'Plan 2 description');
-      // console.log('insertId result', result.insertId);
-
-      // result = await db.insertMeal(planId, 'Meal 1', 'Meal 1 description');
-      // const mealId = result.insertId;
-      // console.log('insertId result', result.insertId);
-
-      // result = await db.insertNutrient(mealId, 812, 123.456);
-      // const nutrientId = result.insertId;
-      // console.log('insertId result', result.insertId);
-
-      //result = await db.deleteNutrient(1);
-      // console.log('deleteMeal result', result);
-      // result = await db.deleteMeal(1);
-      // console.log('deleteMeal result', result);
-
-      // result = await db.deletePlan(1);
-      // console.log('deletePlan result', result);
-      // const allPlans = await db.getAllPlans();
-      // console.log('allPlans', allPlans);
-      // console.log('allPlans spread:', allPlans[0]);
-    } catch (err) {
-      // console.log('TEST FAILED: err=', err);
-    }
-  }
-  // // Create test data only once
-  // useEffect(() => { testDb() }, [dispatch]);
 
   const readNutritionFile = async () => {
     console.log('readNutritionFile');
     const nutrientDataCount = await db.getNutrientDataCount();
     if (nutrientDataCount > 0) {
       console.log('Nutrition data is in database, read and set it to reducer:', nutrientDataCount)
-      await dispatch(nutrientDataActions.readNutrientDataFromDb());
+      await dispatch(catchErrors(nutrientDataActions.readNutrientDataFromDb()));
       console.log('Nutrition data set to reducer ');
       setAppInitialized(true);
       console.log('ALL INITIALIZED');
@@ -83,11 +50,11 @@ const InitializeApp = ({ setAppInitialized }) => {
   }
 
   async function readDataFromDatabase() {
-    await dispatch(planActions.readAllPlansFromDb());
-    await dispatch(mealActions.readAllMealsFromDb());
-    await dispatch(nutrientActions.readAllNutrientsFromDb());
+    await dispatch(catchErrors(planActions.readAllPlansFromDb()));
+    await dispatch(catchErrors(mealActions.readAllMealsFromDb()));
+    await dispatch(catchErrors(nutrientActions.readAllNutrientsFromDb()));
     // await dispatch(nutrientActions.readAllNutrientsFromDb());
-    await dispatch(barcodeActions.readAllBarcodesFromDb());
+    await dispatch(catchErrors(barcodeActions.readAllBarcodesFromDb()));
     readNutritionFile();
   }
 

@@ -1,15 +1,11 @@
 import {
   SET_ALL_BARCODES,
-  // ADD_BARCODE_TO_BARCODE,
-  // REMOVE_BARCODE_FROM_BARCODE,
   DELETE_BARCODE,
   ADD_BARCODE,
   UPDATE_BARCODE,
-  // UPDATE_BARCODE_IN_BARCODE
 } from '../actions/barcodes';
 
 import Barcode from '../../models/Barcode';
-// import testBarcodesData from '../../data/testBarcodesData';
 
 const initialState = {
   barcodes: [],

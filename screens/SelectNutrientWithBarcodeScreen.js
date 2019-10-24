@@ -10,6 +10,7 @@ import { DATA_ID_I } from '../models/NutrientData';
 import AddButton from '../components/AddButton';
 import TouchableCard from '../components/TouchableCard';
 import HeadingText from '../components/HeadingText';
+import { catchErrors } from '../store/actions/dbOperation';
 
 const SelectNutrientWithBarcodeScreen = props => {
   const mealId = props.navigation.getParam('mealId');
@@ -45,7 +46,7 @@ const SelectNutrientWithBarcodeScreen = props => {
     }
     const barcode = barcodes.find(barcode => barcode.barcode === scannedBarcode);
     if (barcode) {
-      dispatch(nutrientActions.storeNutrientToDb(new Nutrient(null, mealId, barcode.nutrientDataId, 0)));
+      dispatch(catchErrors(nutrientActions.storeNutrientToDb(new Nutrient(null, mealId, barcode.nutrientDataId, 0))));
       props.navigation.goBack();
     }
     else {
@@ -94,8 +95,8 @@ const SelectNutrientWithBarcodeScreen = props => {
       {nutrientData && (<AddButton title="Add nutrient to meal" color="green"
         onPress={() => {
           setModalVisible(false);
-          dispatch(nutrientActions.storeNutrientToDb(
-            new Nutrient(null, mealId, barcode.nutrientDataId, 0)));
+          dispatch(catchErrors(nutrientActions.storeNutrientToDb(
+            new Nutrient(null, mealId, barcode.nutrientDataId, 0))));
           props.navigation.goBack();
         }} />)
       }{
