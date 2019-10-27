@@ -4,6 +4,7 @@ import TouchableCard from '../components/TouchableCard';
 import Icon from '../components/Icon';
 import Heading2Text from '../components/Heading2Text';
 import MicronutrientView from '../components/MicronutrientView';
+import * as i1n from '../helperFunctions/translations';
 
 const Meal = ({ meal, editMealHandler, deleteMealHandler, navigateToMealHandler }) => {
   return (
@@ -17,7 +18,7 @@ const Meal = ({ meal, editMealHandler, deleteMealHandler, navigateToMealHandler 
       </View>
       <View style={styles.mealMicronutrientRow}>
         <MicronutrientView mealId={meal.id} summary={true} oneRow={true}
-          noDataText="Meal has no nutrients yet." />
+          noDataText={i1n.t('mealHasNoNutrientsYet')} />
       </View>
     </TouchableCard>
   );

@@ -8,6 +8,7 @@ import Colors from '../constants/Colors';
 import HeadingText from '../components/HeadingText';
 import { NAME_I } from '../models/NutrientData';
 import ElevatedHeader from '../components/ElevatedHeader';
+import * as i1n from '../helperFunctions/translations';
 
 const MicronutrientScreen = props => {
   const summary = props.navigation.getParam('summary');
@@ -26,11 +27,11 @@ const MicronutrientScreen = props => {
     const nutrientName = nutrientsData.find(data => data[0] === nutrient.nutrientDataId)[NAME_I];
     headingText = nutrient.amount + 'g of ' + nutrientName;
   } else if (mealId) {
-    headingText = 'Meal : ' + meals.find(meal => meal.id === mealId).name;
+    headingText = i1n.t('meal') + ' : ' + meals.find(meal => meal.id === mealId).name;
   } else if (planId) {
-    headingText = 'Plan : ' + plans.find(plan => plan.id === planId).name;
+    headingText = i1n.t('plan') + ' : ' + plans.find(plan => plan.id === planId).name;
   } else if (nutrientData) {
-    headingText = '100g of ' + nutrientData[NAME_I];
+    headingText = '100g ' + i1n.t('of') + ' ' + nutrientData[NAME_I];
   }
 
   return (
@@ -47,7 +48,7 @@ MicronutrientScreen.navigationOptions = navData => {
   // const item = navData.navigation.getParam('item');
 
   return {
-    headerTitle: 'Micronutrient info',
+    headerTitle: i1n.t('micronutrientContent'),
     // headerTitle: place.title,
   }
 }

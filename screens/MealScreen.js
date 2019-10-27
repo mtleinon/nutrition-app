@@ -11,6 +11,7 @@ import AddButton from '../components/AddButton';
 import Nutrient from '../components/Nutrient';
 import TouchableHeader from '../components/TouchableHeader';
 import { catchErrors } from '../store/actions/dbOperation';
+import * as i1n from '../helperFunctions/translations';
 
 const MealScreen = props => {
   const mealId = props.navigation.getParam('mealId');
@@ -37,7 +38,7 @@ const MealScreen = props => {
         <HeadingText style={styles.HeadingText}>{meal.name}</HeadingText>
         <View style={styles.micronutrientRow}>
           <MicronutrientView mealId={meal.id} summary={true}
-            oneRow={true} noDataText="Meal has no nutrients yet." />
+            oneRow={true} noDataText=" " />
         </View>
       </TouchableHeader>
       <KeyboardAvoidingView
@@ -54,8 +55,8 @@ const MealScreen = props => {
             }}
           />)}
           <View style={styles.buttonRow}>
-            <AddButton title='Add nutrient' onPress={() => props.navigation.navigate('SelectNutrient', { mealId })} />
-            <AddButton title='Scan barcode' onPress={() => {
+            <AddButton title={i1n.t('addNutrient')} onPress={() => props.navigation.navigate('SelectNutrient', { mealId })} />
+            <AddButton title={i1n.t('scanBarcode')} onPress={() => {
               props.navigation.navigate('SelectNutrientWithBarcode', { mealId });
             }} />
           </View>
@@ -71,7 +72,7 @@ MealScreen.navigationOptions = navData => {
   // const mealNutrientData = navData.navigation.getParam('mealNutrientData');
 
   return {
-    headerTitle: 'Meal',
+    headerTitle: i1n.t('meal'),
     headerRight: (
       <HeaderButtons HeaderButtonComponent={HeaderButton}>
         <Item title="Select nutrient with barcode"

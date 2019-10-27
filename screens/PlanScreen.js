@@ -13,6 +13,7 @@ import AddButton from '../components/AddButton';
 import Meal from '../components/Meal';
 import TouchableHeader from '../components/TouchableHeader';
 import { catchErrors } from '../store/actions/dbOperation';
+import * as i1n from '../helperFunctions/translations';
 
 const PlanScreen = props => {
   const planId = props.navigation.getParam('planId');
@@ -43,7 +44,7 @@ const PlanScreen = props => {
         <HeadingText style={styles.HeadingText}>{plan.name}</HeadingText>
         <View style={styles.planMicronutrientRow}>
           <MicronutrientView planId={plan.id} summary={true}
-            oneRow={true} noDataText="Plan has no meals." />
+            oneRow={true} noDataText=" " />
         </View>
       </TouchableHeader>
       <ScrollView>
@@ -52,7 +53,7 @@ const PlanScreen = props => {
           editMealHandler={editMealHandler}
           navigateToMealHandler={navigateToMealHandler} />)
         }
-        <AddButton title='Add new meal' onPress={() => props.navigation.navigate('NewMeal', { planId })} />
+        <AddButton title={i1n.t('addNewMeal')} onPress={() => props.navigation.navigate('NewMeal', { planId })} />
       </ScrollView>
     </View>
   )
@@ -62,7 +63,7 @@ PlanScreen.navigationOptions = navData => {
   const planId = navData.navigation.getParam('planId');
 
   return {
-    headerTitle: 'Plan',
+    headerTitle: i1n.t('plan'),
     headerRight: (
       <HeaderButtons HeaderButtonComponent={HeaderButton}>
         <Item title="Add Meal"

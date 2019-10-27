@@ -15,7 +15,7 @@ const initialState = {
 };
 
 export default (state = initialState, action) => {
-  console.log('configurations action', action.type);
+  console.log('111 configurations action', action.type, state.configurations.appInitialized);
   switch (action.type) {
     case SET_GENDER:
       return {
@@ -26,10 +26,18 @@ export default (state = initialState, action) => {
         configurations: { ...state.configurations, language: action.language }
       }
     case SET_CONFIGURATIONS:
+      console.log('SET_CONFIGURATIONS ', state.configurations, action.configurations);
+
       return {
-        configurations: { ...state.configurations, ...action.configurations }
+        configurations: {
+          ...state.configurations,
+          language: action.configurations.language,
+          gender: action.configurations.gender,
+        }
       }
     case SET_APP_INITIALIZED:
+      console.log('SET_APP_INITIALIZED');
+
       return {
         configurations: { ...state.configurations, appInitialized: true }
       }

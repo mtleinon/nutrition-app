@@ -22,5 +22,7 @@ export const readNutrientDataFromDb = () => {
     const nutrientsInDb = await db.getNutrientData();
     const nutrientsData = nutrientsInDb.map(nutrientInDb => Object.values(nutrientInDb).slice(1));
     dispatch(setNutrientsData(nutrientsData));
+    console.log('readNutrientDataFromDb');
+
   }
 };

@@ -5,6 +5,7 @@ import HeadingText from '../components/HeadingText';
 import SmallText from '../components/SmallText';
 import TouchableCard from '../components/TouchableCard';
 import Icon from '../components/Icon';
+import * as i1n from '../helperFunctions/translations';
 
 const Plan = ({ plan, deletePlanHandler, editPlanHandler, navigateToPlanHandler }) => {
   return (
@@ -18,7 +19,7 @@ const Plan = ({ plan, deletePlanHandler, editPlanHandler, navigateToPlanHandler 
       </View>
       <SmallText numberOfLines={2} style={styles.planDescription}>{plan.description}</SmallText>
       <View style={styles.micronutrient}>
-        <MicronutrientView planId={plan.id} summary={true} noDataText="Click to add meals" />
+        <MicronutrientView planId={plan.id} summary={true} noDataText={i1n.t('clickToAddMeal')} />
       </View>
     </TouchableCard>
   );

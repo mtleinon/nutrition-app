@@ -6,7 +6,7 @@ import * as db from '../helperFunctions/sqlite';
 import Colors from '../constants/Colors';
 import * as Constants from '../constants/Constants';
 import * as configurationsActions from '../store/actions/configurations';
-
+import * as i1n from '../helperFunctions/translations';
 
 const ConfigureScreen = props => {
   const dispatch = useDispatch();
@@ -35,7 +35,7 @@ const ConfigureScreen = props => {
 
   return (
     <View style={styles.screen}>
-      <Text style={styles.text}>This version is used for testing.</Text>
+      <Text style={styles.text}>{i1n.t('programVersion')}</Text>
       <View style={{ height: 100 }}>
         <Picker
           selectedValue={configurations.language}
@@ -72,7 +72,7 @@ const ConfigureScreen = props => {
 ConfigureScreen.navigationOptions = navData => {
 
   return {
-    headerTitle: 'Nutrition planner version 0.01',
+    headerTitle: i1n.t('configurationScreenTitle'),
   }
 };
 

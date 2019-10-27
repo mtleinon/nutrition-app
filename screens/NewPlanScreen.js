@@ -9,6 +9,7 @@ import * as planActions from '../store/actions/plans';
 import { catchErrors } from '../store/actions/dbOperation';
 
 import Colors from '../constants/Colors';
+import * as i1n from '../helperFunctions/translations';
 
 const NewPlanScreen = props => {
   const planId = props.navigation.getParam('planId');
@@ -21,8 +22,8 @@ const NewPlanScreen = props => {
 
   const planHandler = useCallback(() => {
     if (!name) {
-      Alert.alert('Please give name',
-        'Please write plan name to the field',
+      Alert.alert(i1n.t('pleaseGiveName'),
+        i1n.t('pleaseWritePlanNameToTheField'),
         [{ text: 'OK' }]);
       return;
     }
@@ -38,17 +39,17 @@ const NewPlanScreen = props => {
 
   useEffect(() => {
     props.navigation.setParams({ planHandler })
-    props.navigation.setParams({ actionText: isEditMode ? "Update plan" : "Add plan" })
+    props.navigation.setParams({ actionText: isEditMode ? i1n.t('updatePlan') : i1n.t('addNewPlan') })
   }, [planHandler]);
 
   return (
     <View style={styles.screen}>
       <InputText
-        label="Name"
+        label={i1n.t("name")}
         onChangeText={setName} value={name}
       />
       <InputText
-        label="Description"
+        label={i1n.t("description")}
         multiline={true}
         numberOfLines={6}
         onChangeText={setDescription} value={description}

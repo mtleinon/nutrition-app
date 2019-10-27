@@ -6,3 +6,4 @@ export const FINISH = 'Finish';
 export const DEFAULT_LANGUAGE = ENGLISH;
 export const DEFAULT_GENDER = FEMALE;
 export const CONFIGURATION_FILE = 'nutrition-app-configuration';
+

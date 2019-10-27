@@ -28,7 +28,7 @@ const InitializeApp = ({ setAppInitialized }) => {
       await dispatch(catchErrors(nutrientDataActions.readNutrientDataFromDb()));
       console.log('Nutrition data set to reducer ');
       setAppInitialized(true);
-      console.log('ALL INITIALIZED');
+      console.log('ALL INITIALIZED 1');
 
       return; // nutrients are already in the database
     }
@@ -52,7 +52,7 @@ const InitializeApp = ({ setAppInitialized }) => {
     await db.insertAllNutrientData(nutrientsData);
     dispatch(nutrientDataActions.setNutrientsData(nutrientsData));
     setAppInitialized(true);
-    console.log('ALL INITIALIZED');
+    console.log('ALL INITIALIZED 2');
   }
 
   const readUsdaNutritionFile = async () => {
@@ -63,7 +63,7 @@ const InitializeApp = ({ setAppInitialized }) => {
       await dispatch(catchErrors(nutrientDataActions.readNutrientDataFromDb()));
       console.log('Nutrition data set to reducer ');
       setAppInitialized(true);
-      console.log('ALL INITIALIZED');
+      console.log('ALL INITIALIZED 3');
 
       return; // nutrients are already in the database
     }
@@ -76,7 +76,7 @@ const InitializeApp = ({ setAppInitialized }) => {
     await db.insertAllNutrientData(usdaData);
     dispatch(nutrientDataActions.setNutrientsData(usdaData));
     setAppInitialized(true);
-    console.log('ALL INITIALIZED');
+    console.log('ALL INITIALIZED 4');
   }
 
   async function readDataFromDatabase(language) {

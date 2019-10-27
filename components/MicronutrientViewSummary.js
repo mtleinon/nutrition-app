@@ -1,13 +1,16 @@
 import React from 'react'
 import { View, StyleSheet, FlatList } from 'react-native'
+import { useSelector } from 'react-redux';
 import { ENERGY_I, CARBOHYDRATES_I, PROTEIN_I } from '../models/NutrientData';
 import MicronutrientSummary from '../components/MicronutrientSummary';
 import nutrientHeading from '../data/nutrientInfo';
 import nutrientHeadingEnglish from '../data/nutrientInfoUSDA';
 import Language from '../constants/Language';
 import { convertKCalToKJ } from '../helperFunctions/helperFunctions';
+import * as Constants from '../constants/Constants';
 
 const MicronutrientViewSummary = (dataToShow) => {
+  const language = useSelector(state => state.configurations.configurations.language);
 
   const energy = dataToShow[ENERGY_I];
   const relativeToEnergy = (index, value) => {
@@ -36,7 +39,7 @@ const MicronutrientViewSummary = (dataToShow) => {
   let heading = [];
   let unit = [];
   let relativeEnergy = [];
-  if (Language.current === Language.english) {
+  if (language === Constants.ENGLISH) {
     data = [
       dataToShow[3],
       dataToShow[7],
@@ -60,9 +63,9 @@ const MicronutrientViewSummary = (dataToShow) => {
       nutrientHeadingEnglish[4].unit
     ];
   } else {
-    data = dataToShow.slice(2);
-    heading = nutrientHeading.slice(2).name.fiShort;
-    unit = nutrientHeading.slice(2).unit;
+    data = dataToShow.slice(2, 6);
+    heading = nutrientHeading.slice(2, 6).map(row => row.name.fiShort);
+    unit = nutrientHeading.slice(2, 6).map(row => row.unit);
   }
 
   return (

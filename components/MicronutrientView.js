@@ -8,6 +8,8 @@ import { calculateDataToShow } from '../helperFunctions/calculateDataToShow';
 const SUMMARY_LENGTH = 8; // In english data 8 column has needed data
 
 const MicronutrientView = ({ nutrientId, mealId, planId, nutrientData, summary, oneRow, noDataText }) => {
+  console.log('MicronutrientView: planId ', planId);
+
   const noDataMessage = noDataText || 'No micronutrient data';
   const meals = useSelector(state => state.meals.meals);
   const plans = useSelector(state => state.plans.plans);

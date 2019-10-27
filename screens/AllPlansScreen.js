@@ -1,14 +1,14 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux';
-import { Alert, View, ScrollView, StyleSheet, Platform } from 'react-native'
+import { View, ScrollView, StyleSheet, Platform } from 'react-native'
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import * as planActions from '../store/actions/plans';
-import * as mealActions from '../store/actions/meals';
 import Plan from '../components/Plan';
 import Colors from '../constants/Colors';
 import HeaderButton from '../components/HeaderButton';
 import AddButton from '../components/AddButton';
 import { catchErrors } from '../store/actions/dbOperation';
+import * as i1n from '../helperFunctions/translations';
 
 const AllPlansScreen = props => {
   const plans = useSelector(state => state.plans.plans);
@@ -22,9 +22,6 @@ const AllPlansScreen = props => {
 
   const deletePlanHandler = planId => {
     const mealIdsToDelete = meals.filter(meal => meal.planId === planId).map(meal => meal.id);
-    // dispatch(catchErrors(nutrientActions.deleteNutrientsOfMealsFromDb(mealIdsToDelete)));
-    // dispatch(catchErrors(mealActions.deleteMealsOfAPlanFromDb(mealIdsToDelete)));
-    // dispatch(catchErrors(planActions.deletePlanFromDb(planId)));
     dispatch(catchErrors(planActions.deletePlanAndItsContentFromDb(planId, mealIdsToDelete)));
   }
 
@@ -39,7 +36,7 @@ const AllPlansScreen = props => {
           deletePlanHandler={deletePlanHandler}
           editPlanHandler={editPlanHandler}
           navigateToPlanHandler={navigateToPlanHandler} />)}
-        <AddButton title='Add new plan' onPress={() => props.navigation.navigate('NewPlan')} />
+        <AddButton title={i1n.t('addNewPlan')} onPress={() => props.navigation.navigate('NewPlan')} />
       </ScrollView>
 
     </View>
@@ -49,10 +46,10 @@ const AllPlansScreen = props => {
 AllPlansScreen.navigationOptions = navData => {
 
   return {
-    headerTitle: 'All Plans',
+    headerTitle: i1n.t('allPlans'),
     headerRight: (
       <HeaderButtons HeaderButtonComponent={HeaderButton}>
-        <Item title="Add Plan"
+        <Item title="AddNewPlan"
           iconName={Platform.OS === 'android' ? 'md-add' : 'ios-add'}
           onPress={() => {
             navData.navigation.navigate('NewPlan');

@@ -12,7 +12,6 @@ import { useSelector } from 'react-redux';
 const getRecommendation = header => {
   // console.log('getRecommendation - header:', header);
 
-  // if (Language.current === Constants.FINISH) {
   if (header.dri) {
     if (header.dri.rda) {
       if (header.dri.rda.males) {
@@ -24,8 +23,6 @@ const getRecommendation = header => {
       return header.dri.ai;
   }
   return undefined;
-  // }
-  return undefined; //TODO: For english header
 }
 
 const MicronutrientViewLong = (dataToShow) => {
@@ -43,17 +40,19 @@ const MicronutrientViewLong = (dataToShow) => {
   if (configurations.language === Constants.FINISH) {
     data = [
       {
-        title: { title: 'Main nutrients', amount: 'amount', relative: '% ener' },
+        title: { title: 'Pää ravintoaineet', amount: 'määrä', relative: '% ener' },
         data: dataWithHeading.slice(2, 6),
-        title: { title: 'Detailed nutrients', amount: 'amount', relative: '' },
+      },
+      {
+        title: { title: 'Yksityiskohdat', amount: 'määrä', relative: '' },
         data: dataWithHeading.slice(6, 33)
       },
       {
-        title: { title: 'Micronutrients', amount: 'amount', relative: '% rec' },
+        title: { title: 'Hivenaineet', amount: 'määrä', relative: '% rel' },
         data: dataWithHeading.slice(33, 45)
       },
       {
-        title: { title: 'Vitamins', amount: 'amount', relative: '% rec' },
+        title: { title: 'Vitamiinit', amount: 'määrä', relative: '% suos' },
         data: dataWithHeading.slice(45, 56)
       },
     ];

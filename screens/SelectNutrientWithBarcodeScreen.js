@@ -11,6 +11,7 @@ import AddButton from '../components/AddButton';
 import TouchableCard from '../components/TouchableCard';
 import HeadingText from '../components/HeadingText';
 import { catchErrors } from '../store/actions/dbOperation';
+import * as i1n from '../helperFunctions/translations';
 
 const SelectNutrientWithBarcodeScreen = props => {
   const mealId = props.navigation.getParam('mealId');
@@ -39,8 +40,8 @@ const SelectNutrientWithBarcodeScreen = props => {
 
   const addNutrientHandler = useCallback(() => {
     if (!scannedBarcode) {
-      Alert.alert('Please read barcode first',
-        'Please use phones camera to read barcode',
+      Alert.alert(i1n.t('pleaseScanBarcodeFirst'),
+        i1n.t('pleaseUsePhonesCameraToReadBarcode'),
         [{ text: 'OK' }]);
       return;
     }
@@ -59,11 +60,11 @@ const SelectNutrientWithBarcodeScreen = props => {
   }, [addNutrientHandler]);
 
   if (hasCameraPermission === null) {
-    return <Text>Requesting for camera permission</Text>;
+    return <Text>{i1n.t('requestingForCameraPermissions')}</Text>;
   }
 
   if (hasCameraPermission === false) {
-    return <Text>No access to camera</Text>;
+    return <Text>{i1n.t('noAccessToCamera')}</Text>;
   }
 
   const handleBarCodeScanned = ({ data }) => {
@@ -90,9 +91,9 @@ const SelectNutrientWithBarcodeScreen = props => {
   const BarcodeResult = () => (
     <View style={{ flex: 1, justifyContent: 'center' }}>
       <TouchableCard>
-        <HeadingText>{nutrientData ? `Found ${nutrientData[1]}` : 'No nutrient for barcode'}</HeadingText>
+        <HeadingText>{nutrientData ? i1n.t('found') + nutrientData[1] : i1n.t('noNutrientForTheBarcode')}</HeadingText>
       </TouchableCard>
-      {nutrientData && (<AddButton title="Add nutrient to meal" color="green"
+      {nutrientData && (<AddButton title={i1n.t('AddNutrientToTheMeal')} color="green"
         onPress={() => {
           setModalVisible(false);
           dispatch(catchErrors(nutrientActions.storeNutrientToDb(
@@ -100,19 +101,19 @@ const SelectNutrientWithBarcodeScreen = props => {
           props.navigation.goBack();
         }} />)
       }{
-        barcode && <AddButton title="Set new nutrient for the barcode" color="green"
+        barcode && <AddButton title={i1n.t('setNewNutrientForTheBarcode')} color="green"
           onPress={() => {
             props.navigation.navigate('SelectNutrient', { barcode, mealId });
             setModalVisible(false);
           }} />
       }{
         !barcode && scannedBarcode &&
-        <AddButton title="Select nutrient for the new barcode" color="green"
+        <AddButton title={i1n.t('setNewNutrientForTheNewBarcode')} color="green"
           onPress={() => {
             props.navigation.navigate('SelectNutrient', { scannedBarcode, mealId });
             setModalVisible(false);
           }} />
-      }<AddButton title="Scan new barcode" color="blue"
+      }<AddButton title={i1n.t('addNewBarcode')} color="blue"
         onPress={() => {
           setScanned(false);
           setModalVisible(false);
@@ -149,7 +150,7 @@ SelectNutrientWithBarcodeScreen.navigationOptions = navData => {
   return {
     headerTitle: (
       <TouchableOpacity style={styles.header} onPress={addNutrientHandler} >
-        <Text style={styles.headerText}>Scan barcode</Text>
+        <Text style={styles.headerText}>{i1n.t('scanBarcode')}</Text>
       </TouchableOpacity>)
   }
 }

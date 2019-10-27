@@ -8,6 +8,7 @@ import InputText from '../components/InputText';
 import * as mealActions from '../store/actions/meals';
 import Meal from '../models/Meal.js';
 import { catchErrors } from '../store/actions/dbOperation';
+import * as i1n from '../helperFunctions/translations';
 
 const NewMealScreen = props => {
   const planId = props.navigation.getParam('planId');
@@ -21,8 +22,8 @@ const NewMealScreen = props => {
 
   const mealHandler = useCallback(() => {
     if (!name) {
-      Alert.alert('Please give name',
-        'Please write meal name to the field',
+      Alert.alert(i1n.t('pleaseGiveName'),
+        i1n.t('pleaseWriteMealNameToTheField'),
         [{ text: 'OK' }]);
       return;
     }
@@ -36,7 +37,7 @@ const NewMealScreen = props => {
 
   useEffect(() => {
     props.navigation.setParams({ mealHandler });
-    props.navigation.setParams({ actionText: isEditMode ? "Update meal" : "Add meal" })
+    props.navigation.setParams({ actionText: isEditMode ? i1n.t('updateMeal') : i1n.t('addNewMeal') })
   }, [mealHandler]);
 
   return (

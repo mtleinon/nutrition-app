@@ -11,6 +11,7 @@ import Nutrient from '../models/Nutrient';
 import Barcode from '../models/Barcode';
 import Icon from '../components/Icon';
 import { catchErrors } from '../store/actions/dbOperation';
+import * as i1n from '../helperFunctions/translations';
 
 
 const NutrientDataView = ({ item, selectedNameHandler, showMicronutrientHandler }) => {
@@ -64,8 +65,8 @@ const SelectNutritionScreen = props => {
 
   const addNutrientHandler = useCallback(() => {
     if (!selectedId) {
-      Alert.alert('Please select nutrient',
-        'Please select nutrient by touching a nutrient in the list',
+      Alert.alert(i1n.t('pleaseSelectNutrient'),
+        i1n.t('pleaseSelectNutrientByTouchingANutrientInTheList'),
         [{ text: 'OK' }]);
       return;
     }
@@ -92,10 +93,10 @@ const SelectNutritionScreen = props => {
   return (
     <View style={styles.screen}>
       <InputText
-        label="Search nutrition:"
+        label={i1n.t('searchNutrient')}
         onChangeText={setSelectedName} value={selectedName}
       />
-      <Text style={styles.label}>Select nutrition:</Text>
+      <Text style={styles.label}>{i1n.t('selectNutrient')}:</Text>
       <FlatList
         data={nutrientsData.filter(item => filterNutrient(selectedName, item[1]))}
         renderItem={item => <NutrientDataView
@@ -117,7 +118,7 @@ SelectNutritionScreen.navigationOptions = navData => {
   return {
     headerTitle: (
       <TouchableOpacity style={styles.header} onPress={addNutrientHandler} >
-        <Text style={styles.headerText}>{barcode ? 'Select nutrient for barcode' : 'Select nutrient'}</Text>
+        <Text style={styles.headerText}>{barcode ? i1n.t('selectNutrientForBarcode') : i1n.t('selectNutrient')}</Text>
       </TouchableOpacity>)
   }
 }
