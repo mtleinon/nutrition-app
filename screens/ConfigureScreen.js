@@ -1,10 +1,16 @@
 import React from 'react'
-import { Button, View, Text, StyleSheet, } from 'react-native'
+import { Picker, Button, View, Text, StyleSheet, } from 'react-native'
+import { useSelector, useDispatch } from 'react-redux';
+
 import * as db from '../helperFunctions/sqlite';
 import Colors from '../constants/Colors';
+import * as Constants from '../constants/Constants';
+import * as configurationsActions from '../store/actions/configurations';
+
 
 const ConfigureScreen = props => {
-
+  const dispatch = useDispatch();
+  const configurations = useSelector(state => state.configurations.configurations);
   const writeDbTablesToLog = async () => {
     let result = await db.getAllPlans();
     console.log('Plans result =', result);
@@ -19,9 +25,37 @@ const ConfigureScreen = props => {
   const dropTablesHandler = async () => {
     await db.dropAllTablesInDatabase();
   }
+  const languageChangeHandler = language => {
+    dispatch(configurationsActions.storeLanguageToFile(language));
+
+  };
+  const genderChangeHandler = gender => {
+    dispatch(configurationsActions.storeGenderToFile(gender));
+  };
+
   return (
     <View style={styles.screen}>
       <Text style={styles.text}>This version is used for testing.</Text>
+      <View style={{ height: 100 }}>
+        <Picker
+          selectedValue={configurations.language}
+          style={{ justifyContent: 'center', height: 50, width: 200 }}
+          onValueChange={languageChangeHandler}
+        >
+          <Picker.Item label={Constants.ENGLISH} value={Constants.ENGLISH} />
+          <Picker.Item label={Constants.FINISH} value={Constants.FINISH} />
+        </Picker>
+      </View>
+      <View style={{ height: 100 }}>
+        <Picker
+          selectedValue={configurations.gender}
+          style={{ justifyContent: 'center', height: 50, width: 200 }}
+          onValueChange={genderChangeHandler}
+        >
+          <Picker.Item label={Constants.FEMALE} value={Constants.FEMALE} />
+          <Picker.Item label={Constants.MALE} value={Constants.MALE} />
+        </Picker>
+      </View>
       <View style={styles.button}>
         <Button title="Drop database tables" onPress={dropTablesHandler} />
       </View>

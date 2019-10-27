@@ -5,7 +5,7 @@ import MicronutrientViewOneRow from '../components/MicronutrientViewOneRow';
 import MicronutrientViewSummary from '../components/MicronutrientViewSummary';
 import MicronutrientViewLong from '../components/MicronutrientViewLong';
 import { calculateDataToShow } from '../helperFunctions/calculateDataToShow';
-const SUMMARY_LENGTH = 6;
+const SUMMARY_LENGTH = 8; // In english data 8 column has needed data
 
 const MicronutrientView = ({ nutrientId, mealId, planId, nutrientData, summary, oneRow, noDataText }) => {
   const noDataMessage = noDataText || 'No micronutrient data';

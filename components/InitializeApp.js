@@ -9,7 +9,13 @@ import * as barcodeActions from '../store/actions/barcodes';
 import nutrientInfo from '../data/nutrientInfo';
 import * as db from '../helperFunctions/sqlite';
 import { catchErrors } from '../store/actions/dbOperation';
+import * as FileSystem from 'expo-file-system';
+import * as Constants from '../constants/Constants';
+// import Language from '../constants/Language';
+import * as configurations from '../store/actions/configurations';
+
 const finelli = require('../data/finelli3.json');
+const usdaData = require('../data/usdaDataLong.json');
 
 const InitializeApp = ({ setAppInitialized }) => {
   const dispatch = useDispatch();
@@ -49,17 +55,71 @@ const InitializeApp = ({ setAppInitialized }) => {
     console.log('ALL INITIALIZED');
   }
 
-  async function readDataFromDatabase() {
+  const readUsdaNutritionFile = async () => {
+    console.log('readUsdaNutritionFile');
+    const nutrientDataCount = await db.getNutrientDataCount();
+    if (nutrientDataCount > 0) {
+      console.log('Nutrition data is in database, read and set it to reducer:', nutrientDataCount)
+      await dispatch(catchErrors(nutrientDataActions.readNutrientDataFromDb()));
+      console.log('Nutrition data set to reducer ');
+      setAppInitialized(true);
+      console.log('ALL INITIALIZED');
+
+      return; // nutrients are already in the database
+    }
+    console.log('Read USDA Nutrition data file and insert data to database', nutrientDataCount)
+    usdaData.forEach((d, i, data) => {
+      if (d.length !== data[0].length) {
+        console.log('i, d.length =', i, d.length);
+      }
+    })
+    await db.insertAllNutrientData(usdaData);
+    dispatch(nutrientDataActions.setNutrientsData(usdaData));
+    setAppInitialized(true);
+    console.log('ALL INITIALIZED');
+  }
+
+  async function readDataFromDatabase(language) {
+
     await dispatch(catchErrors(planActions.readAllPlansFromDb()));
     await dispatch(catchErrors(mealActions.readAllMealsFromDb()));
     await dispatch(catchErrors(nutrientActions.readAllNutrientsFromDb()));
     // await dispatch(nutrientActions.readAllNutrientsFromDb());
     await dispatch(catchErrors(barcodeActions.readAllBarcodesFromDb()));
-    readNutritionFile();
+
+    if (language === Constants.FINISH) {
+      readNutritionFile();
+    } else {
+      readUsdaNutritionFile();
+    }
+  }
+
+  const initializeDB = async () => {
+    let configurationInFile;
+    try {
+      const configurationString = await FileSystem.readAsStringAsync(
+        FileSystem.documentDirectory + Constants.CONFIGURATION_FILE,
+      );
+      configurationInFile = JSON.parse(configurationString);
+      dispatch(configurations.setConfigurations(configurationInFile));
+    } catch (err) {
+      console.log(`Configuration file cold not be read,
+      use default configuration:`, err);
+    }
+    const language = configurationInFile ?
+      configurationInFile.language :
+      Constants.DEFAULT_LANGUAGE;
+    console.log('initializeDB language =', language);
+    db.initializeDatabase(language).then(() => {
+      console.log('Sqlite database initialization succeeded');
+    }).catch((err) => {
+      console.log('Sqlite database initialization failed', err);
+    });
+    readDataFromDatabase(language);
   }
 
   useEffect(() => {
-    readDataFromDatabase();
+    initializeDB();
   }, [dispatch]);
 
 

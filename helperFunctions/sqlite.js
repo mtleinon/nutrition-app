@@ -1,13 +1,16 @@
-// import { SQLite } from 'expo-sqlite';
 import * as SQLite from 'expo-sqlite';
-const dbName = 'nutrition-app.db';
+// import Language from '../constants/Language';
+import * as Constants from '../constants/Constants';
+const dbNameFinish = 'nutrition-app-finish.db';
+const dbNameEnglish = 'nutrition-app-english.db';
+
 const plans = 'plans';
 const meals = 'meals';
 const nutrients = 'nutrients';
 const barcodes = 'barcodes';
 const nutrientDataTable = 'nutrientsData';
 
-const db = SQLite.openDatabase(dbName);
+let db;
 
 export const dropAllTablesInDatabase = () => {
   console.log('dropAllTablesInDatabase: start');
@@ -70,7 +73,6 @@ export const dropAllTablesInDatabase = () => {
           reject(err);
         }
       );
-
       // console.log('all transaction steps started')
     },
       (err) => {
@@ -84,9 +86,14 @@ export const dropAllTablesInDatabase = () => {
   });
 };
 
-export const initializeDatabase = () => {
+export const initializeDatabase = (language) => {
   console.log('initializeDatabase: start');
-
+  if (language === Constants.ENGLISH) {
+    dbName = dbNameEnglish;
+  } else {
+    dbName = dbNameFinish;
+  }
+  db = SQLite.openDatabase(dbName);
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
 
@@ -184,8 +191,9 @@ export const initializeDatabase = () => {
           reject(err);
         }
       );
-      tx.executeSql(
-        `CREATE TABLE IF NOT EXISTS ${nutrientDataTable} (
+      if (language === Constants.FINISH) {
+        tx.executeSql(
+          `CREATE TABLE IF NOT EXISTS ${nutrientDataTable} (
           id INTEGER PRIMARY KEY,
           column0 INTEGER NOT NULL,
           column1 TEXT NOT NULL,
@@ -245,16 +253,85 @@ export const initializeDatabase = () => {
           column55 REAL NOT NULL,
           column56 REAL NOT NULL
         );`,
-        [],
-        () => {
-        },
-        (_, err) => {
-          // console.log('nutrientsData step in transaction failed', err)
+          [],
+          () => {
+          },
+          (_, err) => {
+            // console.log('nutrientsData step in transaction failed', err)
 
-          reject(err);
-          // console.log('nutrientsData step in transaction succeeded')
-        }
-      );
+            reject(err);
+            // console.log('nutrientsData step in transaction succeeded')
+          }
+        );
+      }
+      if (language === Constants.ENGLISH) {
+        tx.executeSql(
+          `CREATE TABLE IF NOT EXISTS ${nutrientDataTable} (
+          id INTEGER PRIMARY KEY,
+          column0 INTEGER NOT NULL,
+          column1 TEXT NOT NULL,
+          column2 REAL NOT NULL,
+          column3 REAL NOT NULL,
+          column4 REAL NOT NULL,
+          column5 REAL NOT NULL,
+          column6 REAL NOT NULL,
+          column7 REAL NOT NULL,
+          column8 REAL NOT NULL,
+          column9 REAL NOT NULL,
+          column10 REAL NOT NULL,
+          column11 REAL NOT NULL,
+          column12 REAL NOT NULL,
+          column13 REAL NOT NULL,
+          column14 REAL NOT NULL,
+          column15 REAL NOT NULL,
+          column16 REAL NOT NULL,
+          column17 REAL NOT NULL,
+          column18 REAL NOT NULL,
+          column19 REAL NOT NULL,
+          column20 REAL NOT NULL,
+          column21 REAL NOT NULL,
+          column22 REAL NOT NULL,
+          column23 REAL NOT NULL,
+          column24 REAL NOT NULL,
+          column25 REAL NOT NULL,
+          column26 REAL NOT NULL,
+          column27 REAL NOT NULL,
+          column28 REAL NOT NULL,
+          column29 REAL NOT NULL,
+          column30 REAL NOT NULL,
+          column31 REAL NOT NULL,
+          column32 REAL NOT NULL,
+          column33 REAL NOT NULL,
+          column34 REAL NOT NULL,
+          column35 REAL NOT NULL,
+          column36 REAL NOT NULL,
+          column37 REAL NOT NULL,
+          column38 REAL NOT NULL,
+          column39 REAL NOT NULL,
+          column40 REAL NOT NULL,
+          column41 REAL NOT NULL,
+          column42 REAL NOT NULL,
+          column43 REAL NOT NULL,
+          column44 REAL NOT NULL,
+          column45 REAL NOT NULL,
+          column46 REAL NOT NULL,
+          column47 REAL NOT NULL,
+          column48 REAL NOT NULL,
+          column49 REAL NOT NULL,
+          column50 REAL NOT NULL,
+          column51 REAL NOT NULL,
+          column52 REAL NOT NULL
+        );`,
+          [],
+          () => {
+            console.log('usdaNutrientsData step in transaction succeeded')
+          },
+          (_, err) => {
+            console.log('usdaNutrientsData step in transaction failed', err)
+            reject(err);
+          }
+        );
+      }
       // console.log('all transaction steps started')
     },
       (err) => {
@@ -298,10 +375,10 @@ export const updatePlan = plan => {
     db.transaction((tx) => {
       tx.executeSql(
         `UPDATE ${plans} 
-         SET
-           name="${plan.name}",
-           description="${plan.description}"
-         WHERE id=${plan.id};`,
+        SET
+          name="${plan.name}",
+          description="${plan.description}"
+        WHERE id=${plan.id};`,
         [],
         (_, result) => {
           resolve(result)
@@ -741,7 +818,7 @@ export const getNutrientData = () => {
 
 export const insertAllNutrientData = (allNutrientData) => {
   return new Promise((resolve, reject) => {
-    // console.log('insertAllNutrientData START, write nutrientdata:', allNutrientData.length);
+    // console.log('insertAllNutrientData START, write nutrientData:', allNutrientData.length);
     db.transaction((tx) => {
       const columnNames = allNutrientData[0].map((_, index) => 'column' + index);
       const questionMarks = allNutrientData[0].map(_ => '?');
@@ -770,6 +847,37 @@ export const insertAllNutrientData = (allNutrientData) => {
   });
 };
 
+// export const insertAllUsdaNutrientData = (allNutrientData) => {
+//   return new Promise((resolve, reject) => {
+//     console.log('insertAllNutrientData START, write nutrientdata:', allNutrientData.length);
+//     db.transaction((tx) => {
+//       const columnNames = allNutrientData[0].map((_, index) => 'column' + index);
+//       const questionMarks = allNutrientData[0].map(_ => '?');
+//       // // console.log('insertNutrientData', `INSERT INTO ${ nutrientDataTable } (${ columnNames } ) VALUES(${ questionMarks }); `);
+//       allNutrientData.forEach(nutrientData => {
+//         tx.executeSql(
+//           `INSERT INTO ${nutrientDataTable} (${columnNames} ) VALUES(${questionMarks}); `,
+//           nutrientData,
+//           null,
+//           (_, err) => {
+//             // console.log('insertAllNutrientData FAILED');
+//             reject(err);
+//           }
+//         );
+//       });
+//     },
+//       (_, err) => {
+//         // console.log('insertAllNutrientData FAILED att end', err);
+//         reject(err);
+//       },
+//       (_, result) => {
+//         // console.log('insertAllNutrientData SUCCEEDED');
+//         resolve(result)
+//       }
+//     )
+//   });
+// };
+
 export const insertNutrientData = (nutrientData) => {
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
@@ -789,6 +897,7 @@ export const insertNutrientData = (nutrientData) => {
     })
   });
 };
+
 export const getNutrientDataCount = () => {
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {

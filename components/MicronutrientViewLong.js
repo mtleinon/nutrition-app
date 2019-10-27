@@ -1,13 +1,18 @@
 import React from 'react'
 import { View, SectionList, StyleSheet } from 'react-native'
 import nutrientHeading from '../data/nutrientInfo';
+import Language from '../constants/Language';
+import nutrientHeadingEnglish from '../data/nutrientInfoUSDA';
 import MicronutrientSectionHeader from '../components/MicronutrientSectionHeader';
 import MicronutrientSectionData from '../components/MicronutrientSectionData';
+import * as Constants from '../constants/Constants';
+import { useSelector } from 'react-redux';
 
 
 const getRecommendation = header => {
   // console.log('getRecommendation - header:', header);
 
+  // if (Language.current === Constants.FINISH) {
   if (header.dri) {
     if (header.dri.rda) {
       if (header.dri.rda.males) {
@@ -19,36 +24,59 @@ const getRecommendation = header => {
       return header.dri.ai;
   }
   return undefined;
+  // }
+  return undefined; //TODO: For english header
 }
 
 const MicronutrientViewLong = (dataToShow) => {
+  const configurations = useSelector(state => state.configurations.configurations);
+
   // Convert data for SectionList
   const dataWithHeading = dataToShow.map((data, i) => ({
     value: data,
-    heading: nutrientHeading[i].name.fiShort,
-    unit: nutrientHeading[i].unit,
-    recommendation: getRecommendation(nutrientHeading[i])
+    heading: configurations.language === Constants.FINISH ? nutrientHeading[i].name.fiShort : nutrientHeadingEnglish[i].name.enShort,
+    unit: configurations.language === Constants.FINISH ? nutrientHeading[i].unit : nutrientHeadingEnglish[i].unit,
+    recommendation: configurations.language === Constants.FINISH ? getRecommendation(nutrientHeading[i]) : getRecommendation(nutrientHeadingEnglish[i])
   }));
 
-  const data = [
-    {
-      title: { title: 'Main nutrients', amount: 'amount', relative: '% ener' },
-      data: dataWithHeading.slice(2, 6)
-    },
-    {
-      title: { title: 'Detailed nutrients', amount: 'amount', relative: '' },
-      data: dataWithHeading.slice(6, 33)
-    },
-    {
-      title: { title: 'Micronutrients', amount: 'amount', relative: '% rec' },
-      data: dataWithHeading.slice(33, 45)
-    },
-    {
-      title: { title: 'Vitamins', amount: 'amount', relative: '% rec' },
-      data: dataWithHeading.slice(45, 56)
-    },
-  ];
-
+  let data;
+  if (configurations.language === Constants.FINISH) {
+    data = [
+      {
+        title: { title: 'Main nutrients', amount: 'amount', relative: '% ener' },
+        data: dataWithHeading.slice(2, 6),
+        title: { title: 'Detailed nutrients', amount: 'amount', relative: '' },
+        data: dataWithHeading.slice(6, 33)
+      },
+      {
+        title: { title: 'Micronutrients', amount: 'amount', relative: '% rec' },
+        data: dataWithHeading.slice(33, 45)
+      },
+      {
+        title: { title: 'Vitamins', amount: 'amount', relative: '% rec' },
+        data: dataWithHeading.slice(45, 56)
+      },
+    ];
+  } else {
+    data = [
+      {
+        title: { title: 'Main nutrients', amount: 'amount', relative: '% ener' },
+        data: dataWithHeading.slice(2, 10)
+      },
+      {
+        title: { title: 'Micronutrients', amount: 'amount', relative: '% rec' },
+        data: dataWithHeading.slice(10, 20)
+      },
+      {
+        title: { title: 'Vitamins', amount: 'amount', relative: '% rec' },
+        data: dataWithHeading.slice(20, 44)
+      },
+      {
+        title: { title: 'Vitamins', amount: 'amount', relative: '% rec' },
+        data: dataWithHeading.slice(44, 53)
+      },
+    ];
+  }
   return (<View style={styles.micronutrientList}>
     <SectionList
       sections={data}
