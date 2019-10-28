@@ -85,9 +85,11 @@ export const deletePlanAndItsContentFromDb = (planId, mealIdsToDelete) => {
   return async dispatch => {
     const dbResult = await db.deletePlanAndItsContent(planId, mealIdsToDelete);
     console.log('dbResult', dbResult);
-    dispatch(nutrientActions.deleteNutrientsOfMeals(mealIdsToDelete));
-    dispatch(mealActions.deleteMeals(mealIdsToDelete));
+
+    // Delete plan first so that it is not re-rendered when its meals and nutrients are deleted
     dispatch(deletePlan(planId));
+    dispatch(mealActions.deleteMeals(mealIdsToDelete));
+    dispatch(nutrientActions.deleteNutrientsOfMeals(mealIdsToDelete));
   }
 };
 

@@ -9,8 +9,11 @@ import Language from '../constants/Language';
 import { convertKCalToKJ } from '../helperFunctions/helperFunctions';
 import * as Constants from '../constants/Constants';
 
-const MicronutrientViewSummary = (dataToShow) => {
-  const language = useSelector(state => state.configurations.configurations.language);
+const MicronutrientViewSummary = (dataToShow, language) => {
+  // For some reason useSelector caused error shown below when nutrients and meals of a plan was 
+  // added or deleted, Workaround was to pass the language parameter in props.
+  // Invariant Violation: Invariant Violation: Invariant Violation: Rendered fewer hooks than expected. This may be caused by an accidental early return statement.
+  // const language = useSelector(state => state.configurations.configurations.language);
 
   const energy = dataToShow[ENERGY_I];
   const relativeToEnergy = (index, value) => {
