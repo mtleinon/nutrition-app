@@ -42,9 +42,16 @@ const InitializeApp = ({ setAppInitialized }) => {
       } else {
         const nutrition = finelliNutrition.map((n, i) => {
           if (i < 2) {
+            // Two first columns contain id and name of the nutrient
             return n;
           }
-          return +(n.replace(',', '.').replace(' ', ''));
+          // Other columns contain numeric values
+          const numericValue = +(n.replace(',', '.').replace(' ', ''));
+          if (i === 2) {
+            // Convert energy from kJ to kcal
+            return numericValue / 4.186;
+          }
+          return numericValue;
         });
         nutrientsData.push(nutrition);
       }

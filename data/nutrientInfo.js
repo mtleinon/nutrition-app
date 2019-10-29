@@ -3,7 +3,9 @@
 export default [
   { column: 0, name: { fi: 'id' } },
   { column: 1, name: { fi: 'name' } },
-  { column: 2, name: { fi: 'energia, laskennallinen (kJ)', fiShort: 'energia', fiShort2: 'energ.' }, unit: 'kJ' },
+  // Energy in original finelli file is in kJ. 
+  // Energy number values are converted from kJ to kcal during finelli file reading phase in readNutritionFile function.
+  { column: 2, name: { fi: 'energia, laskennallinen (kcal)', fiShort: 'energia', fiShort2: 'energ.' }, unit: 'kcal' },
   { column: 3, name: { fi: 'hiilihydraatti imeytyva (g)', fiShort: 'hiilihydraatti', fiShort2: 'hiil.' }, unit: 'g' },
   { column: 4, name: { fi: 'rasva (g)', fiShort: 'rasva', fiShort2: 'rasva' }, unit: 'g', },
   { column: 5, name: { fi: 'proteiini (g)', fiShort: 'proteiini', fiShort2: 'prot.' }, unit: 'g' },

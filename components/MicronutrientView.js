@@ -26,12 +26,11 @@ const MicronutrientView = ({ nutrientId, mealId, planId, nutrientData, summary, 
       <Text >{noDataMessage}</Text>
     </View>);
   } else if (oneRow) {
-    return MicronutrientViewOneRow(dataToShow);
+    return <MicronutrientViewOneRow dataToShow={dataToShow} language={language} />;
   } else if (summary) {
-    // return MicronutrientViewOneRow(dataToShow);
-    return MicronutrientViewSummary(dataToShow);
+    return <MicronutrientViewSummary dataToShow={dataToShow} language={language} />;
   }
-  return MicronutrientViewLong(dataToShow, language);
+  return <MicronutrientViewLong dataToShow={dataToShow} language={language} />;
 }
 const styles = StyleSheet.create({
   info: {

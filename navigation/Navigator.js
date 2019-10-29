@@ -14,8 +14,8 @@ import ConfigureScreen from '../screens/ConfigureScreen';
 
 const AppNavigator = createStackNavigator(
   {
-    Configure: ConfigureScreen,
     AllPlans: AllPlansScreen,
+    Configure: ConfigureScreen,
     NewPlan: NewPlanScreen,
     Plan: PlanScreen,
     NewMeal: NewMealScreen,

@@ -25,7 +25,7 @@ const MicronutrientScreen = props => {
   if (nutrientId) {
     const nutrient = nutrients.find(nutrient => nutrient.id === nutrientId);
     const nutrientName = nutrientsData.find(data => data[0] === nutrient.nutrientDataId)[NAME_I];
-    headingText = nutrient.amount + 'g of ' + nutrientName;
+    headingText = nutrient.amount + 'g ' + i1n.t('of') + ' ' + nutrientName;
   } else if (mealId) {
     headingText = i1n.t('meal') + ' : ' + meals.find(meal => meal.id === mealId).name;
   } else if (planId) {

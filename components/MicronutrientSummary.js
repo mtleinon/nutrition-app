@@ -12,16 +12,16 @@ const decimals = value => {
   }
   return
 }
-const MicronutrientSummary = ({ value, heading, unit, recommendation }) => {
+const MicronutrientSummary = ({ nutrientData }) => {
   // console.log('MicronutrientSummary:', heading, value);
   return (
     <View style={styles.item} >
       <View style={styles.microNutrient}>
-        <Text numberOfLines={2} style={styles.microNutrientName}>{heading}</Text>
+        <Text numberOfLines={2} style={styles.microNutrientName}>{nutrientData.header}</Text>
         <View style={styles.row} >
-          <Text style={styles.microNutrientValue}>{value.toFixed(decimals(value))}</Text>
-          <Text style={styles.microNutrientUnit}>{unit}</Text>
-          <Text style={styles.microNutrientRecommendation}>{recommendation ? (recommendation * 100).toFixed(0) + '%' : ''}</Text>
+          <Text style={styles.microNutrientValue}>{nutrientData.value.toFixed(decimals(nutrientData.value))}</Text>
+          <Text style={styles.microNutrientUnit}>{nutrientData.unit}</Text>
+          <Text style={styles.microNutrientRecommendation}>{nutrientData.relativeEnergy ? (nutrientData.relativeEnergy * 100).toFixed(0) + '%' : ''}</Text>
         </View>
       </View>
     </View >

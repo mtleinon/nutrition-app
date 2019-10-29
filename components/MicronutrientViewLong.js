@@ -25,7 +25,7 @@ const getRecommendation = header => {
   return undefined;
 }
 
-const MicronutrientViewLong = (dataToShow) => {
+const MicronutrientViewLong = ({ dataToShow }) => {
   const configurations = useSelector(state => state.configurations.configurations);
 
   // Convert data for SectionList
@@ -71,7 +71,7 @@ const MicronutrientViewLong = (dataToShow) => {
         data: dataWithHeading.slice(20, 44)
       },
       {
-        title: { title: 'Vitamins', amount: 'amount', relative: '% rec' },
+        title: { title: 'Fet acids', amount: 'amount', relative: '% rec' },
         data: dataWithHeading.slice(44, 53)
       },
     ];
