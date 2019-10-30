@@ -23,7 +23,7 @@ const Nutrient = ({
   }
   ));
   return (
-    <TouchableCard onPress={onPress}>
+    <TouchableCard onPress={onPress} style={styles.cardColor}>
       <View style={styles.nutrient}>
         <Heading3Text numberOfLines={2} style={styles.nutrientName}>{nutrientData[NAME_I]}</Heading3Text>
         <InputNumber2 style={styles.amount}
@@ -42,6 +42,9 @@ const Nutrient = ({
 }
 
 const styles = StyleSheet.create({
+  cardColor: {
+    backgroundColor: Colors.nutrientColor
+  },
   micronutrientRow: {
     marginLeft: 10,
     marginRight: 30,

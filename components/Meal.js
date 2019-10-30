@@ -5,11 +5,12 @@ import Icon from '../components/Icon';
 import Heading2Text from '../components/Heading2Text';
 import MicronutrientView from '../components/MicronutrientView';
 import * as i1n from '../helperFunctions/translations';
+import Colors from '../constants/Colors';
 
 const Meal = ({ meal, editMealHandler, deleteMealHandler, navigateToMealHandler }) => {
   return (
-    <TouchableCard onPress={() => navigateToMealHandler(meal.id)} >
-      <View style={styles.nameRow}>
+    <TouchableCard onPress={() => navigateToMealHandler(meal.id)} style={styles.cardColor} >
+      <View style={styles.nameRow} >
         <Heading2Text numberOfLines={2} style={styles.mealName}>{meal.name}</Heading2Text>
         <View style={styles.row}>
           <Icon name="delete" onPress={() => deleteMealHandler(meal.id)} />
@@ -25,6 +26,9 @@ const Meal = ({ meal, editMealHandler, deleteMealHandler, navigateToMealHandler 
 }
 
 const styles = StyleSheet.create({
+  cardColor: {
+    backgroundColor: Colors.mealColor
+  },
   nameRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',

@@ -40,6 +40,7 @@ const PlanScreen = props => {
         onPress={() => {
           props.navigation.navigate('Micronutrient', { planId });
         }}
+        style={styles.headerColor}
       >
         <HeadingText style={styles.HeadingText}>{plan.name}</HeadingText>
         <View style={styles.planMicronutrientRow}>
@@ -88,6 +89,9 @@ const styles = StyleSheet.create({
   },
   HeadingText: {
     marginLeft: 10,
+  },
+  headerColor: {
+    backgroundColor: Colors.planColor
   },
   meal: {
     borderBottomWidth: 1,

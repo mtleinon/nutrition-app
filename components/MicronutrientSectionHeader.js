@@ -2,9 +2,9 @@ import React from 'react'
 import { View, Text, StyleSheet } from 'react-native'
 import Colors from '../constants/Colors';
 
-const MicronutrientSectionHeader = ({ title }) => {
+const MicronutrientSectionHeader = ({ title, style }) => {
   return (
-    <View style={styles.sectionHeader}>
+    <View style={[styles.sectionHeader, style]}>
       <Text style={styles.sectionHeaderName}>{title.title}</Text>
       <Text style={styles.sectionHeaderValue}>{title.amount}</Text>
       <Text style={styles.sectionHeaderUnit}> </Text>
@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
     paddingBottom: 5,
     borderBottomWidth: 2,
     borderBottomColor: Colors.darkGrayBorder,
-    backgroundColor: 'white'
+    // backgroundColor: 'white'
   }
 });
 

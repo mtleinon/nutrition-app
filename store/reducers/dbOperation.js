@@ -16,7 +16,7 @@ const initialState = {
 };
 
 export default (state = initialState, action) => {
-  console.log('errors action', action.type);
+  // console.log('errors action', action.type);
 
   switch (action.type) {
     case START:

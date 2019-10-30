@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Platform } from 'react-native'
+import { View, Platform } from 'react-native'
 
 import { createAppContainer } from 'react-navigation';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
@@ -55,6 +55,7 @@ const rootReducer = (state, action) => {
 const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
 
 import AppNavigator from './navigation/Navigator';
+import Colors from './constants/Colors';
 const AppNavigationContainer = createAppContainer(AppNavigator);
 
 
@@ -74,22 +75,33 @@ const AppWithInitializer = () => {
 
 export default function App() {
   console.log('App function STARTED');
-  return (
-    <Provider store={store}>
-      <ErrorViewer>
-        <AppWithInitializer />
-      </ErrorViewer>
-      <AdMobBanner
-        bannerSize="fullBanner"
+  return (<>
+    <View style={{ flex: 1 }}>
+      <Provider store={store}>
+        <ErrorViewer>
+          <AppWithInitializer />
+        </ErrorViewer>
+      </Provider>
+    </View>
+    {/* <View style={{
+      // marginTop: 3, 
+      elevation: 2,
+      shadowOpacity: .3,
+      backgroundColor: Colors.screenBackground,
+      // height: 60,
+    }}> */}
+    <AdMobBanner
+      bannerSize="smartBannerPortrait"
 
-        adUnitID={Platform.OS === 'android'
-          ? "ca-app-pub-3940256099942544/6300978111"
-          : "ca-app-pub-3940256099942544/6300978111"}
-        testDeviceID="EMULATOR"
-        // testDeviceID="5756bdbc-f5cc-4999-9788-190c4c7371d9"
-        servePersonalizedAds
-        onDidFailToReceiveAdWithError={err => { console.warn('banner err =', err); }} />
-    </Provider>);
+      adUnitID={Platform.OS === 'android'
+        ? "ca-app-pub-9120709668433720/3958710513"
+        : "ca-app-pub-9120709668433720/4955548677"}
+      // testDeviceID="EMULATOR"
+      testDeviceID="5756bdbc-f5cc-4999-9788-190c4c7371d9"
+      servePersonalizedAds
+      onDidFailToReceiveAdWithError={err => { console.warn('banner err =', err); }} />
+    {/* </View> */}
+  </>)
 }
 
 /*

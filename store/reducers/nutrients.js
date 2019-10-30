@@ -14,7 +14,7 @@ const initialState = {
 };
 
 export default (state = initialState, action) => {
-  console.log('nutrients action', action.type);
+  // console.log('nutrients action', action.type);
 
   switch (action.type) {
 

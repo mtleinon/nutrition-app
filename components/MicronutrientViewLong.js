@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, SectionList, StyleSheet } from 'react-native'
+import { Text, View, SectionList, StyleSheet } from 'react-native'
 import nutrientHeading from '../data/nutrientInfo';
 import Language from '../constants/Language';
 import nutrientHeadingEnglish from '../data/nutrientInfoUSDA';
@@ -25,7 +25,7 @@ const getRecommendation = header => {
   return undefined;
 }
 
-const MicronutrientViewLong = ({ dataToShow }) => {
+const MicronutrientViewLong = ({ dataToShow, style }) => {
   const configurations = useSelector(state => state.configurations.configurations);
 
   // Convert data for SectionList
@@ -71,20 +71,21 @@ const MicronutrientViewLong = ({ dataToShow }) => {
         data: dataWithHeading.slice(20, 44)
       },
       {
-        title: { title: 'Fet acids', amount: 'amount', relative: '% rec' },
+        title: { title: 'Fat acids', amount: 'amount', relative: '% rec' },
         data: dataWithHeading.slice(44, 53)
       },
     ];
   }
   return (<View style={styles.micronutrientList}>
     <SectionList
+      // ListHeaderComponent={<Text> TEST:very long text that take several lines</Text>}
       sections={data}
       renderItem={item => {
         return <MicronutrientSectionData
           value={item.item} />
       }}
       renderSectionHeader={({ section: { title } }) => (
-        <MicronutrientSectionHeader title={title} />)}
+        <MicronutrientSectionHeader title={title} style={style} />)}
       stickySectionHeadersEnabled={true}
       keyExtractor={(_, index) => index.toString()}
     />

@@ -34,7 +34,9 @@ const MealScreen = props => {
     <View style={styles.screen} >
       <TouchableHeader onPress={() => {
         props.navigation.navigate('Micronutrient', { mealId });
-      }}>
+      }}
+        style={styles.headerColor}
+      >
         <HeadingText style={styles.HeadingText}>{meal.name}</HeadingText>
         <View style={styles.micronutrientRow}>
           <MicronutrientView mealId={meal.id} summary={true}
@@ -104,6 +106,9 @@ const styles = StyleSheet.create({
     // paddingLeft: 5,
     // paddingRight: 5,
     backgroundColor: Colors.screenBackground,
+  },
+  headerColor: {
+    backgroundColor: Colors.mealColor
   },
   HeadingText: {
     marginLeft: 10,

@@ -6,10 +6,11 @@ import SmallText from '../components/SmallText';
 import TouchableCard from '../components/TouchableCard';
 import Icon from '../components/Icon';
 import * as i1n from '../helperFunctions/translations';
+import Colors from '../constants/Colors';
 
 const Plan = ({ plan, deletePlanHandler, editPlanHandler, navigateToPlanHandler }) => {
   return (
-    <TouchableCard onPress={() => navigateToPlanHandler(plan.id)} >
+    <TouchableCard onPress={() => navigateToPlanHandler(plan.id)} style={styles.cardColor}>
       <View style={styles.nameRow}>
         <HeadingText numberOfLines={2} style={styles.mealName}>{plan.name}</HeadingText>
         <View style={styles.row}>
@@ -26,17 +27,24 @@ const Plan = ({ plan, deletePlanHandler, editPlanHandler, navigateToPlanHandler 
 }
 
 const styles = StyleSheet.create({
+  cardColor: {
+    backgroundColor: Colors.planColor
+  },
   nameRow: {
     flexDirection: 'row',
     width: '100%',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     paddingLeft: 9,
     paddingRight: 5,
     paddingTop: 5
   },
+  mealName: {
+    flex: 1,
+    marginTop: 5
+  },
   row: {
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
   micronutrient: {
     paddingHorizontal: 10

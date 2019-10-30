@@ -15,7 +15,7 @@ const initialState = {
 };
 
 export default (state = initialState, action) => {
-  console.log('111 configurations action', action.type, state.configurations.appInitialized);
+  // console.log('111 configurations action', action.type, state.configurations.appInitialized);
   switch (action.type) {
     case SET_GENDER:
       return {

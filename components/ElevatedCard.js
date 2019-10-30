@@ -1,8 +1,8 @@
 import React from 'react'
 import { View, StyleSheet, Dimensions } from 'react-native'
 
-const ElevatedCard = ({ children }) => (
-  <View style={styles.elevated}>
+const ElevatedCard = ({ children, style }) => (
+  <View style={[styles.elevated, style]}>
     {children}
   </View>
 );
@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     borderWidth: 0,
     borderColor: 'transparent',
-    marginVertical: 3,
+    marginVertical: 2,
     marginHorizontal: Dimensions.get('window').width < 350 ? 4 : 10,
 
   }

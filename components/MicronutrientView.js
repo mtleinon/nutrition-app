@@ -8,8 +8,8 @@ import { calculateDataToShow } from '../helperFunctions/calculateDataToShow';
 const SUMMARY_LENGTH = 8; // In english data 8 column has needed data
 import * as i1n from '../helperFunctions/translations';
 
-const MicronutrientView = ({ nutrientId, mealId, planId, nutrientData, summary, oneRow, noDataText }) => {
-  console.log('MicronutrientView: planId ', planId);
+const MicronutrientView = ({ nutrientId, mealId, planId, nutrientData, summary, oneRow, noDataText, style }) => {
+  // console.log('MicronutrientView: planId ', planId);
   const language = useSelector(state => state.configurations.configurations.language);
 
   const meals = useSelector(state => state.meals.meals);
@@ -30,7 +30,7 @@ const MicronutrientView = ({ nutrientId, mealId, planId, nutrientData, summary, 
   } else if (summary) {
     return <MicronutrientViewSummary dataToShow={dataToShow} language={language} />;
   }
-  return <MicronutrientViewLong dataToShow={dataToShow} language={language} />;
+  return <MicronutrientViewLong dataToShow={dataToShow} language={language} style={style} />;
 }
 const styles = StyleSheet.create({
   info: {

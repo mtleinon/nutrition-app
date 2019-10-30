@@ -7,7 +7,7 @@ const initialState = {
 };
 
 export default (state = initialState, action) => {
-  console.log('action', action.type);
+  // console.log('action', action.type);
 
   switch (action.type) {
     case ADD_PLAN:

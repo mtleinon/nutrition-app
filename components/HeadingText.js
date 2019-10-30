@@ -4,7 +4,7 @@ import Colors from '../constants/Colors'
 
 const HeadingText = props => {
   return (
-    <Text style={[styles.text, props.style]} >{props.children}</Text>
+    <Text style={[styles.text, props.style]} numberOfLines={props.numberOfLines}>{props.children}</Text>
   )
 }
 

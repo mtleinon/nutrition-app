@@ -75,11 +75,11 @@ const InitializeApp = ({ setAppInitialized }) => {
       return; // nutrients are already in the database
     }
     console.log('Read USDA Nutrition data file and insert data to database', nutrientDataCount)
-    usdaData.forEach((d, i, data) => {
-      if (d.length !== data[0].length) {
-        console.log('i, d.length =', i, d.length);
-      }
-    })
+    // usdaData.forEach((d, i, data) => {
+    //   if (d.length !== data[0].length) {
+    //     console.log('i, d.length =', i, d.length);
+    //   }
+    // })
     await db.insertAllNutrientData(usdaData);
     dispatch(nutrientDataActions.setNutrientsData(usdaData));
     setAppInitialized(true);
