@@ -10,9 +10,9 @@ const ElevatedCard = ({ children, style }) => (
 const styles = StyleSheet.create({
   elevated: {
     shadowColor: 'black',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: .5,
-    shadowRadius: 1,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: .2,
+    shadowRadius: 2,
     elevation: 1,
 
     padding: 5,

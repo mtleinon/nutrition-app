@@ -5,7 +5,6 @@ import { Ionicons } from '@expo/vector-icons';
 import Colors from '../constants/Colors';
 import * as nutrientActions from '../store/actions/nutrients';
 import * as barcodeActions from '../store/actions/barcodes';
-import InputNumber from '../components/InputNumber';
 import InputText from '../components/InputText';
 import Nutrient from '../models/Nutrient';
 import Barcode from '../models/Barcode';

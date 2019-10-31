@@ -2,7 +2,7 @@ import React from 'react'
 import { useSelector } from 'react-redux';
 import { View, Text, StyleSheet, Platform, Dimensions } from 'react-native'
 
-import InputNumber2 from '../components/InputNumber2';
+import InputNumber from './InputNumber';
 import Colors from '../constants/Colors';
 import MicronutrientView from '../components/MicronutrientView';
 import { NAME_I } from '../models/NutrientData';
@@ -26,7 +26,9 @@ const Nutrient = ({
     <TouchableCard onPress={onPress} style={styles.cardColor}>
       <View style={styles.nutrient}>
         <Heading3Text numberOfLines={2} style={styles.nutrientName}>{nutrientData[NAME_I]}</Heading3Text>
-        <InputNumber2 style={styles.amount}
+        <InputNumber
+          maxLength={4}
+          style={styles.amount}
           onChangeText={(value) => updateNutrientAmountHandler(nutrient, value)}
           value={nutrient.amount}
           focus={focus}
@@ -64,7 +66,6 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   amount: {
-    marginBottom: Platform.OS === 'android' ? 9 : 0,
     fontSize: 15
   },
   unit: {

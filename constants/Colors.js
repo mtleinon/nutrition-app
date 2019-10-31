@@ -22,4 +22,37 @@ const analogousScheme2 = {
   mealColor: '#C5E2B6',
   nutrientColor: '#D5E6AF',
 };
-export default analogousScheme2;
+
+const monochromaticScheme = {
+  // primary: 'blue',
+  primary: '#060',
+  grayBorder: '#bdb',
+  darkGrayBorder: '#555',
+  screenBackground: '#aaa',
+  planColor: '#28FF28',
+  mealColor: '#6DFF6E',
+  nutrientColor: '#92FF92',
+};
+const TriadicScheme = {
+  // primary: 'blue',
+  primary: '#060',
+  grayBorder: '#bdb',
+  darkGrayBorder: '#555',
+  screenBackground: '#aaa',
+  planColor: '#FFC490',
+  mealColor: '#6DFF6E',
+  nutrientColor: '#FF9F48',
+};
+
+
+const whiteBackgroundScheme = {
+  // primary: 'blue',
+  primary: '#060',
+  grayBorder: '#ccc',
+  darkGrayBorder: '#555',
+  screenBackground: '#ddd',
+  planColor: '#fff',
+  mealColor: '#fff',
+  nutrientColor: '#fff',
+};
+export default whiteBackgroundScheme;

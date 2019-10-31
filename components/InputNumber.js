@@ -1,14 +1,24 @@
-import React, { useState } from 'react'
-import { View, Text, TextInput, StyleSheet } from 'react-native'
+import React, { useState, useRef, useEffect } from 'react'
+import { View, TextInput, StyleSheet } from 'react-native'
 import Colors from '../constants/Colors';
 
-const InputNumber = props => {
-  [value, setValue] = useState(props.value);
+const InputNumber2 = props => {
+  const [value, setValue] = useState(props.value);
+  const textInputRef = useRef(null);
+  const maxLength = props.maxLength || 10;
 
+  useEffect(() => {
+    if (textInputRef && textInputRef.current && props.focus && value === 0) {
+      // console.log('textInputRef =', textInputRef);
+      textInputRef.current.focus();
+    }
+  });
+  // let inputRef;
   const setValueHandler = (text) => {
     const number = parseFloat(text);
     //TODO: must , be handled too?
-    if (text.length > 0 && (text.slice(-1) === '.' || !isNaN(number))) {
+    console.log('text =', text);
+    if (text.length <= maxLength && text.length > 0 && (text.slice(-1) === '.' || !isNaN(number))) {
       if (text.slice(-1) === '.' && !text.slice(0, -1).includes('.')) {
         setValue(number.toString() + '.');
       } else {
@@ -18,33 +28,48 @@ const InputNumber = props => {
         props.onChangeText(number);
       }
     }
+    if (text.length === 0) {
+      setValue("0");
+      props.onChangeText(0);
+    }
+    if (text.length >= maxLength) {
+      setValue(text.slice(0, maxLength));
+    }
   }
   return (
-    <View style={styles.input}>
-      <Text style={styles.label}>{props.label}</Text>
-      <TextInput
-        keyboardType="number-pad"
-        style={styles.inputField}
-        onChangeText={setValueHandler} value={value.toString()}
-      />
-    </View>
+    <TextInput
+      ref={textInputRef}
+      keyboardType="number-pad"
+      style={[styles.inputField, props.style]}
+      onChangeText={setValueHandler} value={value.toString()}
+
+    />
   )
 }
 
 const styles = StyleSheet.create({
-  label: {
-    color: Colors.primary,
-    fontSize: 14,
-    fontWeight: 'bold',
-    marginTop: 5,
+  input: {
+    alignItems: 'flex-start'
   },
   inputField: {
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.primary,
-    // backgroundColor: Colors.primary,
-    paddingHorizontal: 6,
-    paddingVertical: 5,
+    textAlign: 'right',
+    color: Colors.primary,
+    fontSize: 16,
+    fontWeight: 'bold',
+    // lineHeight: 1,
+    includeFontPadding: false,
+    textAlignVertical: 'center',
+    // borderBottomWidth: 2,
+    // borderBottomColor: Colors.primary,
+    borderWidth: 1,
+    borderColor: "#5f5",
+    borderRadius: 3,
+    paddingHorizontal: 4,
+    paddingVertical: 1,
+    backgroundColor: '#cfc',
+
+    minWidth: 55
   },
 
 })
-export default InputNumber;
+export default InputNumber2;

@@ -16,13 +16,7 @@ import dbOperationReducer from './store/reducers/dbOperation';
 import configurationsReducer from './store/reducers/configurations';
 import ErrorViewer from './ErrorViewer';
 import * as configurations from './store/actions/configurations';
-import {
-  AdMobBanner,
-  // AdMobInterstitial,
-  // PublisherBanner,
-  // AdMobRewarded
-} from 'expo-ads-admob';
-
+import AddBanner from './components/AddBanner';
 
 // import { initializeDatabase } from './helperFunctions/sqlite';
 console.log('APP STARTED');
@@ -83,28 +77,7 @@ export default function App() {
         </ErrorViewer>
       </Provider>
     </View>
-    {/* <View style={{
-      // marginTop: 3, 
-      elevation: 2,
-      shadowOpacity: .3,
-      backgroundColor: Colors.screenBackground,
-      // height: 60,
-    }}> */}
-    <AdMobBanner
-      bannerSize="smartBannerPortrait"
-
-      adUnitID={Platform.OS === 'android'
-        ? "ca-app-pub-9120709668433720/3958710513"
-        : "ca-app-pub-9120709668433720/4955548677"}
-      // testDeviceID="EMULATOR"
-      testDeviceID="5756bdbc-f5cc-4999-9788-190c4c7371d9"
-      servePersonalizedAds
-      onDidFailToReceiveAdWithError={err => { console.warn('banner err =', err); }} />
-    {/* </View> */}
+    <AddBanner />
   </>)
 }
 
-/*
-      {!appInitialized &&
-        <InitializeApp setAppInitialized={setAppInitialized} />
-*/
