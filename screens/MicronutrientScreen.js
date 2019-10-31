@@ -22,31 +22,25 @@ const MicronutrientScreen = props => {
   const nutrientsData = useSelector(state => state.nutrientsData.nutrientsData);
 
   let headingText = '';
-  let backgroundColor;
   if (nutrientId) {
     const nutrient = nutrients.find(nutrient => nutrient.id === nutrientId);
     const nutrientName = nutrientsData.find(data => data[0] === nutrient.nutrientDataId)[NAME_I];
     headingText = nutrient.amount + 'g ' + i1n.t('of') + ' ' + nutrientName;
-    backgroundColor = Colors.nutrientColor;
   } else if (mealId) {
     headingText = i1n.t('meal') + ' : ' + meals.find(meal => meal.id === mealId).name;
-    backgroundColor = Colors.mealColor;
   } else if (planId) {
     headingText = i1n.t('plan') + ' : ' + plans.find(plan => plan.id === planId).name;
-    backgroundColor = Colors.planColor;
   } else { // nutrientData contains data to be shown
     headingText = '100g ' + i1n.t('of') + ' ' + nutrientData[NAME_I];
-    backgroundColor = Colors.nutrientColor;
   }
 
   return (
-    <View style={[styles.screen, { backgroundColor }]}>
+    <View style={styles.screen}>
       <ElevatedHeader>
         <HeadingText style={styles.headingText} numberOfLines={3}>{headingText}</HeadingText>
       </ElevatedHeader>
       <View style={{ flex: 1 }}>
-
-        <MicronutrientView style={{ backgroundColor }}
+        <MicronutrientView
           nutrientData={nutrientData} nutrientId={nutrientId} mealId={mealId}
           planId={planId} summary={summary} />
       </View>
@@ -66,6 +60,7 @@ MicronutrientScreen.navigationOptions = navData => {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
+    backgroundColor: Colors.screenBackground,
     // paddingBottom: 55,
   },
   // microNutrient: {

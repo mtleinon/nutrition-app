@@ -85,7 +85,7 @@ const MicronutrientViewLong = ({ dataToShow, style }) => {
           value={item.item} />
       }}
       renderSectionHeader={({ section: { title } }) => (
-        <MicronutrientSectionHeader title={title} style={style} />)}
+        <MicronutrientSectionHeader title={title} style={[styles.sectionHeader, style]} />)}
       stickySectionHeadersEnabled={true}
       keyExtractor={(_, index) => index.toString()}
     />
@@ -96,7 +96,12 @@ const styles = StyleSheet.create({
   micronutrientList: {
     marginLeft: 10,
     marginRight: 10,
+    paddingHorizontal: 5,
+    backgroundColor: 'white',
   },
+  sectionHeader: {
+    backgroundColor: '#fff'
+  }
 });
 
 export default MicronutrientViewLong;

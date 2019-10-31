@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
     elevation: 2,
     shadowOpacity: .3,
 
-    // backgroundColor: 'white',
+    backgroundColor: 'white',
   },
 }
 );

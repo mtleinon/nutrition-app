@@ -21,14 +21,28 @@ const styles = StyleSheet.create({
     color: Colors.primary,
     fontSize: 16,
     fontWeight: 'bold',
-    marginTop: 5,
+    marginTop: 15,
   },
   inputField: {
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.primary,
-    paddingHorizontal: 6,
-    paddingVertical: 5,
+    color: Colors.primary,
+    fontSize: 16,
+    fontWeight: 'bold',
+    includeFontPadding: false,
+    textAlignVertical: 'center',
+    borderWidth: 1,
+    borderColor: "#5f5",
+    borderRadius: 3,
+    paddingHorizontal: 5,
+    paddingVertical: 3,
+    backgroundColor: '#cfc',
   },
+
+  // inputField: {
+  //   borderBottomWidth: 1,
+  //   borderBottomColor: Colors.primary,
+  //   paddingHorizontal: 6,
+  //   paddingVertical: 5,
+  // },
   textTop: {
     textAlignVertical: 'top'
   }
