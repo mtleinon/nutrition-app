@@ -13,11 +13,17 @@ import * as FileSystem from 'expo-file-system';
 import * as Constants from '../constants/Constants';
 // import Language from '../constants/Language';
 import * as configurations from '../store/actions/configurations';
+import * as Localization from 'expo-localization';
+import i1n from 'i18n-js';
+
+console.log('initializeApp i1n.locale =', i1n.locale);
 
 const finelli = require('../data/finelli3.json');
 const usdaData = require('../data/usdaDataLong.json');
 
 const InitializeApp = ({ setAppInitialized }) => {
+  console.log('InitializeApp started =', Date.now(), i1n.locale);
+
   const dispatch = useDispatch();
 
   const readNutritionFile = async () => {
@@ -102,37 +108,56 @@ const InitializeApp = ({ setAppInitialized }) => {
   }
 
   const initializeDB = async () => {
-    let configurationInFile;
+
+    // Read configuration file of app. If file exists and store
+    // configuration to redux. 
+    // If file doesn't exists app uses finish language in the app 
+    // if devices language is set to finish. Otherwise
+    // english is used as the language of the app.
+    let language;
     try {
       const configurationString = await FileSystem.readAsStringAsync(
         FileSystem.documentDirectory + Constants.CONFIGURATION_FILE,
       );
-      configurationInFile = JSON.parse(configurationString);
+      const configurationInFile = JSON.parse(configurationString);
+      language = configurationInFile.language;
       dispatch(configurations.setConfigurations(configurationInFile));
     } catch (err) {
       console.log(`Configuration file cold not be read,
       use default configuration:`, err);
+      if (Localization.locale === Constants.FINISH) {
+        language = Constants.FINISH;
+      } else {
+        language = Constants.ENGLISH;
+      }
+      console.log('Set language to redux ' + language + ' locale=' + Localization.locale);
+      dispatch(configurations.setLanguage(language));
     }
-    const language = configurationInFile ?
-      configurationInFile.language :
-      Constants.DEFAULT_LANGUAGE;
-    console.log('initializeDB language =', language);
+
+    // If language used in the app has been set in the configuration file,
+    // use it as app's language. Otherwise use language of in device.
+    console.log('Set language for i18n translator to', language);
+    i1n.locale = language;
+
+    // Initialize database for the selected language and read data from it to 
+    // reducer
     db.initializeDatabase(language).then(() => {
       console.log('Sqlite database initialization succeeded');
     }).catch((err) => {
       console.log('Sqlite database initialization failed', err);
     });
-    readDataFromDatabase(language);
+    readDataFromDatabase();
   }
 
   useEffect(() => {
     initializeDB();
   }, [dispatch]);
 
+  console.log('InitializeApp render =', Date.now());
 
   return (
-    <View>
-      <Text>InitializeApp</Text>
+    <View style={{ flex: 1, backgroundColor: 'white' }}>
+      {/* <Text>InitializeApp</Text> */}
     </View>
   )
 }

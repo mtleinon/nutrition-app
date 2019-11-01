@@ -11,7 +11,7 @@ import AddButton from '../components/AddButton';
 import Nutrient from '../components/Nutrient';
 import TouchableHeader from '../components/TouchableHeader';
 import { catchErrors } from '../store/actions/dbOperation';
-import * as i1n from '../helperFunctions/translations';
+import i1n from 'i18n-js';
 
 const MealScreen = props => {
   const mealId = props.navigation.getParam('mealId');

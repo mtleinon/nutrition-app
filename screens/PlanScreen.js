@@ -13,7 +13,7 @@ import AddButton from '../components/AddButton';
 import Meal from '../components/Meal';
 import TouchableHeader from '../components/TouchableHeader';
 import { catchErrors } from '../store/actions/dbOperation';
-import * as i1n from '../helperFunctions/translations';
+import i1n from 'i18n-js';
 
 const PlanScreen = props => {
   const planId = props.navigation.getParam('planId');

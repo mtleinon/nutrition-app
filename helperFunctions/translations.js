@@ -1,4 +1,4 @@
-const en = {
+export const en = {
   addNewBarcode: 'Add new barcode',
   addNewMeal: 'Add new meal',
   addNewPlan: 'Add new plan',
@@ -41,7 +41,7 @@ const en = {
   setNewNutrientForTheBarcode: "Set new nutrient for the barcode",
   setNewNutrientForTheNewBarcode: "Set new nutrient for the new barcode"
 };
-const fi = {
+export const fi = {
   addNewBarcode: 'Lisää uusi viivakoodi',
   addNewMeal: 'Lisää uusi ateria',
   addNewPlan: 'Lisää uusi dietti',

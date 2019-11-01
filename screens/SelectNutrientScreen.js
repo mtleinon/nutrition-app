@@ -10,7 +10,7 @@ import Nutrient from '../models/Nutrient';
 import Barcode from '../models/Barcode';
 import Icon from '../components/Icon';
 import { catchErrors } from '../store/actions/dbOperation';
-import * as i1n from '../helperFunctions/translations';
+import i1n from 'i18n-js';
 
 
 const NutrientDataView = ({ item, selectedNameHandler, showMicronutrientHandler }) => {

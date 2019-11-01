@@ -4,6 +4,7 @@ import { View, Platform } from 'react-native'
 import { createAppContainer } from 'react-navigation';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { Provider, useSelector, useDispatch } from 'react-redux';
+import { AppLoading } from 'expo';
 
 import ReduxThunk from 'redux-thunk';
 import InitializeApp from './components/InitializeApp';
@@ -17,9 +18,22 @@ import configurationsReducer from './store/reducers/configurations';
 import ErrorViewer from './ErrorViewer';
 import * as configurations from './store/actions/configurations';
 import AddBanner from './components/AddBanner';
+import * as Localization from 'expo-localization';
+import i1n from 'i18n-js';
+import { fi, en } from './helperFunctions/translations';
 
-// import { initializeDatabase } from './helperFunctions/sqlite';
-console.log('APP STARTED');
+// Set supported languages of the app and use device language
+// as apps default language. Later in app startup we change the apps
+// language if it has been set in the configuration file
+
+i1n.fallbacks = true;
+i1n.translations = { en, fi };
+i1n.locale = Localization.locale;
+
+// console.log('fi, en =', fi, en);
+console.log('Localization.locale =', Localization.locale);
+console.log('i1n.locale =', i1n.locale);
+console.log('APP STARTED 1 ', Date.now());
 
 const appReducer = combineReducers({
   nutrientsData: nutrientsDataReducer,
@@ -53,12 +67,14 @@ import Colors from './constants/Colors';
 const AppNavigationContainer = createAppContainer(AppNavigator);
 
 
-const AppWithInitializer = () => {
+
+const AppWithInitializer = ({ setIsReady }) => {
   const appInitialized = useSelector(state => state.configurations.configurations.appInitialized);
   const dispatch = useDispatch();
 
   const setAppInitialized = () => {
     dispatch(configurations.setAppInitialized());
+    setIsReady(true);
   }
   return (
     appInitialized ?
@@ -67,17 +83,38 @@ const AppWithInitializer = () => {
   );
 }
 
+// async _cacheResourcesAsync() {
+//   const images = [require('./assets/snack-icon.png')];
+
+//   const cacheImages = images.map(image => {
+//     return Asset.fromModule(image).downloadAsync();
+//   });
+//   return Promise.all(cacheImages);
+// }
+
 export default function App() {
-  console.log('App function STARTED');
+  const [isReady, setIsReady] = useState(false);
+  console.log('APP STARTED render 2 =', Date.now());
+
+  // if (!isReady) {
+  //   return (
+  //     <AppLoading
+  //     // startAsync={_cacheResourcesAsync}
+  //     // onFinish={() => setIsReady(true)}
+  //     // onError={console.warn}
+  //     />
+  //   );
+  // }
+
   return (<>
     <View style={{ flex: 1 }}>
       <Provider store={store}>
         <ErrorViewer>
-          <AppWithInitializer />
+          <AppWithInitializer setIsReady={setIsReady} />
         </ErrorViewer>
       </Provider>
     </View>
-    <AddBanner />
+    {/* <AddBanner /> */}
   </>)
 }
 

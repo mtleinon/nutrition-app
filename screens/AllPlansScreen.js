@@ -8,7 +8,10 @@ import Colors from '../constants/Colors';
 import HeaderButton from '../components/HeaderButton';
 import AddButton from '../components/AddButton';
 import { catchErrors } from '../store/actions/dbOperation';
-import * as i1n from '../helperFunctions/translations';
+
+// import i1n from 'i18n-js';
+import i1n from 'i18n-js';
+console.log('AllPlansScreen i1n.locale =', i1n.locale);
 
 const AllPlansScreen = props => {
   const plans = useSelector(state => state.plans.plans);

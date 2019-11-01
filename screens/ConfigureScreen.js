@@ -6,7 +6,7 @@ import * as db from '../helperFunctions/sqlite';
 import Colors from '../constants/Colors';
 import * as Constants from '../constants/Constants';
 import * as configurationsActions from '../store/actions/configurations';
-import * as i1n from '../helperFunctions/translations';
+import i1n from 'i18n-js';
 
 const ConfigureScreen = props => {
   const dispatch = useDispatch();

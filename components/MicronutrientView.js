@@ -6,7 +6,7 @@ import MicronutrientViewSummary from '../components/MicronutrientViewSummary';
 import MicronutrientViewLong from '../components/MicronutrientViewLong';
 import { calculateDataToShow } from '../helperFunctions/calculateDataToShow';
 const SUMMARY_LENGTH = 8; // In english data 8 column has needed data
-import * as i1n from '../helperFunctions/translations';
+import i1n from 'i18n-js';
 
 const MicronutrientView = ({ nutrientId, mealId, planId, nutrientData, summary, oneRow, noDataText, style }) => {
   // console.log('MicronutrientView: planId ', planId);

@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
     borderColor: "#5f5",
     borderRadius: 3,
     paddingHorizontal: 4,
-    paddingVertical: 3,
+    paddingVertical: 0,
     backgroundColor: '#cfc',
 
     minWidth: 55

@@ -3,7 +3,7 @@ import { View, StyleSheet } from 'react-native'
 import SmallerText from '../components/SmallerText';
 import { NAME_I, ENERGY_I, CARBOHYDRATES_I, FET_I, PROTEIN_I } from '../models/NutrientData';
 import { convertKCalToKJ } from '../helperFunctions/helperFunctions';
-import * as i1n from '../helperFunctions/translations';
+import i1n from 'i18n-js';
 import * as Constants from '../constants/Constants';
 import nutrientHeadingFinish from '../data/nutrientInfo';
 import nutrientHeadingEnglish from '../data/nutrientInfoUSDA';

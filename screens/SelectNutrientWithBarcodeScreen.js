@@ -11,7 +11,7 @@ import AddButton from '../components/AddButton';
 import TouchableCard from '../components/TouchableCard';
 import HeadingText from '../components/HeadingText';
 import { catchErrors } from '../store/actions/dbOperation';
-import * as i1n from '../helperFunctions/translations';
+import i1n from 'i18n-js';
 
 const SelectNutrientWithBarcodeScreen = props => {
   const mealId = props.navigation.getParam('mealId');

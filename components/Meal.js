@@ -4,7 +4,7 @@ import TouchableCard from '../components/TouchableCard';
 import Icon from '../components/Icon';
 import Heading2Text from '../components/Heading2Text';
 import MicronutrientView from '../components/MicronutrientView';
-import * as i1n from '../helperFunctions/translations';
+import i1n from 'i18n-js';
 import Colors from '../constants/Colors';
 
 const Meal = ({ meal, editMealHandler, deleteMealHandler, navigateToMealHandler }) => {

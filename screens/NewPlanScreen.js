@@ -9,7 +9,7 @@ import * as planActions from '../store/actions/plans';
 import { catchErrors } from '../store/actions/dbOperation';
 
 import Colors from '../constants/Colors';
-import * as i1n from '../helperFunctions/translations';
+import i1n from 'i18n-js';
 
 const NewPlanScreen = props => {
   const planId = props.navigation.getParam('planId');

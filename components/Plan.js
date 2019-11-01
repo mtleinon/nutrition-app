@@ -5,7 +5,7 @@ import HeadingText from '../components/HeadingText';
 import SmallText from '../components/SmallText';
 import TouchableCard from '../components/TouchableCard';
 import Icon from '../components/Icon';
-import * as i1n from '../helperFunctions/translations';
+import i1n from 'i18n-js';
 import Colors from '../constants/Colors';
 
 const Plan = ({ plan, deletePlanHandler, editPlanHandler, navigateToPlanHandler }) => {

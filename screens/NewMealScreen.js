@@ -8,7 +8,7 @@ import InputText from '../components/InputText';
 import * as mealActions from '../store/actions/meals';
 import Meal from '../models/Meal.js';
 import { catchErrors } from '../store/actions/dbOperation';
-import * as i1n from '../helperFunctions/translations';
+import i1n from 'i18n-js';
 
 const NewMealScreen = props => {
   const planId = props.navigation.getParam('planId');

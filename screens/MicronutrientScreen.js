@@ -8,7 +8,7 @@ import Colors from '../constants/Colors';
 import HeadingText from '../components/HeadingText';
 import { NAME_I } from '../models/NutrientData';
 import ElevatedHeader from '../components/ElevatedHeader';
-import * as i1n from '../helperFunctions/translations';
+import i1n from 'i18n-js';
 
 const MicronutrientScreen = props => {
   const summary = props.navigation.getParam('summary');

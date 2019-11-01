@@ -88,10 +88,10 @@ export const dropAllTablesInDatabase = () => {
 
 export const initializeDatabase = (language) => {
   console.log('initializeDatabase: start');
-  if (language === Constants.ENGLISH) {
-    dbName = dbNameEnglish;
-  } else {
+  if (language === Constants.FINISH) {
     dbName = dbNameFinish;
+  } else {
+    dbName = dbNameEnglish;
   }
   db = SQLite.openDatabase(dbName);
   return new Promise((resolve, reject) => {
@@ -264,7 +264,7 @@ export const initializeDatabase = (language) => {
           }
         );
       }
-      if (language === Constants.ENGLISH) {
+      else {
         tx.executeSql(
           `CREATE TABLE IF NOT EXISTS ${nutrientDataTable} (
           id INTEGER PRIMARY KEY,
