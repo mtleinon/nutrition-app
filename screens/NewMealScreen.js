@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Alert, TouchableHighlight, TouchableOpacity, FlatList, TextInput, View, Text, StyleSheet, Platform } from 'react-native'
 import Colors from '../constants/Colors';
 //import uuid from 'react-native-uuid';
-
+import AddButton from '../components/AddButton';
 import InputText from '../components/InputText';
 import * as mealActions from '../store/actions/meals';
 import Meal from '../models/Meal.js';
@@ -52,6 +52,7 @@ const NewMealScreen = props => {
         numberOfLines={6}
         onChangeText={setDescription} value={description}
       />
+      <AddButton title={isEditMode ? i1n.t('updateMeal') : i1n.t('addNewMeal')} onPress={mealHandler} />
     </View>
   )
 }
@@ -71,7 +72,7 @@ NewMealScreen.navigationOptions = navData => {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    marginTop: 20,
+    marginTop: 10,
     paddingHorizontal: 10,
     width: '100%'
   },

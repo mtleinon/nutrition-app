@@ -4,7 +4,7 @@ import { Alert, TouchableOpacity, View, Text, StyleSheet, Platform } from 'react
 
 import InputText from '../components/InputText';
 import Plan from '../models/Plan';
-
+import AddButton from '../components/AddButton';
 import * as planActions from '../store/actions/plans';
 import { catchErrors } from '../store/actions/dbOperation';
 
@@ -54,6 +54,8 @@ const NewPlanScreen = props => {
         numberOfLines={6}
         onChangeText={setDescription} value={description}
       />
+      <AddButton title={isEditMode ? i1n.t('updatePlan') : i1n.t('addNewPlan')} onPress={planHandler} />
+
     </View>
   )
 }
@@ -73,7 +75,7 @@ NewPlanScreen.navigationOptions = navData => {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    marginTop: 20,
+    marginTop: 10,
     paddingHorizontal: 10,
     width: '100%'
   },
