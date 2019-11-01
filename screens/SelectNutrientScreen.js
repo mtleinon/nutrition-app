@@ -7,6 +7,7 @@ import * as nutrientActions from '../store/actions/nutrients';
 import * as barcodeActions from '../store/actions/barcodes';
 import InputText from '../components/InputText';
 import Nutrient from '../models/Nutrient';
+import { DATA_ID_I, NAME_I } from '../models/NutrientData';
 import Barcode from '../models/Barcode';
 import Icon from '../components/Icon';
 import { catchErrors } from '../store/actions/dbOperation';
@@ -29,19 +30,26 @@ const filterNutrient = (search, nutrientName) => {
 }
 
 const SelectNutritionScreen = props => {
-  console.log('SelectNutritionScreen - props', props);
+  // console.log('SelectNutritionScreen - props', props);
 
   const mealId = props.navigation.getParam('mealId');
   const barcode = props.navigation.getParam('barcode');
   const scannedBarcode = props.navigation.getParam('scannedBarcode');
   const nutrientsData = useSelector(state => state.nutrientsData.nutrientsData);
-  // const barcodes = useSelector(state => state.barcodes.barcodes);
+  const usedNutrientIds = useSelector(state =>
+    state.nutrients.nutrients.map(nutrient => nutrient.nutrientDataId));
 
-  // const [name, setName] = useState('');
-  // const [amount, setAmount] = useState('');
   const [selectedName, setSelectedName] = useState('');
   const [selectedId, setSelectedId] = useState('');
   const dispatch = useDispatch();
+
+  const compareNutrients = (a, b) => {
+    const aIsUsed = usedNutrientIds.includes(a[DATA_ID_I]);
+    const bIsUsed = usedNutrientIds.includes(b[DATA_ID_I]);
+    if (aIsUsed && !bIsUsed) return -1;
+    if (!aIsUsed && bIsUsed) return 1;
+    return 0;
+  };
 
   const showMicronutrientHandler = (nutrient) => {
     props.navigation.navigate('Micronutrient', { nutrientData: nutrient });
@@ -79,10 +87,8 @@ const SelectNutritionScreen = props => {
       } else {
         dispatch(catchErrors(barcodeActions.storeBarcodeToDb(new Barcode(null, barcode, selectedId))));
       }
-      // return;
     }
     props.navigation.navigate('Meal');
-    // props.navigation.goBack();
   }, [selectedId]);
 
   useEffect(() => {
@@ -97,7 +103,10 @@ const SelectNutritionScreen = props => {
       />
       <Text style={styles.label}>{i1n.t('selectNutrient')}:</Text>
       <FlatList
-        data={nutrientsData.filter(item => filterNutrient(selectedName, item[1]))}
+        data={nutrientsData
+          .filter(item => filterNutrient(selectedName, item[1]))
+          .sort((a, b) => compareNutrients(a, b))
+        }
         renderItem={item => <NutrientDataView
           item={item}
           selectedNameHandler={selectedNameHandler}
@@ -111,7 +120,7 @@ const SelectNutritionScreen = props => {
 
 SelectNutritionScreen.navigationOptions = navData => {
   const addNutrientHandler = navData.navigation.getParam('addNutrientHandler');
-  const mealId = navData.navigation.getParam('mealId');
+  // const mealId = navData.navigation.getParam('mealId');
   const barcode = navData.navigation.getParam('barcode');
 
   return {
