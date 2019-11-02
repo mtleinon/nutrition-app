@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { View, TextInput, StyleSheet } from 'react-native'
+import { TextInput, StyleSheet } from 'react-native'
 import Colors from '../constants/Colors';
 
 const InputNumber = props => {

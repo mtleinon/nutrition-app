@@ -7,9 +7,8 @@ import Colors from '../constants/Colors';
 import * as Constants from '../constants/Constants';
 import * as configurationsActions from '../store/actions/configurations';
 import i1n from 'i18n-js';
-import Heading2Text from '../components/Heading3Text';
-import ElevatedCard from '../components/ElevatedCard';
-import CheckBox from '../components/CheckBox';
+import SelectLanguage from '../components/SelectLanguage';
+import SelectGender from '../components/SelectGender';
 
 const ConfigureScreen = props => {
   const dispatch = useDispatch();
@@ -41,6 +40,7 @@ const ConfigureScreen = props => {
       }
     }
   };
+
   const genderChangeHandler = gender => {
     dispatch(configurationsActions.storeGenderToFile(gender));
   };
@@ -49,40 +49,8 @@ const ConfigureScreen = props => {
     <View style={styles.screen}>
       <Text style={styles.text}>{i1n.t('programVersion')}</Text>
 
-      <ElevatedCard>
-        <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, paddingVertical: 10 }}>
-          <View style={{ flex: 1 }}>
-            <Heading2Text>{i1n.t('language')}</Heading2Text>
-          </View>
-          <View style={{ flex: 1, flexDirection: 'column' }}>
-            <CheckBox handler={() => languageChangeHandler(Constants.ENGLISH)}
-              label={i1n.t('english')}
-              value={configurations.language === Constants.ENGLISH}
-            />
-            <CheckBox handler={() => languageChangeHandler(Constants.FINISH)}
-              label={i1n.t('finish')}
-              value={configurations.language === Constants.FINISH}
-            />
-          </View>
-        </View>
-      </ElevatedCard>
-      <ElevatedCard>
-        <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, paddingVertical: 10 }}>
-          <View style={{ flex: 1 }}>
-            <Heading2Text>{i1n.t('genre')}</Heading2Text>
-          </View>
-          <View style={{ flex: 1, flexDirection: 'column' }}>
-            <CheckBox handler={() => genderChangeHandler(Constants.FEMALE)}
-              label={i1n.t('female')}
-              value={configurations.gender === Constants.FEMALE}
-            />
-            <CheckBox handler={() => genderChangeHandler(Constants.MALE)}
-              label={i1n.t('male')}
-              value={configurations.gender === Constants.MALE}
-            />
-          </View>
-        </View>
-      </ElevatedCard>
+      <SelectLanguage value={configurations.language} handler={languageChangeHandler} />
+      <SelectGender value={configurations.gender} handler={genderChangeHandler} />
       <View style={styles.button}>
         <Button title={i1n.t('goToStartScreen')} onPress={() => props.navigation.navigate('AllPlans')} />
       </View>

@@ -5,9 +5,9 @@ import Heading2Text from '../components/Heading3Text';
 
 const CheckBox = ({ label, handler, value }) => {
   return (
-    <View style={{ marginVertical: 10 }}  >
+    <View>
       <TouchableWithoutFeedback onPress={handler}>
-        <View style={{ flexDirection: 'row' }}>
+        <View style={{ flexDirection: 'row', paddingVertical: 10 }}>
           <View style={{ borderColor: 'black', borderWidth: 1, height: 20, width: 20, borderRadius: 10 }}>
             {value &&
               <View style={{
