@@ -35,9 +35,13 @@ const SelectNutritionScreen = props => {
   const mealId = props.navigation.getParam('mealId');
   const barcode = props.navigation.getParam('barcode');
   const scannedBarcode = props.navigation.getParam('scannedBarcode');
-  const nutrientsData = useSelector(state => state.nutrientsData.nutrientsData);
+
   const usedNutrientIds = useSelector(state =>
     state.nutrients.nutrients.map(nutrient => nutrient.nutrientDataId));
+
+  let nutrientsData = useSelector(
+    state => state.nutrientsData.nutrientsData
+  );
 
   const [selectedName, setSelectedName] = useState('');
   const [selectedId, setSelectedId] = useState('');
@@ -104,8 +108,7 @@ const SelectNutritionScreen = props => {
       <Text style={styles.label}>{i1n.t('selectNutrient')}:</Text>
       <FlatList
         data={nutrientsData
-          .filter(item => filterNutrient(selectedName, item[1]))
-          .sort((a, b) => compareNutrients(a, b))
+          .filter(item => filterNutrient(selectedName, item[NAME_I])).sort((a, b) => compareNutrients(a, b))
         }
         renderItem={item => <NutrientDataView
           item={item}

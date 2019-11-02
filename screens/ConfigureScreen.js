@@ -1,5 +1,5 @@
 import React from 'react'
-import { Picker, Button, View, Text, StyleSheet, } from 'react-native'
+import { Button, View, Text, StyleSheet, } from 'react-native'
 import { useSelector, useDispatch } from 'react-redux';
 
 import * as db from '../helperFunctions/sqlite';
@@ -7,6 +7,9 @@ import Colors from '../constants/Colors';
 import * as Constants from '../constants/Constants';
 import * as configurationsActions from '../store/actions/configurations';
 import i1n from 'i18n-js';
+import Heading2Text from '../components/Heading3Text';
+import ElevatedCard from '../components/ElevatedCard';
+import CheckBox from '../components/CheckBox';
 
 const ConfigureScreen = props => {
   const dispatch = useDispatch();
@@ -25,9 +28,18 @@ const ConfigureScreen = props => {
   const dropTablesHandler = async () => {
     await db.dropAllTablesInDatabase();
   }
-  const languageChangeHandler = language => {
-    dispatch(configurationsActions.storeLanguageToFile(language));
 
+  const languageChangeHandler = newValue => {
+    if (newValue === Constants.ENGLISH) {
+      if (configurations.language !== Constants.ENGLISH) {
+        dispatch(configurationsActions.storeLanguageToFile(Constants.ENGLISH));
+      }
+    }
+    if (newValue === Constants.FINISH) {
+      if (configurations.language !== Constants.FINISH) {
+        dispatch(configurationsActions.storeLanguageToFile(Constants.FINISH));
+      }
+    }
   };
   const genderChangeHandler = gender => {
     dispatch(configurationsActions.storeGenderToFile(gender));
@@ -36,36 +48,51 @@ const ConfigureScreen = props => {
   return (
     <View style={styles.screen}>
       <Text style={styles.text}>{i1n.t('programVersion')}</Text>
-      <View style={{ height: 100 }}>
-        <Picker
-          selectedValue={configurations.language}
-          style={{ justifyContent: 'center', height: 50, width: 200 }}
-          onValueChange={languageChangeHandler}
-        >
-          <Picker.Item label={Constants.ENGLISH} value={Constants.ENGLISH} />
-          <Picker.Item label={Constants.FINISH} value={Constants.FINISH} />
-        </Picker>
-      </View>
-      <View style={{ height: 100 }}>
-        <Picker
-          selectedValue={configurations.gender}
-          style={{ justifyContent: 'center', height: 50, width: 200 }}
-          onValueChange={genderChangeHandler}
-        >
-          <Picker.Item label={Constants.FEMALE} value={Constants.FEMALE} />
-          <Picker.Item label={Constants.MALE} value={Constants.MALE} />
-        </Picker>
+
+      <ElevatedCard>
+        <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, paddingVertical: 10 }}>
+          <View style={{ flex: 1 }}>
+            <Heading2Text>{i1n.t('language')}</Heading2Text>
+          </View>
+          <View style={{ flex: 1, flexDirection: 'column' }}>
+            <CheckBox handler={() => languageChangeHandler(Constants.ENGLISH)}
+              label={i1n.t('english')}
+              value={configurations.language === Constants.ENGLISH}
+            />
+            <CheckBox handler={() => languageChangeHandler(Constants.FINISH)}
+              label={i1n.t('finish')}
+              value={configurations.language === Constants.FINISH}
+            />
+          </View>
+        </View>
+      </ElevatedCard>
+      <ElevatedCard>
+        <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, paddingVertical: 10 }}>
+          <View style={{ flex: 1 }}>
+            <Heading2Text>{i1n.t('genre')}</Heading2Text>
+          </View>
+          <View style={{ flex: 1, flexDirection: 'column' }}>
+            <CheckBox handler={() => genderChangeHandler(Constants.FEMALE)}
+              label={i1n.t('female')}
+              value={configurations.gender === Constants.FEMALE}
+            />
+            <CheckBox handler={() => genderChangeHandler(Constants.MALE)}
+              label={i1n.t('male')}
+              value={configurations.gender === Constants.MALE}
+            />
+          </View>
+        </View>
+      </ElevatedCard>
+      <View style={styles.button}>
+        <Button title={i1n.t('goToStartScreen')} onPress={() => props.navigation.navigate('AllPlans')} />
       </View>
       <View style={styles.button}>
-        <Button title="Drop database tables" onPress={dropTablesHandler} />
+        <Button title={i1n.t('clearAllData')} onPress={dropTablesHandler} color='red' />
       </View>
       <View style={styles.button}>
-        <Button title="Go to start screen" onPress={() => props.navigation.navigate('AllPlans')} />
+        <Button title={i1n.t('testWriteDatabasesToLog')} onPress={writeDbTablesToLog} color='orange' />
       </View>
-      <View style={styles.button}>
-        <Button title="Write db tables to log" onPress={writeDbTablesToLog} />
-      </View>
-    </View>
+    </View >
   )
 }
 
@@ -78,7 +105,7 @@ ConfigureScreen.navigationOptions = navData => {
 
 const styles = StyleSheet.create({
   button: {
-    margin: 20,
+    margin: 10,
   },
   text: {
     textAlign: 'center'

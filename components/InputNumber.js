@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react'
 import { View, TextInput, StyleSheet } from 'react-native'
 import Colors from '../constants/Colors';
 
-const InputNumber2 = props => {
+const InputNumber = props => {
   const [value, setValue] = useState(props.value);
   const textInputRef = useRef(null);
   const maxLength = props.maxLength || 10;
@@ -38,6 +38,7 @@ const InputNumber2 = props => {
   }
   return (
     <TextInput
+      maxLength={maxLength}
       ref={textInputRef}
       keyboardType="number-pad"
       style={[styles.inputField, props.style]}
@@ -72,4 +73,4 @@ const styles = StyleSheet.create({
   },
 
 })
-export default InputNumber2;
+export default InputNumber;

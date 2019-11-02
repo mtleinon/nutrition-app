@@ -31,7 +31,6 @@ export const storeLanguageToFile = language => {
       FileSystem.documentDirectory + Constants.CONFIGURATION_FILE,
       JSON.stringify(newConfigurations));
 
-    // // console.log('storeBarcodeToDb', barcode);
     dispatch(setConfigurations(newConfigurations));
     dispatch(reinitializeApp());
   }
